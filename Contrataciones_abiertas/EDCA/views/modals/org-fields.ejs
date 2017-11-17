@@ -1,0 +1,42 @@
+<form id="updatesingleorg_form">
+    <input type="text" name="table" value="<%= table %>" hidden>
+    <input type="text" name="localid" value = "<%= data.contractingprocess_id %>" hidden>
+
+    <p><label>Nombre<!--Name--></label>
+        <input name="name" type="text" class="form-control" value="<%= data.name %>"></p>
+    <hr>
+    <h4>Identificador</h4>
+    <p><label>Esquema <!--Identifier scheme--></label>
+        <input name = "identifier_scheme" class="form-control" type="text" value="<%= data.identifier_scheme %>" ></p>
+    <p><label>ID<!--Identifier ID--></label>
+        <input name = "identifier_id" class="form-control" type="text" value="<%= data.identifier_id %>" ></p>
+    <p><label>Nombre legal<!--Identifier legal name--></label>
+        <input name = "identifier_legalname" class="form-control" type="text" value="<%= data.identifier_legalname %>" ></p>
+    <p><label>URI<!--Identifier URI--></label>
+        <input name = "identifier_uri" class="form-control" type="text" value="<%= data.identifier_uri %>" ></p>
+    <hr>
+    <h4>Dirección</h4>
+    <p><label>Calle y número <!--Address street address--></label>
+        <input name="address_streetaddress" type="text" class="form-control" value="<%= data.address_streetaddress %>" ></p>
+    <p><label>Localidad<!--Address locality--></label>
+        <input name="address_locality" type="text" class="form-control" value="<%= data.address_locality %>"></p>
+    <p><label>Región<!--Address region--></label>
+        <input name="address_region" type="text" class="form-control" value="<%= data.address_region %>"></p>
+    <p><label>Código postal<!--Address postal code--></label>
+        <input name="address_postalcode" type="text" class="form-control" value="<%= data.address_postalcode %>"></p>
+    <p><label>País<!--Address country name--></label>
+        <input name="address_countryname" type="text" class="form-control" value="<%= data.address_countryname %>"></p>
+    <hr>
+    <h4>Contacto</h4>
+    <p><label>Nombre<!--Contact point name--></label>
+        <input name="contactpoint_name" type="text" class="form-control" value="<%= data.contactpoint_name %>"></p>
+    <p><label>E-mail<!--Contact point email--></label>
+        <input name="contactpoint_email" type="text" class="form-control" value="<%= data.contactpoint_email %>"></p>
+    <p><label>Teléfono<!--Contact point telephone--></label>
+        <input name="contactpoint_telephone"  type="text" class="form-control" value="<%= data.contactpoint_telephone %>"></p>
+    <p><label>Fax<!--Contact point fax number--></label>
+        <input name="contactpoint_faxnumber" type="text" class="form-control" value="<%= data.contactpoint_faxnumber %>"></p>
+    <p><label>URL<!--Contact point url--></label>
+        <input name="contactpoint_url"    type="url" class="form-control" value="<%= data.contactpoint_url %>"></p>
+    <p><button type="submit" class="btn btn-default">Guardar</button></p>
+</form>

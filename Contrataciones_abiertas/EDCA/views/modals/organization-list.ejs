@@ -1,0 +1,28 @@
+<%
+if ( data.length > 0 ){
+    for (var i=0; i< data.length; i++){
+%>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title"><%= data[i].name %></h4>
+    </div>
+    <div class="panel-body">
+        <p><label>Esquema: </label> <%= data[i].identifier_scheme%></p>
+        <p><label>ID:</label> <%= data[i].identifier_id%></p>
+        <p><label>Nombre legal:</label> <%= data[i].identifier_legalname%> </p>
+        <p><label>URI:</label> <%= data[i].identifier_uri%></p>
+
+        <!-- additional identifiers -->
+
+        <button class="btn btn-default" data-table="<%= table %>" data-id="<%= data[i].id%>">Eliminar</button>
+        <button class="btn btn-default" data-action="edit_organization"> Editar</button>
+        
+    </div>
+    
+    
+</div>
+
+<%}
+} else{ %>
+    <div class="alert alert-warning" role="alert"><strong>Atención:</strong> No se han registrado organizaciones</div>
+<%}%>

@@ -1,0 +1,10 @@
+.idea/
+node_modules/
+bower_components/
+*~
+*.csv
+uploads/
+uploads/*
+#*#
+output/
+.env

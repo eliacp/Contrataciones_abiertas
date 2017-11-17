@@ -1,0 +1,49 @@
+<form id ="newtransaction_form">
+    <input type="text" name="localid" value = "<%= localid %>" hidden>
+    <!--<p><label>ID</label>
+        <input class="form-control" name="transactionid">
+    </p>-->
+    <p> <label>Origen<!--Source--></label>
+        <input class="form-control" name="source"> </p>
+    <p><label>Fecha <!--Date--></label>
+        <input class="form-control" id="newtrans_date1" name="implementation_date" required></p>
+    <p><label>Valor: Monto<!--Value amount--></label>
+        <input type="number" class="form-control" step="0.01" name="value_amount" required></p>
+    <p><label>Valor: Divisa<!--Value currency--></label>
+
+    <select class="form-control" name="value_currency">
+        <% for ( var i = 0; i < currencies.length; i++){ %>
+        <option value = "<%= currencies[i].alphabetic_code %>"
+                <%= currencies[i].alphabetic_code == 'MXN'? 'selected':null %>
+        >
+            <%= currencies[i].currency+' - '+currencies[i].alphabetic_code%>
+        </option>
+        <%}%>
+    </select>
+    </p>
+
+
+    <p><label>URI</label>
+        <input type="url" class="form-control" name="uri"></p>
+    <hr>
+    <h4>Proveedor</h4>
+    <p><label>Esquema<!--Provider organization scheme--></label>
+        <input type="text" class="form-control" name="providerorganization_scheme"></p>
+    <p><label>ID <!--Provider organization ID--></label>
+        <input type="text" class="form-control" name="providerorganization_id"></p>
+    <p><label>Nombre legal<!--Provider organization legal name--></label>
+        <input type="text" class="form-control" name="providerorganization_legalname"></p>
+    <p><label>URI<!--Provider organization URI--></label>
+        <input type="url" class="form-control" name="providerorganization_uri"></p>
+    <hr>
+    <h4>Receptor</h4>
+    <p><label>Esquema<!--Receiver organization scheme--></label>
+        <input type="text" class="form-control" name="receiverorganization_scheme"></p>
+    <p><label>ID<!--Receiver organization ID--></label>
+        <input type="text" class="form-control" name="receiverorganization_id"></p>
+    <p><label>Nombre legal<!--Receiver organization legal name--></label>
+        <input type="text" class="form-control" name="receiverorganization_legalname"></p>
+    <p><label>URI<!--Receiver organization URI--></label>
+        <input type="url" class="form-control" name="receiverorganization_uri"></p>
+    <button class="btn btn-default">Guardar</button>
+</form>

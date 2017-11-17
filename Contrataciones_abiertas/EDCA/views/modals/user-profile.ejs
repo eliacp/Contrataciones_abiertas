@@ -1,0 +1,20 @@
+<form id="form_update_user_profile">
+    <input name="id" type="text" value="<%= user._id %>" hidden>
+    <p>
+        <label>Nombre de usuario</label>
+        <input name = "username" type="text" class="form-control" value="<%= user.username %>" disabled>
+    </p>
+    <p>
+        <label>Nombre(s)</label>
+        <input name="fullname" type="text" class="form-control" value="<%= user.fullname %>" required>
+    </p>
+
+    <p><label>E-mail</label>
+        <input name="email" type="email" class="form-control" value="<%= user.email %>" placeholder="E-mail">
+    </p>
+    <p>
+        <label>Dirección</label>
+        <input class="form-control" type="text" value="<%= user.address%>" name="address">
+    </p>
+    <button type="submit" class="btn btn-default">Actualizar</button>
+</form>

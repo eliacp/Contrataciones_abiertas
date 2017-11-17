@@ -1,0 +1,38 @@
+<form id ="newitem_form">
+    <input type="text" name = "table" value ="<%= table %>" hidden>
+    <input type="text" name = "localid" value = "<%= localid %>" hidden>
+    <!--<p><label>ID</label>
+        <input class="form-control" type="text" name="itemid" required></p>-->
+    <p><label>Descripción<!--Description--></label>
+        <input class="form-control" type="text" name="description" required></p>
+    <hr>
+    <h4>Clasificación</h4>
+    <p><label>Esquema <!--Classification scheme--></label>
+        <input class="form-control" type="text" name="classification_scheme"></p>
+    <p><label>ID<!--Classification id--></label>
+        <input class="form-control" type="text" name="classification_id"></p>
+    <p><label>Descripción<!--Classification description--></label>
+        <input class="form-control" type="text" name="classification_description"></p>
+    <p><label>URI<!--Classification uri--></label>
+        <input type="url" class="form-control" name="classification_uri"></p>
+    <hr>
+    <p><label>Cantidad<!--Quantity--></label>
+        <input class="form-control" type="number" name="quantity" required></p>
+    <p><label>Nombre de unidad<!--Unit name--></label>
+        <input class="form-control" type="text" name="unit_name"></p>
+    <p><label>Valor unitario: Monto<!--Unit value amount--></label>
+        <input class="form-control" type="number" name="unit_value_amount"  step="0.01" required></p>
+    <p><label>Valor unitario: Divisa<!--Unit value currency--></label>
+        <select class="form-control" name="unit_value_currency">
+            <% for ( var i = 0; i < currencies.length; i++){ %>
+            <option value = "<%= currencies[i].alphabetic_code %>"
+            <%= currencies[i].alphabetic_code == 'MXN'? 'selected':null %>
+            >
+                <%= currencies[i].currency+' - '+currencies[i].alphabetic_code%>
+            </option>
+            <%}%>
+        </select>
+        </p>
+
+    <button class="btn btn-default">Guardar</button>
+</form>

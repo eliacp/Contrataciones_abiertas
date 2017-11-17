@@ -1,0 +1,23 @@
+<%
+if ( data.length > 0 ){
+for (var i=0; i< data.length; i++){%>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <p><label>ID:</label> <%= data[i].itemid%></p>
+        <p><label>Descripción:</label> <%= data[i].description %></p>
+        <hr>
+        <h4>Clasificación</h4>
+        <p><label>Esquema:<!--Classification scheme:--></label> <%= data[i].classification_scheme%></p>
+        <p><label>ID:<!--Classification ID:--></label> <%=data[i].classification_id%></p>
+        <p><label>Descripción:<!--Classification description--></label> <%= data[i].classification_description%></p>
+        <p><label>URI:<!--Classification URI:--></label> <%= data[i].classification_uri%></p>
+        <p><label>Cantidad:<!--Quantity:--></label> <%= data[i].quantity%></p>
+        <button class="btn btn-default" data-id="<%= data[i].id %>" data-table="<%= table %>">Eliminar</button>
+    </div>
+</div>
+<%}
+} else {
+%>
+<div class="alert alert-warning" role="alert"><strong>Atención:</strong> No se han registrado artículos</div>
+<%}
+%>

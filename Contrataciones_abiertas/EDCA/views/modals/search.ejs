@@ -1,0 +1,48 @@
+<div class="panel panel-default">
+    <div class="panel-body">
+        <form id="searchprocessbyocid_form">
+            <p>
+                <label>ID de proceso</label>
+                <input type="text" name="ocid" title="ocid" class="form-control" required>
+            </p>
+            <button  type="submit" class="btn btn-default">Buscar</button>
+        </form>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <form id="searchprocessbydate_form">
+            <div class="row">
+                <div class='col-sm-6'>
+                    <label>Fecha inicial</label>
+                    <div class="form-group">
+                        <div class='input-group date' id='datetimepicker1'>
+                            <input type='text' name="fecha_inicial" class="form-control" required>
+                            <span class="input-group-addon">
+                               <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class='col-sm-6'>
+                    <label>Fecha final</label>
+                    <div class="form-group">
+                        <div class='input-group date' id='datetimepicker2'>
+                            <input type='text' name="fecha_final" class="form-control" required>
+                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-default">Buscar</button>
+        </form>
+    </div>
+</div>
+
+<div style="max-height: 350px; overflow: auto;">
+    <p><div id="searchprocess_result"></div></p>
+</div>

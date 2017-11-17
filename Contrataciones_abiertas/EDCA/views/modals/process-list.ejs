@@ -1,0 +1,14 @@
+<% if (data.length > 0){%>
+<div class="list-group">
+
+    <% for (var i=0;i< data.length;i++){%>
+    <a href="<%= '/main/'+ data[i].id %>" class="list-group-item">
+        <h4 class="list-group-item-heading"> Proceso <%= data[i].id %> </h4>
+        <p class="list-group-item-text"> <strong> OCID:</strong> <%=data[i].ocid %> - Creado el <%= data[i].fecha_creacion.toLocaleDateString() %> a las <%= data[i].hora_creacion%> </p>
+    </a>
+    <%}%>
+</div>
+<%}else {%>
+<div class="alert alert-warning" role="alert"><strong>Atención:</strong> La búsqueda no ha regresado resultados</div>
+<%}%>
+

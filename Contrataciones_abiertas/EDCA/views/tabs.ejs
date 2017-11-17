@@ -1,0 +1,731 @@
+<%
+function getMString ( fecha ){
+    return (
+            fecha.getFullYear() + "-"+
+            ( (fecha.getMonth() + 1 < 10)?("0"+(fecha.getMonth()+1)):(fecha.getMonth() + 1) )+ "-" + // 0 - 11
+            ( (fecha.getDate() < 10)?("0"+(fecha.getDate())):(fecha.getDate()) ) +" "+ // 1 - 31
+            ( (fecha.getHours() < 9)?("0"+fecha.getHours()):fecha.getHours() )+":"+ //0 - 23
+            ( (fecha.getMinutes() < 9 )?("0"+fecha.getMinutes()):fecha.getMinutes() ) + ":" +
+            ( (fecha.getSeconds() < 9 )?("0"+ fecha.getSeconds()):fecha.getSeconds() )
+    );
+}
+%>
+
+<ul id="pills" class="nav nav-pills nav-justified">
+    <li role="presentation" class="active"><a data-toggle="pill" href="#home" data-tooltip="crear_proceso" title="Esta sección se utiliza para describir el trasfondo del proceso de contratación. Esto puede incluir detalles sobre el presupuesto, proyectos relacionados y documentación tal cómo: Evaluación de necesidades, Plan del proyecto, Plan de contratación, Estudio de factibilidad, etc. ">1. PLANEACIÓN</a></li>
+    <li role="presentation"><a data-toggle="pill" href="#menu1" data-tooltip="crear_proceso" title="Esta secciónn incluye los detalles del anunciamiento de que una dependencia requiere licitar algún bien en particular, ya sean materiales o servicios, y que desea establecer un contrato por los mismos.">2. CONTRATACIÓN</a></li>
+    <li role="presentation"><a data-toggle="pill" href="#menu2" data-tooltip="crear_proceso" title="Esta sección se utiliza para anunciar cualquier adjudicación que haya sido dada durante el proceso de esta licitación. Pueden existir múltiples adjudicaciones para un mismo proceso.">3. ADJUDICACIÓN</a></li>
+    <li role="presentation"><a data-toggle="pill" href="#menu3" data-tooltip="crear_proceso" title="Esta sección se utiliza para dar detalles sobre los contratos en los que se ha incurrido en este proceso. Todo contrato necesita estar relacionado con una adjudicación.">4. CONTRATO</a></li>
+    <li role="presentation"><a data-toggle="pill" href="#menu4" data-tooltip="crear_proceso" title="Esta sección describe los avances en cuanto a la ejecución del proyecto.">5. EJECUCIÓN</a></li>
+</ul>
+<br>
+<div id="all-contents" class="tab-content">
+    <div id="home" class="tab-pane fade in active">
+
+        <div class="well well-lg">
+            <h3>1. PLANEACIÓN</h3>
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-tooltip="crear_proceso" title="Aquí se pueden agregar los diversos documentos que pertenecen a la fase de planeación.">
+                    <!-- Documents-->Documentos <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#" data-toggle="modal" data-action="new_document" data-table="planningdocuments" data-contractingprocess_id="<%= cp.id %>" data-target="#genericModal">Nuevo</a></li>
+                    <li><a href="#" data-toggle="modal" data-action="edit_documents" data-table="planningdocuments" data-contractingprocess_id="<%=cp.id%>" data-target="#genericModal">Editar</a></li>
+                </ul>
+            </div>
+            <hr>
+
+            <form id="planning_form" >
+                <p> <label data-tooltip="crear_proceso" title='Texto que describe los motivos de la contratación. No se limita al "fundamento legal", es decir, a aquella normatividad que permite realizar la contratación, sino que además debe señalarse la necesidad a la que responde el proceso de contratación. Se puede fundamentar en la planeación estratégica y sectorial de la institución que ejecuta el proyecto.'>Justificación<!--Rationale--></label>
+                    <input type="text" class="form-control" name="rationale" value = "<%=(typeof planning!= "undefined")? planning.rationale : ''%>" >
+                </p>
+
+                <p>
+                <h3>1.1 Fuente de financiamiento <!--BUDGET--></h3>
+                Registre la siguiente información sobre el presupuesto que sustenta la contratación pública.
+                </p>
+
+                <input type="text" name="contractingprocess_id" value ="<%= (typeof budget != "undefined")? budget.contractingprocess_id:''%>" hidden>
+                <!-- Falta el id de planning -->
+
+                <!-- budget_source -->
+                <p>
+                    <label data-tooltip="crear_proceso" title='Dato que señala la fuente de la que provienen los recursos económicos para la contratación. Este dato puede conducir a otros paquetes de datos que provean mayor detalle sobre los recursos económicos que sustentan la contratación. Por ejemplo, la desagregación del presupuesto asignado.'>Fuente de financiamiento<!--Budget source--></label>
+                    <br>
+                    Denominación de los componentes de la clave presupuestaria
+                    <input type="url" class="form-control" name="budget_source" value = "<%= (typeof budget != "undefined")? budget.budget_source:''%>" >
+                </p>
+
+                <!-- budget id -->
+                <p>
+                    <label data-tooltip="crear_proceso" title='Identificador de la fuente presupuestaria que provee recursos económicos para la contratación.'><!--ID--> Identificador de presupuesto</label>
+                    <br>
+                    Indique los siguientes dígitos sobre la clave presupuestaria relacionada con la contratación
+                    <input class="form-control" name="budget_budgetid" value="<%= budget.budget_budgetid %>">
+                </p>
+
+                <!-- budget description -->
+                <p>
+                    <label data-tooltip="crear_proceso" title='Descripción de la fuente presupuestaria. Puede referirse al título o al nombre de la fuente presupuestaria que provee los recursos económicos necesarios para el proyecto de contratación.'>
+                        Descripción del presupuesto<!--Budget description--></label>
+                    <input class="form-control" name="budget_description" value = "<%= (typeof budget != "undefined")? budget.budget_description:''%>" >
+                </p>
+
+                <!-- budget amount -->
+                <p>
+                    <label data-tooltip="crear_proceso" title='Valor asignado en la fuente presupuestaria a la contratación.'>Monto aprobado<!--Budget amount--></label>
+                    <br>
+                    Especifique el monto que fue aprobado para la contratación
+                    <input class="form-control" type="number" step="0.01" name="budget_amount" value = "<%= (typeof budget != "undefined")? budget.budget_amount:'' %>" required>
+                </p>
+
+                <!-- budget currency -->
+                <p>
+                    <label data-tooltip="crear_proceso" title='Moneda del monto asignado a la contratación en la fuente presupuestaria, expresado en tres letras según el formato ISO 4217.'>Moneda <!--Budget currency--></label>
+                    <br>
+                    Especifique la moneda o divisa del monto que fue aprobado para la contratación
+                    <select class="form-control" name="budget_currency">
+                        <% for ( var i = 0; i < currencies.length; i++){ %>
+                        <option value = "<%= currencies[i].alphabetic_code %>"
+                                <% if (budget.budget_currency == null && currencies[i].alphabetic_code=='MXN' ) {%>
+                                <%= 'selected' %>
+                                <%} else if (currencies[i].alphabetic_code == budget.budget_currency){%>
+                                <%= 'selected' %>
+                                <%}%>
+                        >
+                            <%= currencies[i].currency+' - '+currencies[i].alphabetic_code%>
+                        </option>
+                        <%}%>
+                    </select>
+                </p>
+
+                <!-- budget project -->
+                <p><label data-tooltip="crear_proceso" title='Nombre del proyecto relacionado con la contratación y que provee de recursos financieros para su ejecución (en caso de aplicar). Un proyecto provee mayor desagregación sobre el financiamiento que la fuente presupuestaria.'>
+                        Nombe del Proyecto o Programa de Inversión (PPI)<!--Budget project--></label>
+                    <input class="form-control" name="budget_project" value = "<%= (typeof budget != "undefined")? budget.budget_project:'' %>" >
+                </p>
+
+                <!-- project ID -->
+                <p>
+                    <label data-tooltip="crear_proceso" title='Clave que identifica el proyecto presupuestario del que el proceso de contratación forma parte o mediante el cuál es financiado (en caso de ser aplicable).'>
+                        Clave del Proyecto <!--Budget projectID--></label>
+                    <input class="form-control" name="budget_projectid" value = "<%= (typeof budget != "undefined")? budget.budget_projectid:"" %>" >
+                </p>
+
+                <!-- buget uri -->
+                <p>
+                    <label data-tooltip="crear_proceso" title='Enlace o liga a un registro digital (o base de datos) que contenga la información sobre el presupuesto asociado con la contratación.'>Enlace a presupuesto<!--URI--></label>
+                    <br>
+                    URI a un registro digital o base de datos del presupuesto relacionado con la contratación
+                    <input type="url" class="form-control" name="budget_uri" value = "<%= (typeof budget != "undefined")? budget.budget_uri:'' %>" >
+                </p>
+                <button type="submit" class="btn btn-default">Guardar</button>
+                <button class="btn btn-default" type="button" data-toggle="modal" data-contractingprocess_id="<%= cp.id %>" data-action="import_data" data-stage="planning" data-target="#genericModal">Importar datos</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="menu1" class="tab-pane fade">
+        <div class="well well-lg">
+            <h3>2. PROCEDIMIENTO DE CONTRATACIÓN</h3>
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Licitantes<!-- Tenderers--> <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#" data-toggle="modal" data-action="new_organization" data-contractingprocess_id = "<%= cp.id %>" data-table="tenderer" data-target="#genericModal">Nuevo</a></li>
+                    <li><a href="#" data-toggle="modal" data-action="edit_organizations" data-contractingprocess_id = "<%= cp.id %>" data-table="tenderer" data-target="#genericModal">Editar</a></li>
+                </ul>
+            </div>
+
+            <button type="button" class="btn btn-primary" data-action="edit_organization" data-contractingprocess_id="<%= cp.id %>" data-table="procuringentity" data-toggle="modal" data-target="#genericModal">
+                Unidad Administrativa que realiza la contratación <!--Procuring E.--> <i class="fa fa-user"></i></button>
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-tooltip="crear_proceso" title="Aquí se pueden agregar los diversos documentos que pertenecen a la fase de licitación.">
+                    Documentos<!-- Documents--> <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#" data-toggle="modal" data-action="new_document" data-table="tenderdocuments" data-contractingprocess_id="<%= cp.id %>" data-target="#genericModal">Nuevo</a></li>
+                    <li><a href="#" data-toggle="modal" data-action="edit_documents" data-table="tenderdocuments" data-contractingprocess_id="<%=cp.id%>" data-target="#genericModal">Editar</a></li>
+                </ul>
+            </div>
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-tooltip="crear_proceso" title="Aquí se pueden registrar los diversos hitos de la fase de licitación">
+                    Hitos <!--Milestones--> <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#" data-toggle="modal" data-action="new_milestone" data-table="tendermilestone" data-contractingprocess_id="<%= cp.id %>" data-target="#genericModal">Nuevo</a></li>
+                    <li><a href="#" data-toggle="modal" data-action="edit_milestones" data-table="tendermilestone" data-contractingprocess_id="<%=cp.id%>" data-target="#genericModal">Editar</a></li>
+                </ul>
+            </div>
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Ítems <!--Items--> <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#" data-toggle="modal" data-action="new_item" data-table="tenderitem" data-contractingprocess_id="<%= cp.id %>" data-target="#genericModal">Nuevo</a></li>
+                    <li><a href="#" data-toggle="modal" data-action="edit_items" data-table="tenderitem" data-contractingprocess_id="<%= cp.id%>" data-target="#genericModal">Editar</a></li>
+                </ul>
+            </div>
+
+            <hr>
+
+            <form id="tender_form" role="form" >
+                <input type="text" name="contractingprocess_id" hidden value ="<%= (typeof tender != "undefined")? tender.contractingprocess_id:''%>" >
+
+                <p><label data-tooltip="crear_proceso" title='Clave que identifica la licitación.'><!--ID--> Número de procedimiento</label>
+                    <br>
+                    Clave que identifica el procedimiento de contratación. En la APF, consiste en el número de procedimiento que genera CompraNet.
+                    <input type="text" class="form-control" name="tenderid" value="<%= tender.tenderid %>" required>
+                </p>
+                <p><label data-tooltip="crear_proceso" title='Nombre asignado a la licitación.'>Título de la licitación<!--Title--></label>
+                    <br>
+                    Nombre que permite identificar el proceso de contratación. En la APF, puede ser el título o descripción del expediente registrado en CompraNet.
+                    <input type="text" class="form-control" name="title" value = "<%= (typeof tender != "undefined")? tender.title:''%>" >
+                </p>
+                <p><label data-tooltip="crear_proceso" title='Descripción de la licitación.'>Descripción<!--Description--></label>
+                    <br>
+                    Texto que describe el procedimiento de contratación. En la APF, puede ser la descripción del anuncio registrado en CompraNet.
+                    <input type="text" class="form-control" name = "description" value = "<%= (typeof tender != "undefined")? tender.description:''%>" >
+                </p>
+                <p><label data-tooltip="crear_proceso" title='Etapa hasta la cuál ha avanzado el proceso de licitación.'>Estatus <!--Status--></label>
+                    <br>
+                    Indique la etapa en la que se encuentra el proceso de licitación. Este campo se actualizará conforme avance el proceso de licitación.
+                    <select class="form-control" name="status">
+                        <option value="" <%=(tender.status == null)? 'selected':''%> >Ninguno</option>
+                        <option value="planned" <%=(tender.status == 'planned')? 'selected':''%> >Planeado</option>
+                        <option value="active" <%=(tender.status == 'active')? 'selected':''%> >Activo</option>
+                        <option value="cancelled" <%=(tender.status == 'cancelled')? 'selected':''%> >Cancelado</option>
+                        <option value="unsuccessful" <%=(tender.status == 'unsuccessful')? 'selected':''%> >Fallido</option>
+                        <option value="complete" <%=(tender.status == 'complete')? 'selected':''%> >Completado</option>
+                    </select>
+                </p>
+                <p><label data-tooltip="crear_proceso" title='Valor mínimo estimado de la licitación, expresado en monto y moneda.'>Valor mínimo: Monto <!--Min value amount--></label>
+                    <br>
+                    Monto estimado del valor mínimo de la contratación
+                    <input type="number" step="0.01" class="form-control" name = "minvalue_amount" value = "<%= (typeof tender != "undefined")? tender.minvalue_amount:''%>" required>
+                </p>
+                <p><label data-tooltip="crear_proceso" title='Moneda del monto asignado a la contratación en la fuente presupuestaria, expresado en tres letras según el formato ISO 4217.'>Valor mínimo: Moneda<!--Min value currency--></label>
+
+                    <select class="form-control" name="minvalue_currency">
+                        <% for ( var i = 0; i < currencies.length; i++){ %>
+                        <option value = "<%= currencies[i].alphabetic_code %>"
+                                <% if (tender.minvalue_currency == null && currencies[i].alphabetic_code=='MXN' ) {%>
+                                <%= 'selected' %>
+                                <%} else if (currencies[i].alphabetic_code == tender.minvalue_currency){%>
+                                <%= 'selected' %>
+                                <%}%>
+                        >
+                            <%= currencies[i].currency+' - '+currencies[i].alphabetic_code%>
+                        </option>
+                        <%}%>
+                    </select>
+
+                </p>
+                <p><label data-tooltip="crear_proceso" title='Valor máximo estimado de la licitación, expresado en monto y moneda.'>Valor: Monto<!--Value amount--></label>
+                    <br>
+                    Monto estimado del valor máximo de la contratación. En la APF consiste en el valor del techo presupuestal
+                    <input type="number" step="0.01" class="form-control" name= "value_amount" value = "<%= (typeof tender != "undefined")? tender.value_amount:''%>" required>
+                </p>
+                <p><label data-tooltip="crear_proceso" title='Moneda del monto asignado a la contratación en la fuente presupuestaria, expresado en tres letras según el formato ISO 4217.'>Valor: Moneda <!--Value currency--></label>
+
+                    <select class="form-control" name="value_currency">
+                        <% for ( var i = 0; i < currencies.length; i++){ %>
+                        <option value = "<%= currencies[i].alphabetic_code %>"
+                                <% if (tender.value_currency == null && currencies[i].alphabetic_code=='MXN' ) {%>
+                                <%= 'selected' %>
+                                <%} else if (currencies[i].alphabetic_code == tender.value_currency){%>
+                                <%= 'selected' %>
+                                <%}%>
+                        >
+                            <%= currencies[i].currency+' - '+currencies[i].alphabetic_code%>
+                        </option>
+                        <%}%>
+                    </select>
+                </p>
+
+                <p>
+                    <label data-tooltip="crear_proceso" title='Nombre del tipo de procedimiento que se utiliza para la contratación.'>Tipo de procedimiento<!--Procurement method--></label>
+                    <br>
+                    Seleccione el tipo de procedimiento de contratación
+                    <select name = "procurementmethod" class="form-control">
+                        <option value ="">No aplica</option>
+                        <option value="Adjudicación directa art.41" <%= tender.procurementmethod == 'Adjudicación directa art.41'?'selected':''%> >Adjudicación directa art.41</option>
+                        <option value="Adjudicación directa art.42" <%= tender.procurementmethod == 'Adjudicación directa art.42'?'selected':''%> >Adjudicación directa art.42</option>
+                        <option value="Excepciones al reglamento" <%= tender.procurementmethod == 'Excepciones al reglamento'?'selected':'' %> >Excepciones al reglamento</option>
+                 <!--    <option value="Contrato de fideicomiso" <%= tender.procurementmethod == 'Contrato de fideicomiso'?'selected':'' %> >Contrato de fideicomiso</option>  -->
+                        <option value="Invitación a cuando menos tres personas" <%= tender.procurementmethod == 'Invitación a cuando menos tres personas'?'selected':''%> >Invitación a cuando menos tres personas</option>
+                        <option value="Licitación pública" <%= tender.procurementmethod=='Licitación pública'?'selected':'' %> >Licitación pública</option>
+                    </select>
+                </p>
+
+                <p><label data-tooltip="crear_proceso" title='Descripción de las razones por las cuáles se seleccionó el tipo de prodecimiento que se sigue para la contratación.'>Justificación del tipo de procedimiento<!--Procurement method rationale--></label>
+                   <br>
+                    Texto que describe las razón principal por la que se seleccionó el tipo de procedimiento. En la APF, puede encontrarse dentro de la justificación de compra.
+                    <input type="text" class="form-control" name= "procurementmethod_rationale" value = "<%= (typeof tender != "undefined")? tender.procurementmethod_rationale:''%>" >
+                </p>
+                <p><label data-tooltip="crear_proceso" title='Nombre del tipo de criterio que será utilizado en la evaluación de propuestas para la adjudicación del contrato'>Criterio de adjudicación<!--Award criteria--></label>
+                    <input type="text" class="form-control" name = "awardcriteria" value = "<%= (typeof tender != "undefined")? tender.awardcriteria:''%>" >
+                </p>
+                <p><label data-tooltip="crear_proceso" title='Información detallada sobre los criterios de adjudicación del contrato.'>Detalles del criterio de adjudicación <!--Award criteria details--></label>
+                    <input type="text" class="form-control" name = "awardcriteria_details" value = "<%= (typeof tender != "undefined")? tender.awardcriteria_details:''%>" >
+                </p>
+                <p><label data-tooltip="crear_proceso" title='Método por el cuál se recibirán las propuestas para el proceso de contratación'>Método de recepción <!--Submission method--></label>
+                    <input type="text" class="form-control" name="submissionmethod" value = "<%= (typeof tender != "undefined")? tender.submissionmethod:''%>" >
+                </p>
+                <p><label data-tooltip="crear_proceso" title='Información detallada sobre el método por el cuál se recibirán propuestas para el proceso de contratación. Podría referirse a la dirección postal o electrónica a la que tiene que enviarse la propuesta, o a requisitos adicionales'>Detalles del método de recepción<!--Submission method details--></label>
+                    <input type="text" class="form-control" name="submissionmethod_details" value = "<%= (typeof tender != "undefined")? tender.submissionmethod_details:''%>" >
+                </p>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <p>
+                            <label data-tooltip="crear_proceso" title='Periodo durante el cuál se deben entregar las propuestas del proceso de contratación'>Periodo de licitación: Fecha inicial<!--Tender period start date--></label>
+                            <input type="text" class="form-control" id="lici_date1" name="tenderperiod_startdate"
+                                    <% if (typeof tender != "undefined") {%>
+                                   value = "<%= (tender.tenderperiod_startdate != null)? getMString(tender.tenderperiod_startdate):''%>"
+                                    <%}%> >
+                        </p>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <p>
+                            <label data-tooltip="crear_proceso" title='Periodo durante el cuál se deben entregar las propuestas del proceso de contratación'>Periodo de licitación: Fecha final<!--Tender period end date--></label>
+                            <input type="text" class="form-control" id="lici_date2" name="tenderperiod_enddate"
+                                    <% if (typeof tender != "undefined") {%>
+                                   value = "<%= (tender.tenderperiod_enddate != null)? getMString(tender.tenderperiod_enddate):''%>"
+                                    <%}%> >
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <p>
+                            <label data-tooltip="crear_proceso" title='Periodo durante el cuál se pueden hacer aclaraciones al proceso de contratación'>Periodo de aclaraciones: Fecha inicial <!--Enquiry period start date--></label>
+                            <input type="text" class="form-control" id="lici_date3" name= "enquiryperiod_startdate"
+                                    <% if (typeof tender != "undefined") {%>
+                                   value = "<%= (tender.enquiryperiod_startdate != null)? getMString(tender.enquiryperiod_startdate):''%>"
+                                    <%}%> >
+                        </p>
+                    </div>
+                    <div class="col-sm-6">
+                        <p>
+                            <label data-tooltip="crear_proceso" title='Periodo durante el cuál se pueden hacer aclaraciones al proceso de contratación'>Periodo de aclaraciones: Fecha final <!--Enquiry period end date--></label>
+                            <input type="text" class="form-control" id="lici_date4" name= "enquiryperiod_enddate"
+                                    <% if (typeof tender != "undefined") {%>
+                                   value = "<%= (tender.enquiryperiod_enddate != null)? getMString(tender.enquiryperiod_enddate):''%>"
+                                    <%}%> >
+                        </p>
+                    </div>
+                </div>
+
+                <p>
+                    <label data-tooltip="crear_proceso" title='Campo binario para indicar si hubo o no aclaraciones en el proceso de licitación'>Se realizaron aclaraciones <!--Has enquiries--></label>
+                    <select class="form-control" name="hasenquiries">
+                        <option value="1"
+                                <% if (typeof tender != "undefined") {%>
+                                <%=(tender.hasenquiries > 0) ?'selected':''%>
+                                <%}%>
+                        >Si</option>
+                        <option value="0"
+                                <% if (typeof tender != "undefined"){%>
+                                <%=(tender.hasenquiries <= 0) ?'selected':''%>
+                                <%}%>
+                        >No</option>
+                    </select>
+                </p>
+
+                <p>
+                    <label data-tooltip="crear_proceso" title='Descripción de criterios de elegilidad para potenciales proveedores (participantes en la licitación). Se refiere a determinadas características que debe tener el proveedor o condiciones que debe cumplir para poder participar en el proceso de contratación.'>Criterio de elegibilidad<!--Elegibility criteria--></label>
+                    <input type="text" class="form-control" name="eligibilitycriteria" value = "<%= (typeof tender != "undefined")? tender.eligibilitycriteria:''%>" >
+                </p>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <p>
+                            <label data-tooltip="crear_proceso" title='Fecha o periodo en que se prevee se adjudique el contrato'>Periodo de adjudicación: Fecha inicial<!--Award period start date--></label>
+                            <input type="text" class="form-control" id="lici_date5" name="awardperiod_startdate"
+                                    <%if (typeof tender != "undefined"){%>
+                                   value = "<%= (tender.awardperiod_startdate != null)? getMString(tender.awardperiod_startdate):''%>"
+                                    <%}%> >
+                        </p>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <p>
+                            <label data-tooltip="crear_proceso" title='Fecha o periodo en que se prevee se adjudique el contrato'>Periodo de adjudicación: Fecha final<!--Award period end date--></label>
+                            <input type="text" class="form-control" id="lici_date6" name="awardperiod_enddate"
+                                    <%if(typeof tender != "undefined"){%>
+                                   value = "<%= (tender.awardperiod_enddate != null)? getMString(tender.awardperiod_enddate):''%>"
+                                    <%}%> >
+                        </p>
+                    </div>
+                </div>
+
+                <p>
+                    <label data-tooltip="crear_proceso" title='Número de participantes que entregaron una propuesta en la licitación'>Número de participantes <!--Number of tenderers--></label>
+                    <input type="number" class="form-control" name="numberoftenderers" value = "<%= (typeof tender != "undefined")? tender.numberoftenderers:''%>" required>
+                </p>
+
+                <h3>2.1 MODIFICACIÓN <!--AMENDMENT--></h3>
+
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Cambios<!--Amendmendt changes--> <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" data-toggle="modal" data-action="new_change" data-table="tenderamendmentchanges" data-contractingprocess_id="<%= cp.id %>" data-target="#genericModal">Nuevo</a></li>
+                        <li><a href="#" data-toggle="modal" data-action="edit_changes" data-table="tenderamendmentchanges" data-contractingprocess_id="<%=cp.id%>" data-target="#genericModal">Editar</a></li>
+                    </ul>
+                </div>
+                <hr>
+
+                <div style="position:relative;">
+                    <p>
+                        <label data-tooltip="crear_proceso" title=''>Fecha <!--Date--></label>
+                        <input type="text" class="form-control" id="lici_date7" name="amendment_date"
+                                <%if(typeof tender != "undefined"){%>
+                               value = "<%= (tender.amendment_date != null)? getMString(tender.amendment_date):''%>"
+                                <%}%> >
+                    </p>
+                </div>
+
+                <p><label data-tooltip="crear_proceso" title=''>Fundamento <!--Rationale--></label>
+                    <input type="text" name="amendment_rationale" class="form-control" value="<%=(typeof tender!= "undefined")?tender.amendment_rationale:''%>" >
+                </p>
+                <button type="submit" class="btn btn-default">Guardar</button>
+                <button class="btn btn-default" type="button" data-toggle="modal" data-contractingprocess_id="<%= cp.id %>" data-action="import_data" data-stage="tender" data-target="#genericModal">Importar datos</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="menu2" class="tab-pane fade">
+        <div class="well well-lg">
+            <h3>3. ADJUDICACIÓN</h3>
+            <input type="text" name="contractingprocess_id" hidden value ="<%= (typeof award != "undefined")? award.contractingprocess_id:''%>" >
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Proveedores <!--Suppliers--> <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#" data-toggle="modal" data-action="new_organization" data-contractingprocess_id="<%= cp.id %>" data-table="supplier" data-target="#genericModal">Nuevo</a></li>
+                    <li><a href="#" data-toggle="modal" data-action="edit_organizations" data-contractingprocess_id="<%= cp.id %>" data-table="supplier" data-target="#genericModal">Editar</a></li>
+                </ul>
+            </div>
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Documentos<!--Documents--> <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#" data-toggle="modal" data-action="new_document" data-table="awarddocuments" data-contractingprocess_id="<%= cp.id %>" data-target="#genericModal">Nuevo</a></li>
+                    <li><a href="#" data-toggle="modal" data-action="edit_documents" data-table="awarddocuments" data-contractingprocess_id="<%=cp.id%>" data-target="#genericModal">Editar</a></li>
+                </ul>
+            </div>
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    ítems<!--Items--> <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#" data-toggle="modal" data-action="new_item" data-table="awarditem" data-contractingprocess_id="<%= cp.id %>" data-target="#genericModal">Nuevo</a></li>
+                    <li><a href="#" data-toggle="modal" data-action="edit_items" data-table="awarditem" data-contractingprocess_id="<%= cp.id%>" data-target="#genericModal">Editar</a></li>
+                </ul>
+            </div>
+
+            <hr>
+
+            <form id="award_form" role="form">
+                <input type="text" name="contractingprocess_id" hidden value ="<%= (typeof award != "undefined")? award.contractingprocess_id :''%>" >
+
+                <p><label data-tooltip="crear_proceso" title='Clave del fallo que adjudica el contrato'>ID</label>
+                    <input type="text" class="form-control" name="awardid" value="<%= award.awardid %>" required>
+                </p>
+                <p><label data-tooltip="crear_proceso" title='Nombre asignado al fallo de la adjudicación'>Título<!--Title--></label>
+                    <input type="text" name="title" class="form-control" value = "<%= (typeof award != "undefined")? award.title:''%>" >
+                </p>
+                <p><label data-tooltip="crear_proceso" title='Descripción de la adjudicación del contrato'>Descripción<!--Description--></label>
+                    <input type="text" name="description" class="form-control" value = "<%= (typeof award != "undefined")? award.description:''%>" >
+                </p>
+                <p><label data-tooltip="crear_proceso" title='Estado actual de la adjudicación del contrato'>Estatus<!--Status--></label>
+                    <select class="form-control" name="status">
+                        <option value="" <%= (award.status == null)?'selected':''%> >Ninguno</option>
+                        <option value="pending" <%= (award.status == 'pending')?'selected':''%> >Pendiente</option>
+                        <option value="active" <%= (award.status == 'active')?'selected':''%> >Activo</option>
+                        <option value="cancelled" <%= (award.status == 'cancelled')?'selected':''%> >Cancelado</option>
+                        <option value="unsuccessful" <%= (award.status == 'unsuccessful')?'selected':''%> >Fallido</option>
+                    </select>
+                </p>
+
+                <div style="position: relative">
+                    <label data-tooltip="crear_proceso" title='Fecha en que se adjudicó el contrato'>Fecha<!--Date--></label>
+                    <p>
+                        <input type="text" id ="adju_date1" name="award_date" class="form-control"
+                                <%if(typeof award !="undefined"){%>
+                               value = "<%= (award.award_date != null)? getMString(award.award_date):''%>"
+                                <%}%> >
+                    </p>
+                </div>
+
+                <p>
+                    <label data-tooltip="crear_proceso" title='Valor total de la adjudicación'>Valor: Monto<!--Value amount--></label>
+                    <input type="number" step="0.01" class="form-control" name="value_amount" value = "<%= (typeof award != "undefined")? award.value_amount:''%>" required>
+                </p>
+                <p>
+                    <label data-tooltip="crear_proceso" title='Moneda del monto asignado a la contratación en la fuente presupuestaria, expresado en tres letras según el formato ISO 4217.'>Valor: Moneda<!--Value currency--></label>
+
+                    <select class="form-control" name="value_currency">
+                        <% for ( var i = 0; i < currencies.length; i++){ %>
+                        <option value = "<%= currencies[i].alphabetic_code %>"
+                                <% if (award.value_currency == null && currencies[i].alphabetic_code=='MXN' ) {%>
+                                <%= 'selected' %>
+                                <%} else if (currencies[i].alphabetic_code == award.value_currency){%>
+                                <%= 'selected' %>
+                                <%}%>
+                        >
+                            <%= currencies[i].currency+' - '+currencies[i].alphabetic_code%>
+                        </option>
+                        <%}%>
+                    </select>
+
+                </p>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <p>
+                            <label data-tooltip="crear_proceso" title='Fecha de inicio del contrato'>Periodo de contrato: Fecha inicial<!--Contract period start date--></label>
+                            <input type="text" id ="adju_date2" name="contractperiod_startdate" class="form-control"
+                                    <%if (typeof award != "undefined"){%>
+                                   value = "<%= ( award.contractperiod_startdate != null)? getMString(award.contractperiod_startdate):''%>"
+                                    <%}%> >
+                        </p>
+                    </div>
+                    <div class="col-sm-6">
+                        <p>
+                            <label data-tooltip="crear_proceso" title='Fecha de finalización del contrato'>Periodo de contrato: Fecha final<!--Contract period end date--></label>
+                            <input type="text" id = "adju_date3" name="contractperiod_enddate" class="form-control"
+                                    <%if(typeof award != "undefined"){%>
+                                   value = "<%= (award.contractperiod_enddate != null)? getMString(award.contractperiod_enddate):''%>"
+                                    <%}%> >
+                        </p>
+                    </div>
+                </div>
+
+                <h3>3.1 MODIFICACIÓN <!-- AMENDMENT--></h3>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Cambios <!--Amendment changes--> <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" data-toggle="modal" data-action="new_change" data-table="awardamendmentchanges" data-contractingprocess_id="<%= cp.id %>" data-target="#genericModal">Nuevo</a></li>
+                        <li><a href="#" data-toggle="modal" data-action="edit_changes" data-table="awardamendmentchanges" data-contracingprocess_id="<%=cp.id%>" data-target="#genericModal">Editar</a></li>
+                    </ul>
+                </div>
+                <hr>
+                <div style="position: relative">
+                    <p>
+                        <label data-tooltip="crear_proceso" title='Fecha en que se realiza la modificación a la adjudicación.'>Fecha<!--Amendment date--></label>
+                        <input type="text" class="form-control" id="adju_date4" name="amendment_date"
+                                <%if(typeof award != "undefined"){%>
+                               value = "<%= (award.amendment_date != null)? getMString(award.amendment_date):''%>"
+                                <%}%> >
+                    </p>
+                </div>
+
+                <p>
+                    <label data-tooltip="crear_proceso" title='Justificación de la modificación que se realiza a la adjudicación.'>Fundamento <!--Amendment rationale--></label>
+                    <input type="text" class="form-control" name="amendment_rationale" value = "<%= (typeof award != "undefined")? award.amendment_rationale:''%>" >
+                </p>
+
+                <button type="submit" class="btn btn-default">Guardar</button>
+                <button class="btn btn-default" type="button" data-toggle="modal" data-contractingprocess_id="<%= cp.id %>" data-action="import_data" data-stage="award" data-target="#genericModal">Importar datos</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="menu3" class="tab-pane fade">
+        <div class="well well-lg">
+
+            <h3>4. CONTRATO</h3>
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Documentos<!--Documents--> <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#" data-toggle="modal" data-action="new_document" data-table="contractdocuments" data-contractingprocess_id="<%= cp.id %>" data-target="#genericModal">Nuevo</a></li>
+                    <li><a href="#" data-toggle="modal" data-action="edit_documents" data-table="contractdocuments" data-contractingprocess_id="<%=cp.id%>" data-target="#genericModal">Editar</a></li>
+                </ul>
+            </div>
+
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Ítems <!--Items--> <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#" data-toggle="modal" data-action="new_item" data-table="contractitem" data-contractingprocess_id="<%= cp.id %>" data-target="#genericModal">Nuevo</a></li>
+                    <li><a href="#" data-toggle="modal" data-action="edit_items" data-table="contractitem" data-contractingprocess_id="<%= cp.id%>" data-target="#genericModal">Editar</a></li>
+                </ul>
+            </div>
+
+            <hr>
+
+            <form id="contract_form" role="form">
+
+                <input type="text" name="contractingprocess_id" hidden value ="<%= (typeof contract != "undefined")? contract.contractingprocess_id :''%>" >
+                <p><label data-tooltip="crear_proceso" title="Clave única que identifica el contrato. Dicha clave no puede ser modificada durante el proceso de contratación.">ID</label>
+                    <input type="text" class="form-control" name="contractid" value="<%= contract.contractid %>" required>
+                </p>
+                <p><label data-tooltip="crear_proceso" title='Clave del fallo que adjudica el contrato'>ID de adjudicación<!--Award ID--></label>
+                    <input class="form-control" type="text" name="awardid" value = "<%= (typeof contract != "undefined")? contract.awardid:''%>" required>
+                </p>
+                <p>
+                    <label data-tooltip="crear_proceso" title='Título o nombre que se le asigna al contrato'>Título <!--Title--></label>
+                    <input type="text" class="form-control" name = "title" value = "<%= (typeof contract != "undefined")? contract.title:''%>" >
+                </p>
+                <p>
+                    <label data-tooltip="crear_proceso" title='Descripción del contrato'>Descripción <!--Description--></label>
+                    <input type="text" class="form-control" name = "description" value = "<%= (typeof contract != "undefined")? contract.description:''%>" >
+                </p>
+                <p>
+                    <label data-tooltip="crear_proceso" title='Estado actual del contrato'>Estatus <!--Status--></label>
+                    <select class="form-control" name="status">
+                        <option value="" <%= (contract.status == null)?'selected':''%> >Ninguno</option>
+                        <option value="pending" <%= (contract.status == 'pending')?'selected':''%> >Pendiente</option>
+                        <option value="active" <%= (contract.status == 'active')?'selected':''%> >Activo</option>
+                        <option value="cancelled" <%= (contract.status == 'cancelled')?'selected':''%> >Cancelado</option>
+                        <option value="terminated" <%=(contract.status == 'terminated')?'selected':''%> >Terminado</option>
+                    </select>
+                </p>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <p>
+                            <label data-tooltip="crear_proceso" title='Fecha de inicio del contrato'>Periodo: Fecha inicial<!--Period start date--></label>
+                            <input type="text" id= "cont_date1" name  = "period_startdate" class="form-control"
+                                    <%if (typeof contract != "undefined"){%>
+                                   value = "<%= (contract.period_startdate != null)? getMString(contract.period_startdate):''%>"
+                                    <%}%> >
+                        </p>
+                    </div>
+                    <div class="col-sm-6">
+                        <p>
+                            <label data-tooltip="crear_proceso" title='Fecha de finalización del contrato'>Periodo: Fecha final <!--Period end date--></label>
+                            <input type="text" id= "cont_date2" class="form-control" name= "period_enddate"
+                                    <%if(typeof contract != "undefined"){%>
+                                   value = "<%= (contract.period_enddate != null)? getMString(contract.period_enddate):''%>"
+                                    <%}%> >
+                        </p>
+                    </div>
+                </div>
+
+                <p><label data-tooltip="crear_proceso" title='Valor total del contrato. En el caso de contratos marcos se referirá a un valor estimado o valor máximo del contrato'>Valor: Monto<!--Value amount--></label>
+                    <input type="number" step="0.01" class="form-control" name="value_amount" value = "<%= (typeof contract != "undefined")? contract.value_amount:''%>" required>
+                </p>
+                <p><label data-tooltip="crear_proceso" title='Moneda del monto asignado a la contratación en la fuente presupuestaria, expresado en tres letras según el formato ISO 4217.'>Valor: Moneda<!--Value currency--></label>
+
+                    <select class="form-control" name="value_currency">
+                        <% for ( var i = 0; i < currencies.length; i++){ %>
+                        <option value = "<%= currencies[i].alphabetic_code %>"
+                                <% if (contract.value_currency == null && currencies[i].alphabetic_code=='MXN' ) {%>
+                                <%= 'selected' %>
+                                <%} else if (currencies[i].alphabetic_code == contract.value_currency){%>
+                                <%= 'selected' %>
+                                <%}%>
+                        >
+                            <%= currencies[i].currency+' - '+currencies[i].alphabetic_code%>
+                        </option>
+                        <%}%>
+                    </select>
+
+                </p>
+
+                <div style="position: relative">
+                    <p>
+                        <label data-tooltip="crear_proceso" title='Fecha en la que fue firmado el contrato o se recibió la última firma.'>Fecha de firma<!--Date signed--></label>
+                        <input type="text" id="cont_date3" class="form-control" name="datesigned"
+                                <% if (typeof contract != "undefined"){%>
+                               value = "<%= (contract.datesigned != null)? getMString(contract.datesigned):''%>"
+                                <%}%> >
+                    </p>
+                </div>
+
+                <h3>4.1 MODIFICACIÓN<!-- AMENDMENT --></h3>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Cambios<!--Amendment changes--> <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" data-toggle="modal" data-action="new_change" data-table="contractamendmentchanges" data-contractingprocess_id="<%= cp.id %>" data-target="#genericModal">Nuevo</a></li>
+                        <li><a href="#" data-toggle="modal" data-action="edit_changes" data-table="contractamendmentchanges" data-contractingprocess_id="<%=cp.id%>" data-target="#genericModal">Editar</a></li>
+                    </ul>
+                </div>
+                <hr>
+                <div style="position: relative">
+                    <p>
+                        <label data-tooltip="crear_proceso" title=''>Fecha <!--Amendment date--></label>
+                        <input type="text" class="form-control" id="cont_date4" name="amendment_date"
+                                <%if(typeof contract != "undefined"){%>
+                               value = "<%= (contract.amendment_date != null)? getMString(contract.amendment_date):''%>"
+                                <%}%> >
+                    </p>
+                </div>
+
+                <p>
+                    <label data-tooltip="crear_proceso" title=''>Fundamento<!--Amendment rationale--></label>
+                    <input type="text" class="form-control" name="amendment_rationale" value = "<%= (typeof contract != "undefined")? contract.amendment_rationale:''%>" >
+                </p>
+
+                <button type="submit" class="btn btn-default">Guardar</button>
+                <button class="btn btn-default" type="button" data-toggle="modal" data-contractingprocess_id="<%= cp.id %>" data-action="import_data" data-stage="contract" data-target="#genericModal">Importar datos</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="menu4" class="tab-pane fade">
+        <div class="well well-lg">
+            <h3>5. EJECUCIÓN</h3>
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Documentos <!--Documents--> <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#" data-toggle="modal" data-action="new_document" data-table="implementationdocuments" data-contractingprocess_id="<%= cp.id %>" data-target="#genericModal">Nuevo</a></li>
+                    <li><a href="#" data-toggle="modal" data-action="edit_documents" data-table="implementationdocuments" data-contractingprocess_id="<%=cp.id%>" data-target="#genericModal">Editar</a></li>
+                </ul>
+            </div>
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Pagos<!--Transactions--> <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#" data-toggle="modal" data-action="new_transaction" data-contractingprocess_id="<%= cp.id %>" data-target="#genericModal">Nuevo</a></li>
+                    <li><a href="#" data-toggle="modal" data-action="edit_transactions" data-table="implementationtransactions" data-contractingprocess_id="<%= cp.id %>"data-target="#genericModal">Editar</a></li>
+                </ul>
+            </div>
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Hitos <!--Milestones--> <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#" data-toggle="modal" data-action="new_milestone" data-table="implementationmilestone" data-contractingprocess_id="<%= cp.id %>" data-target="#genericModal">Nuevo</a></li>
+                    <li><a href="#" data-toggle="modal" data-action="edit_milestones" data-table="implementationmilestone" data-contractingprocess_id="<%=cp.id%>" data-target="#genericModal">Editar</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+</div>

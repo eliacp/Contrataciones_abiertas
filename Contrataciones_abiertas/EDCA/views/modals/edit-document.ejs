@@ -1,0 +1,53 @@
+<form id ="newdoc_form">
+    <input type="text"  name = "table" value="<%= table %>" hidden>
+    <input type="text" name="ocid" value = "<%= contractingprocess_id %>" hidden>
+
+    <p><label>Tipo de documento<!--Document type--></label>
+        <!--<input type="text" class="form-control" name = "document_type">-->
+        <select class="form-control" name="document_type">
+            <%for ( var i =0; i< documenttypes.length; i++){%>
+            <option value="<%= documenttypes[i].code %>" <%= documenttypes[i].title == document.document_type?'selected' : null%> >
+                <%= documenttypes[i].title %>
+            </option>
+            <%}%>
+        </select>
+    </p>
+    <!--
+    <p><label>ID</label>
+        <input type="text" class="form-control" name = "documentid" required></p>
+        -->
+    <p><label>Título<!--Title--></label>
+        <input type="text" class="form-control" value = "<%= document.title %>" name = "title" required></p>
+    <p><label>Descripción<!--Description--></label>
+        <input type="text" class="form-control" value = "<%= document.description %>" name = "description" required></p>
+    <p><label>URL</label>
+        <input type="url" class="form-control" value = "<%= document.url %>" name = "url"></p>
+    <div class="row">
+        <div class="col-sm-6">
+            <p>
+                <label>Fecha de publicación<!--Date published--></label>
+                <input type="text" class="form-control" value= "<%= document.date_published %>" id = "newdoc_date1" name = "date_published">
+            </p>
+        </div>
+        <div class="col-sm-6">
+            <p>
+                <label>Fecha de modificación<!--Date modified--></label>
+                <input type="text" class="form-control" value="<%= document.date_modified %>" id = "newdoc_date2" name = "date_modified">
+            </p>
+        </div>
+    </div>
+    <p><label>Formato<!--Format--></label>
+        <input type="text" class="form-control" value = "<%= document.format %>" name = "format"></p>
+    <p><label>Idioma<!--Language--></label>
+        <!-- <input type="text" class="form-control" name = "language">-->
+        <select class="form-control" name = "language">
+            <% for ( var i=0; i< languages.length ;i++){ %>
+            <option value="<% languages[i].alpha2%>"  <%= languages[i].alpha2 == document.language? 'selected' : null %>>
+                <%= languages[i].name +" - "+ languages[i].alpha2 %>
+            </option>
+            <%}%>
+        </select>
+    </p>
+
+    <button class="btn btn-default">Guardar</button>
+</form>

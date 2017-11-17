@@ -1,0 +1,185 @@
+<div class="row contract-stats">
+    <div class="col-md-3">
+        <p class="small">Etapa</p>
+        <p><strong>Licitación</strong></p>
+    </div>
+    <div class="col-md-3">
+        <p class="small">Identificador</p>
+        <p class="semi-bold"><%= tender.tenderid %></p>
+    </div>
+    <div class="col-md-6">
+        <p class="small">Fundamento</p>
+        <p class="semi-bold"><%= tender.procurementmethod_rationale%></p>
+    </div>
+</div>
+<div class="row contract-stats">
+    <div class="col-md-3">
+        <p class="small">Tipo</p>
+        <p class="semi-bold"><%= tender.procurementmethod%></p>
+    </div>
+    <div class="col-md-3">
+        <p class="small">Monto</p>
+        <p><strong>
+                <%  if (!isNaN( tender.value_amount ) && tender.value_amount > 0 ){%>
+                $<%= (tender.value_amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")%>
+                <%} else {%>
+                En proceso
+                <%}%>
+            </strong></p>
+        <p class="small"> Moneda</p>
+        <p class="semi-bold"><%= tender.value_currency%></p>
+    </div>
+    <div class="col-md-6">
+        <p class="small">Título</p>
+        <p class="semi-bold"><%= tender.title %> </p>
+    </div>
+</div>
+<div class="row contract-stats">
+    <div class="col-md-12">
+        <p class="small">Comprador</p>
+        <p class="semi-bold"><%= buyer.identifier_legalname %></p>
+    </div>
+</div>
+<div class="row contract-stats no-border">
+    <div class="col-md-3 col-md-offset-6">
+        <% if ( links != null){%>
+  <!--      <p class="small">Descargar datos abiertos</p>  -->
+        <%if (links.json != null){%>
+        <a href="<%= links.json %>" download="json"><span class="label" data-format="json">JSON</span></a>
+        <%}%>
+
+        <%if (links.xlsx != null){%>
+        <a href="<%= links.xlsx %>" download="xlsx">  <span class="label" data-format="xlsx">XLSX</span></a>
+        <%}%>
+        <%}%>
+    </div>
+    <div class="col-md-3">
+        <% if ( links != null && links.pdf != null){%>
+        <a href="<%= links.pdf%>" download="pdf">
+            <p class="small">Descargar contrato</p>
+            <span class="label" data-format="pdf">PDF</span>
+        </a>
+        <%}%>
+    </div>
+</div>
+<p class="small">Procesos</p>
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingOne">
+            <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    <i class="more-less glyphicon glyphicon-chevron-right"></i>
+                    Ítems
+                </a>
+            </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+            <div class="panel-body">
+                <% if (items.length == 0 ){%>
+                No se han registrado ítems en esta etapa
+                <%}%>
+
+                <% for (var i=0;i< items.length;i++){%>
+                <strong><%= items[i].description%> </strong>
+                <ul>
+                    <li>Identificador: <%= items[i].itemid%></li>
+                    <li>Descripción: <%= items[i].clasification_description%> </li>
+                    <li>Unidad: <%= items[i].unit_name%> </li>
+                    <li>Cantidad: <%= items[i].quantity%> </li>
+                </ul>
+                <%}%>
+
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingTwo">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    <i class="more-less glyphicon glyphicon-chevron-right"></i>
+                    Hitos
+                </a>
+            </h4>
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+            <div class="panel-body">
+                <% if (milestones.length == 0 ){%>
+                No se han registrado hitos en esta etapa
+                <%}%>
+
+                <% for ( var i =0; i < milestones.length;i++){%>
+                <strong><%= milestones[i].title%></strong>
+
+                <ul>
+                    <li>Identificador: <%= milestones[i].title %></li>
+                    <li>Descripción: <%= milestones[i].description %></li>
+                    <% if ( milestones[i].duedate instanceof Date ){%>
+                    <li>Fecha de vencimiento: <%= milestones[i].duedate.toLocaleDateString() %></li>
+                    <%}%>
+                    <% if ( milestones[i].date_modified instanceof Date){%>
+                    <li>Fecha de modificación: <%= milestones[i].date_modified.toLocaleDateString() %></li>
+                    <li>Estátus: <%= milestones[i].status %></li>
+                    <%}%>
+                </ul>
+
+                <%}%>
+
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingThree">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    <i class="more-less glyphicon glyphicon-chevron-right"></i>
+                    Documentos
+                </a>
+            </h4>
+        </div>
+        <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+            <div class="panel-body">
+                <% if (documents.length == 0 ){%>
+                No se han registrado documentos en esta etapa
+                <%}%>
+
+                <% for (var i =0; i< documents.length;i++){%>
+                <strong><%= documents[i].title %></strong>
+                <ul>
+                    <li>Identificador: <%= documents[i].documentid%></li>
+                    <li>Título: <%= documents[i].title %></li>
+                    <li>Descripción: <%= documents[i].description %></li>
+                    <li><a href="<%= documents[i].url %>">URL</a></li>
+                </ul>
+
+                <%}%>
+
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingFour">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                    <i class="more-less glyphicon glyphicon-chevron-right"></i>
+                    Modificaciones
+                </a>
+            </h4>
+        </div>
+        <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+            <div class="panel-body">
+
+                <% if (changes.length == 0 ){%>
+                No se han registrado modificaciones en esta etapa
+                <%}%>
+
+                <% for ( var i =0; i< changes.length;i++){%>
+                Cambio <%=i%>
+                <ul>
+                    <li>Propiedad: <%= changes[i].property%></li>
+                    <li>Valor anterior: <%= changes[i].former_value%></li>
+                </ul>
+                <%}%>
+            </div>
+        </div>
+    </div>
+</div>

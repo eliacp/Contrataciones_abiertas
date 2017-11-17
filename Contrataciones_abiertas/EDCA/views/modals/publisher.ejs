@@ -1,0 +1,12 @@
+<form id="updatepub_form">
+    <input type="text" name="id" value="<%= data.id %>" hidden>
+    <p><label>Nombre<!--Name--></label>
+        <input name="name" class="form-control" value="<%= data.name %>"></p>
+    <p><label>Esquema<!--Scheme--></label>
+        <input name="scheme" class="form-control" value="<%= data.scheme %>"></p>
+    <p><label>UID</label>
+        <input name="uid" class="form-control" value="<%= data.uid %>"></p>
+    <p><label>URI</label>
+        <input type="url" name="uri" class="form-control" value="<%= data.uri %>"></p>
+    <button class="btn btn-default">Guardar</button>
+</form>

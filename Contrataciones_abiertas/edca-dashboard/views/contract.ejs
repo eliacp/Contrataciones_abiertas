@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" lang="es-MX" xml:lang="es-MX">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/contratacionesabiertas/static/bower_components/font-awesome/css/font-awesome.min.css">
+        <!-- Bootstrap core CSS -->
+        <link href="/contratacionesabiertas/static/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel='stylesheet' href='/contratacionesabiertas/static/stylesheets/main.css'/>
+        <link rel='stylesheet' href='/contratacionesabiertas/static/stylesheets/contrato.css'/>
+        <link rel="import" href="<%= process.env.CDN_URL %>/bower_components/polymer/polymer.html">
+ <!--       <link rel="import" href="<%= process.env.CDN_URL %>/bower_components/dgm-navbar/dgm-navbar.html">
+        <link rel="import" href="<%= process.env.CDN_URL %>/bower_components/dgm-footer/dgm-footer.html"> -->
+        <link rel="import" href="/contratacionesabiertas/static/bower_components/dgm-navbar/dgm-navbar.html">
+    	<link rel="import" href="/contratacionesabiertas/static/bower_components/dgm-footer/dgm-footer.html">
+
+        <style>
+            .container{
+                max-width: 1100px;
+            }
+
+            .semi-bold{
+                font-weight: 400;
+            }
+
+            .more-less {
+                float: right;
+            }
+
+        </style>
+
+        <style>
+        /* Tooltip */
+        .implementacion + .tooltip > .tooltip-inner {
+            background-color: white;
+            color: #4a4a4a;
+            padding: 15px;
+            font-size: 10px;
+            font: 10px Open Sans;
+            pointer-events: none;
+        }
+        /* Tooltip on top */
+        .implementacion + .tooltip.top > .tooltip-arrow {
+            border-top: 0px solid green;
+        }
+        </style>
+
+
+	<style no-shim>
+              
+        .navbar-default   { background-color: #FFFFFF; border: none; top: 70px; }
+        
+    </style>
+
+
+        <title>Contrataciones Abiertas</title>
+    </head>
+    <body>
+        <dgm-navbar></dgm-navbar>
+         
+       <nav class="navbar navbar-default navbar-fixed-top">              
+            <div class="container-fluid">   
+                   		<ul class="breadcrumb">
+                            <li><a href="/contratacionesabiertas/"><i class="glyphicon glyphicon-home"></i></a></li>
+                            <li><a href="/contratacionesabiertas/contratos/">Instituto Nacional de Transparencia, Acceso a la Información y Protección de Datos Personales</a></li>
+                            <li><a href="#">Contrato</a></li>
+                        </ul>
+            </div>               
+       </nav>  
+        
+        
+        <br>
+        <div class="container">
+            <div class="row">
+                <div id="contract-sidebar" class="col-md-4 col-sm-4 col-xs-12 sidebar">
+                    <div class="info">
+                        <h3>Proceso de contratación</h3>
+                        <% if ( typeof info.title == 'string'){%>
+                        <p class="title"><%= (info.title.length < 251)? info.title: info.title.substring(0,249) + '...' %></p>
+                       <% }else {%>
+                        <p class="title"> En proceso...</p>
+                        <%}%>
+                    </div>
+                    <div class="stages">
+                        <p><small>ETAPAS</small></p>
+                        <ul>
+                            <!-- Planeación -->
+                            <li <%- (contractingprocess.stage >= 0 )?"class='active'":''%>>
+                                <% if ( contractingprocess.stage >= 0 ){%>
+                                <img class="normal-image" src="/contratacionesabiertas/static/images/ic-menu-planeacion.png">
+                                <img class="hover-image" src="/contratacionesabiertas/static/images/ic-planeacion.png">
+                                <a href="<%= "/contratacionesabiertas/contrato/"+info.cpid+"/planeacion" %>">Planeación </a>
+                                <%}else{%>
+                                <img src="/contratacionesabiertas/static/images/ic-menu-planeacion.png"> Planeación
+                                <%}%>
+                            </li>
+                            <!-- Licitación -->
+                            <li <%- (contractingprocess.stage >= 1 )?"class='active'":''%>>
+                                <% if ( contractingprocess.stage >= 1 ){%>
+                                <img class="normal-image" src="/contratacionesabiertas/static/images/ic-menu-licitacion.png">
+                                <img class="hover-image" src="/contratacionesabiertas/static/images/ic-licitacion.png">
+                                <a href="<%= "/contratacionesabiertas/contrato/"+info.cpid+"/licitacion" %>">Licitación</a>
+                                <%}else{%>
+                                <img src="/contratacionesabiertas/static/images/ic-menu-licitacion.png"> Concurso
+                                <%}%>
+                            </li>
+                            <!-- Adjudicación -->
+                            <li <%- (contractingprocess.stage >= 2) ?"class='active'":''%>>
+                                <% if (contractingprocess.stage >= 2){%>
+                                <img class="normal-image" src="/contratacionesabiertas/static/images/ic-menu-adjudicacion.png">
+                                <img class="hover-image" src="/contratacionesabiertas/static/images/ic-adjudicacion.png">
+                                <a href="<%= "/contratacionesabiertas/contrato/"+info.cpid+"/adjudicacion" %>">Adjudicación</a>
+                                <%}else{%>
+                                <img src="/contratacionesabiertas/static/images/ic-menu-adjudicacion.png"> Adjudicación
+                                <%}%>
+                            </li>
+                            <!-- Contrato -->
+                            <li <%- (contractingprocess.stage >= 3)?"class='active'":''%>>
+                                <%if (contractingprocess.stage >= 3){%>
+                                <img class="normal-image" src="/contratacionesabiertas/static/images/ic-menu-contratacion.png">
+                                <img class="hover-image" src="/contratacionesabiertas/static/images/ic-contratacion.png">
+                                <a href="<%= "/contratacionesabiertas/contrato/"+info.cpid+"/contratacion" %>">Contratación</a>
+                                <%}else{%>
+                                <img src="/contratacionesabiertas/static/images/ic-menu-contratacion.png"> Contratación
+                                <%}%>
+                            </li>
+                            <!-- Implementación -->
+                            <li <%- (contractingprocess.stage >= 4)?"class='active'":''%>>
+                                <% if (contractingprocess.stage >= 4) {%>
+                                <img class="normal-image" src="/contratacionesabiertas/static/images/ic-menu-implementacion.png">
+                                <img class="hover-image" src="/contratacionesabiertas/static/images/ic-implementacion.png">
+                                <a href="<%= "/contratacionesabiertas/contrato/"+info.cpid+"/implementacion" %>">Ejecución</a>
+                            <%}else{%>
+                                <img src="/contratacionesabiertas/static/images/ic-menu-implementacion.png"><span class="implementacion" data-toggle="tooltip" data-placement="top" title="Los datos se publicarán conforme se generen y en las siguientes actualizaciones"> Implementación</span>
+                                <%}%>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="contract-content" class="col-md-8 col-sm-8 col-xs-12">
+                    <% if ( current_stage == 'licitacion') { %>
+                    <% include stages/tender %>
+                    <%} else if ( current_stage == 'adjudicacion' ) {%>
+                    <% include stages/awards %>
+                    <%} else if ( current_stage == 'contratacion'){%>
+                    <% include stages/contracts %>
+                    <%} else if ( current_stage == 'implementacion'){%>
+                    <% include stages/implementation %>
+                    <%} else {%>
+                    <% include stages/planning %>
+                    <%}%>
+                </div>
+            </div>
+        </div>
+        <dgm-footer></dgm-footer>
+        <script src="/contratacionesabiertas/static/bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="/contratacionesabiertas/static/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="<%= process.env.CDN_URL %>/bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+        <script type="text/javascript">
+            function toggleIcon(e) {
+                $(e.target)
+                    .prev('.panel-heading')
+                    .find(".more-less")
+                    .toggleClass('glyphicon-chevron-right glyphicon-chevron-down');
+            }
+            $('.panel-group').on('hidden.bs.collapse', toggleIcon);
+            $('.panel-group').on('shown.bs.collapse', toggleIcon);
+        </script>
+        <script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+});
+</script>
+    </body>
+</html>
