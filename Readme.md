@@ -1,6 +1,6 @@
-```
-Contrataciones Abiertas
 
+# **Contrataciones Abiertas**
+```
 Contrataciones Abiertas es una herramienta que fue desarrollada por la Coordinación de 
 Estrategia Digital Nacional de Presidencia de la República, se compone de dos módulos principales:
 •	Módulo de captura de información
