@@ -1,8 +1,5 @@
 # Plataforma de Contrataciones Abiertas
-Tablero con gráficas y visualizaciones de información de Contrataciones Abiertas. Proyectos incluidos:
-- NAICM
-- Red Compartida
-- Puertos Abiertos
+Tablero con gráficas y visualizaciones de información de Contrataciones Abiertas del INAI.
 
 ## Instalación
 Instrucciones para instalar la Plataforma de Contrataciones Abiertas
@@ -20,10 +17,10 @@ Instrucciones para instalar la Plataforma de Contrataciones Abiertas
 
 ### Aplicación Web
 1. `git clone https://github.com/mxabierto/edca-dashboard.git`
-2. `cd edca-dashboard/ && npm install`
+2. `cd dashboard/ && npm install`
 3. `cd public/ && bower install`
     
 ## Ejecución
-1. `cd edca-dashboard/ && npm start`
+1. `cd dashboard/ && npm start`
 2. A través de un navegador web, apuntar a la siguiente dirección: 
 `http://localhost:4000/contratacionesabiertas/`
