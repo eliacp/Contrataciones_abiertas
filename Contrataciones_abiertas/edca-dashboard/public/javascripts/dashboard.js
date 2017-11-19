@@ -1,6 +1,7 @@
 $(document).ready(function () {
 
     // DONUT CHARTs
+    var ff= $.jqplot;
 
     function donutChart1() {
         $.post('/contratacionesabiertas/donut-chart-data', function (data) {
@@ -13,7 +14,7 @@ $(document).ready(function () {
             }
 
 
-            var plot4 = $.jqplot('chart4', [newData], {
+            var plot4 = ff('chart4', [newData], {
                 //title: 'TIPOS DE CONTRATACION',
                 seriesDefaults: {
                     // make this a donut chart.
@@ -143,7 +144,6 @@ $(document).ready(function () {
     //donutChart2();
     //donutChart2d3();
 
-    var ff= $.jqplot;
     var st= false;
 
     $('a[data-toggle="tab"]').on('shown.bs.tab', function ( e ) {
