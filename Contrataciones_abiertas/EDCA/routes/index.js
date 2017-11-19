@@ -181,6 +181,11 @@ router.get('/main', isAuthenticated, function(req, res, next) {
     res.render('main', { user: req.user, title: 'Sistema de captura de datos de contrataciones abiertas en México' });
 });
 
+/* admin page */
+router.get('/admin', isAuthenticated, function (req, res) {
+    res.render('admin', {title: "Panel de administración del sistema"});
+});
+
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 router.post("/user-profile/", isAuthenticated, function (req, res) {
     var id = req.body.id;
