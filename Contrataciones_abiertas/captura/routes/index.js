@@ -1070,6 +1070,7 @@ var sha3_512 = require('js-sha3').sha3_512;
 
 var PROTO_PATH = path.join(__dirname,'../models/proto/record1.proto');
 
+/*
 var grpc = require('grpc');
 var proto = grpc.load(PROTO_PATH).record1;
 
@@ -1121,7 +1122,7 @@ router.post ('/publish/rpc', function (req, res){
         })
     });
 
-});
+});*/
 
 
 var multer = require('multer');

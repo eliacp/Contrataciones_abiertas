@@ -18,14 +18,14 @@ Instrucciónes para instalar la Herramienta de captura de información de Contra
 
 ### Creación de usuarios
 La creación de usuarios del sistema se realiza de la siguiente manera:
-`scripts/useradm add <Nombre_Usuario> <Contraseña>`
+`useradm add <Nombre_Usuario> <Contraseña>`
 
 ### Configuración de la herramienta
-1. `cd EDCA/ && npm install`
+1. `cd captura/ && npm install`
 2. `cd public/ && bower install`
     
 ## Ejecución
-1. `cd EDCA/ && npm start` 
+1. `cd captura/ && npm start` 
 2. A través de un navegador web, apuntar a la siguiente dirección: 
    `http://localhost:3000/`
 
