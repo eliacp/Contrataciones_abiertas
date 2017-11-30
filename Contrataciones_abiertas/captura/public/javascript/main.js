@@ -100,6 +100,13 @@ $("#contract_form").submit(function(event){
     event.preventDefault();
 });
 
+$("#implementation_form").submit(function (e) {
+    $.post('/update-implementation/', $(this).serialize()).done(function (data) {
+       alert(data);
+    });
+e.preventDefault();
+});
+
 $('#genericModal').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget);
     var modal = $(this);
@@ -133,7 +140,7 @@ $('#genericModal').on('show.bs.modal', function (event) {
                 $('#newmilestone_form').submit(function (event) {
                     $.post('/new-milestone/', $(this).serialize()).done(function (data) {
                         alert(data.description);
-                        if (data.status == 'Ok'){ modal.modal('hide');}
+                        if (data.status === 'Ok'){ modal.modal('hide');}
                     });
                     event.preventDefault();
                 });

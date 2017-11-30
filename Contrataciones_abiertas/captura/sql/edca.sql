@@ -260,7 +260,8 @@ create table TenderMilestone(
 	description text,
 	duedate timestamp, 
 	date_modified timestamp,
-	status text
+	status text,
+	type text
 );
 
 drop table if exists TenderMilestoneDocuments cascade;
@@ -326,6 +327,7 @@ create table Award(
 	awardid text,
 	title text,
 	description text,
+	rationale text,
 	status text,
 	award_date timestamp,
 	value_amount decimal,
@@ -511,8 +513,23 @@ drop table if exists Implementation cascade;
 create table Implementation(
 	id serial primary key,
 	contractingprocess_id int references ContractingProcess(id) on delete cascade, 
-	contract_id int references Contract(id) on delete cascade
+	contract_id int references Contract(id) on delete cascade,
+	status text
 );
+
+/* catálogo de status de implementación */
+drop table if exists implementationStatus
+create table implementationStatus(
+        id serial primary key,
+        code text,
+        title text,
+        description text
+);
+
+insert into implementationStatus("code","title","description") values
+('planning','Planning',''),
+('implementation','Implementation',''),
+('terminated','Terminated','');
 
 drop table if exists ImplementationDocuments cascade;
 create table ImplementationDocuments(
@@ -568,7 +585,8 @@ create table ImplementationMilestone(
 	description text,
 	duedate timestamp, 
 	date_modified timestamp,
-	status text
+	status text,
+	type text
 );
 
 
@@ -2322,5 +2340,22 @@ insert into DocumentFormat ("category","name","template","reference") values
 ('application','zip','application/zip','[Paul_Lindner]'),
 ('application','zlib','application/zlib','[RFC6713]');
 
+drop table if exists MilestoneType cascade;
+create table MilestoneType(
+id serial primary key,
+code text,
+title text,
+description text
+);
+
+insert into MilestoneType("code","title","description") values
+('preProcurement','Pre-procurement milestones', 'For events during the planning or pre-procurement phase of a process, such as the preparation of key studies.'),
+('approval','Approval', 'For events such as the sign-off of a contract or project.'),
+('engagement','Engagement milestones','For engagement milestones, such as a public hearing.'),
+('assessment','Assessment milestones','For assessment and adjudication milestones, such as the meeting date of a committee.'),
+('delivery','Delivery milestones','For delivery milestones, such as the date when a good or service should be provided.'),
+('reporting','Reporting milestones','For reporting milestones, such as when key reports should be provided.'),
+('financing','Financing milestones','For events such as planned payments, or equity transfers in public private partnership projects.'),
+('publicNotices','Public notices','For milestones in which aspects related to public works are specified, such as the closure of streets, changes of traffic, etc.');
 
 

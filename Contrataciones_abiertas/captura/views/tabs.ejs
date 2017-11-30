@@ -442,16 +442,20 @@ function getMString ( fecha ){
             <hr>
 
             <form id="award_form" role="form">
-                <input type="text" name="contractingprocess_id" hidden value ="<%= (typeof award != "undefined")? award.contractingprocess_id :''%>" >
+                <input type="text" name="contractingprocess_id" hidden value ="<%= (typeof award !== "undefined")? award.contractingprocess_id :''%>" >
 
                 <p><label data-tooltip="crear_proceso" title='Clave del fallo que adjudica el contrato'>ID</label>
                     <input type="text" class="form-control" name="awardid" value="<%= award.awardid %>" required>
                 </p>
                 <p><label data-tooltip="crear_proceso" title='Nombre asignado al fallo de la adjudicación'>Título<!--Title--></label>
-                    <input type="text" name="title" class="form-control" value = "<%= (typeof award != "undefined")? award.title:''%>" >
+                    <input type="text" name="title" class="form-control" value = "<%= (typeof award !== "undefined")? award.title:''%>" >
                 </p>
                 <p><label data-tooltip="crear_proceso" title='Descripción de la adjudicación del contrato'>Descripción<!--Description--></label>
-                    <input type="text" name="description" class="form-control" value = "<%= (typeof award != "undefined")? award.description:''%>" >
+                    <input type="text" name="description" class="form-control" value = "<%= (typeof award !== "undefined")? award.description:''%>" >
+                </p>
+                <p>
+                    <label>Fundamento</label>
+                    <input type="text" name="rationale" class="form-control" value="<%= typeof award !== "undefined"? award.rationale: ''%>">
                 </p>
                 <p><label data-tooltip="crear_proceso" title='Estado actual de la adjudicación del contrato'>Estatus<!--Status--></label>
                     <select class="form-control" name="status">
@@ -722,6 +726,39 @@ function getMString ( fecha ){
                     <li><a href="#" data-toggle="modal" data-action="edit_milestones" data-table="implementationmilestone" data-contractingprocess_id="<%=cp.id%>" data-target="#genericModal">Editar</a></li>
                 </ul>
             </div>
+
+            <hr>
+            <form id="implementation_form">
+                <input type="text" name="contractingprocess_id" hidden value ="<%= (typeof contract != "undefined")? contract.contractingprocess_id :''%>" >
+                <p>
+                <label>Estatus</label>
+                <select name="status" class="form-control">
+
+                    <%
+                    var status = [
+                        {code: "None",title: "Ninguno"},
+                        {code: "planning", title:"En planeación"},
+                        {code: "implementation", title: "En implementación"},
+                        {code: "terminated", title: "En finiquito"}
+                        ];
+                            for (var s of status ){
+                    if (s.code === implementation.status){
+                    %>
+                    <option value="<%= s.code %>" selected><%= s.title %></option>
+                    <%
+                    }else {
+                    %>
+                    <option value="<%= s.code %>"><%=s.title%></option>
+                    <%
+                    }
+                    }
+                    %>
+                </select>
+                </p>
+                <p>
+                    <button type="submit" class="btn btn-default">Actualizar</button>
+                </p>
+            </form>
         </div>
     </div>
     <br>

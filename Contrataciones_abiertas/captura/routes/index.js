@@ -280,6 +280,7 @@ router.get('/main/:contractingprocess_id', isAuthenticated, function (req,res) {
             t.one("select * from Tender where contractingprocess_id = $1", [req.params.contractingprocess_id]),
             t.one("select * from Award where contractingprocess_id = $1", [req.params.contractingprocess_id]),
             t.one("select * from Contract where contractingprocess_id = $1", [req.params.contractingprocess_id]),
+            t.one("select * from Implementation where contractingprocess_id = $1", [req.params.contractingprocess_id]),
             t.manyOrNone("select distinct currency, alphabetic_code from currency order by currency")
         ]);
     })
@@ -291,6 +292,7 @@ router.get('/main/:contractingprocess_id', isAuthenticated, function (req,res) {
             console.log("Tender ->",data[3].id); //Tender
             console.log("Award -> ",data[4].id); //Award
             console.log("Contract -> ",data[5].id); //Contract
+            console.log("Implementation ->", data[6].id); //implementation
 
             res.render('main', {
                 user: req.user,
@@ -301,7 +303,8 @@ router.get('/main/:contractingprocess_id', isAuthenticated, function (req,res) {
                 tender: data[3],
                 award: data[4],
                 contract: data[5],
-                currencies : data[6]
+                implementation: data[6],
+                currencies : data[7]
             });
         })
         .catch(function (error) {
@@ -328,7 +331,7 @@ router.post('/new-process', isAuthenticated, function (req, res) {
                     t.one("insert into Award (ContractingProcess_id) values ($1) returning id as award_id", [process.id]),
                     t.one("insert into Contract (ContractingProcess_id) values ($1) returning id as contract_id", [process.id]),
                     t.one("insert into Buyer (ContractingProcess_id) values ($1) returning id as buyer_id",[process.id]),
-                    t.one("insert into Publisher (ContractingProcess_id) values ($1) returning id as publisher_id", process.id)
+                    t.one("insert into Publisher (ContractingProcess_id) values ($1) returning id as publisher_id", [process.id])
                 ]);
 
             }).then(function (info) {
@@ -483,14 +486,16 @@ router.post('/update-tender',isAuthenticated, function (req, res) {
 
 /* Update Award */
 router.post('/update-award',isAuthenticated, function (req, res) {
-    db_conf.edca_db.one("update award set awardid=$2, title= $3, description=$4,status=$5,award_date=$6,value_amount=$7,value_currency=$8,contractperiod_startdate=$9," +
-        "contractperiod_enddate=$10,amendment_date=$11,amendment_rationale=$12 " +
+    db_conf.edca_db.one("update award set awardid=$2, title= $3, description=$4, rationale=$5, status=$6,award_date=$7," +
+        "value_amount=$8,value_currency=$9,contractperiod_startdate=$10," +
+        "contractperiod_enddate=$11,amendment_date=$12,amendment_rationale=$13 " +
         " where ContractingProcess_id = $1 returning id",
         [
             req.body.contractingprocess_id,
             req.body.awardid,
             req.body.title,
             req.body.description,
+            stringCol(req.body.rationale),
             stringCol(req.body.status),
             dateCol(req.body.award_date),
             numericCol(req.body.value_amount),
@@ -667,7 +672,9 @@ router.post('/newitem-fields', function (req,res) {
 });
 
 router.post('/new-milestone', isAuthenticated,function (req,res) {
-    db_conf.edca_db.one('insert into $1~ (contractingprocess_id, milestoneid, title, description, duedate, date_modified, status) values ($2,$3,$4,$5,$6,$7,$8) returning id',
+    console.log(req.body);
+    db_conf.edca_db.one('insert into $1~ (contractingprocess_id, milestoneid, title, description, duedate, date_modified, type, status) ' +
+        'values ($2,$3,$4,$5,$6,$7,$8,$9) returning id',
         [
             req.body.table,
             req.body.localid,
@@ -676,6 +683,7 @@ router.post('/new-milestone', isAuthenticated,function (req,res) {
             req.body.description,
             dateCol(req.body.duedate),
             dateCol(req.body.date_modified),
+            req.body.type,
             req.body.status
         ]).then(function (data) {
         console.log("New milestone: ", data);
@@ -1391,6 +1399,21 @@ router.post('/upload-stage', isAuthenticated, upload.single('datafile'), functio
 
 router.post('/uploadfile-fields', function (req,res) {
     res.render('modals/uploadfile-fields', { localid: req.body.localid, stage: req.body.stage });
+});
+
+router.post('/update-implementation', function (req,res) {
+
+    db_conf.edca_db.one('update implementation set status=$1 where contractingprocess_id=$2 returning id',[
+        req.body.status !== "None"?req.body.status:null,
+        req.body.contractingprocess_id
+    ]).then(function (data) {
+        console.log(data);
+        res.send("La etapa de implementación ha sido actualizada");
+    }).catch(function (error) {
+        console.log(error);
+        res.send('Ocurrió un error al actualizar la etapa de implementación')
+    })
+
 });
 
 module.exports = router;
