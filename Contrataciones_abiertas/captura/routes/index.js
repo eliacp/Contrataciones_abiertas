@@ -281,7 +281,8 @@ router.get('/main/:contractingprocess_id', isAuthenticated, function (req,res) {
             t.one("select * from Award where contractingprocess_id = $1", [req.params.contractingprocess_id]),
             t.one("select * from Contract where contractingprocess_id = $1", [req.params.contractingprocess_id]),
             t.one("select * from Implementation where contractingprocess_id = $1", [req.params.contractingprocess_id]),
-            t.manyOrNone("select distinct currency, alphabetic_code from currency order by currency")
+            t.manyOrNone("select distinct currency, alphabetic_code from currency order by currency"),
+            t.manyOrNone("select * from implementationstatus")
         ]);
     })
     // using .spread(function(user, event)) is best here, if supported;
@@ -304,7 +305,8 @@ router.get('/main/:contractingprocess_id', isAuthenticated, function (req,res) {
                 award: data[4],
                 contract: data[5],
                 implementation: data[6],
-                currencies : data[7]
+                currencies : data[7],
+                implementation_status: data[8]
             });
         })
         .catch(function (error) {
@@ -706,16 +708,18 @@ router.post('/newmilestone-fields', function (req,res) {
 });
 
 router.post('/new-transaction', isAuthenticated,function (req,res) {
-    db_conf.edca_db.one('insert into implementationtransactions (contractingprocess_id, transactionid, source, implementation_date, value_amount, value_currency, ' +
+    db_conf.edca_db.one('insert into implementationtransactions (contractingprocess_id, transactionid, source, ' +
+        'implementation_date, value_amount, value_currency, payment_method, ' +
         'providerorganization_scheme,providerorganization_id,providerorganization_legalname,providerorganization_uri,' +
         'receiverorganization_scheme,receiverorganization_id,receiverorganization_legalname,receiverorganization_uri, uri) ' +
-        'values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15) returning id',[
+        'values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16) returning id',[
         req.body.localid,
         "transaction-"+uuid(),//req.body.transactionid,
         req.body.source,
         dateCol(req.body.implementation_date),
         numericCol(req.body.value_amount),
         req.body.value_currency,
+        req.body.payment_method,
 
         req.body.providerorganization_scheme,
         req.body.providerorganization_id,

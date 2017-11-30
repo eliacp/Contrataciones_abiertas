@@ -518,15 +518,16 @@ create table Implementation(
 );
 
 /* catálogo de status de implementación */
-drop table if exists implementationStatus
-create table implementationStatus(
+drop table if exists ImplementationStatus;
+create table ImplementationStatus(
         id serial primary key,
         code text,
         title text,
         description text
 );
 
-insert into implementationStatus("code","title","description") values
+insert into ImplementationStatus("code","title","description") values
+('None', 'Ninguno', ''),
 ('planning','Planning',''),
 ('implementation','Implementation',''),
 ('terminated','Terminated','');
@@ -559,6 +560,7 @@ create table ImplementationTransactions(
 	implementation_date timestamp,
 	value_amount decimal, 
 	value_currency text,
+	payment_method text,
 
 	providerorganization_scheme text,
 	providerorganization_id text,
@@ -572,6 +574,18 @@ create table ImplementationTransactions(
 
 	uri text
 );
+
+create table PaymentMethod(
+id serial primary key,
+code text,
+title text,
+description text
+);
+
+insert into PaymentMethod (code, title, description) values
+('cash','Cash',''),
+('check','Check',''),
+('wireTransfer','Wire Transfer','');
 
 
 drop table if exists ImplementationMilestone cascade;

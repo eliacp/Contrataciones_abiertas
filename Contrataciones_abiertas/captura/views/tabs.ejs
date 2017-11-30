@@ -735,13 +735,8 @@ function getMString ( fecha ){
                 <select name="status" class="form-control">
 
                     <%
-                    var status = [
-                        {code: "None",title: "Ninguno"},
-                        {code: "planning", title:"En planeación"},
-                        {code: "implementation", title: "En implementación"},
-                        {code: "terminated", title: "En finiquito"}
-                        ];
-                            for (var s of status ){
+
+                            for (var s of implementation_status ){
                     if (s.code === implementation.status){
                     %>
                     <option value="<%= s.code %>" selected><%= s.title %></option>
