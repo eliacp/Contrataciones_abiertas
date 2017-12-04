@@ -87,7 +87,7 @@
 <div class="container">
     <% if (typeof cp != "undefined"){%>
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-5">
             <div class="well">
                 <p>
                     <strong>Identificador de la contratación</strong></p>
@@ -103,10 +103,11 @@
             </div>
         </div>
 
-        <div class="col-sm-6">
+        <div class="col-sm-7">
             <div class="well">
                 <p><strong>Contratación</strong></p>
                 <p>
+                    <button class="btn btn-default" data-action="parties"> <i class="fa fa-users"></i> Parties</button>
                     <button class="btn btn-default" data-action="edit_organization" data-contractingprocess_id="<%= cp.id %>" data-table="buyer" data-toggle="modal"
                             data-target="#genericModal">
                         Comprador <!--Buyer--> <i class="fa fa-user"></i></button>
