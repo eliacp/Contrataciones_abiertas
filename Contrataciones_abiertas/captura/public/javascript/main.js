@@ -62,11 +62,13 @@ $("#updateocid_form").submit(function (event) {
     event.preventDefault();
 });
 
+/*
 $('#blockchain').click(function () {
     $.post( "/publish/rpc", { contractingprocess_id : $(this).data("id")}, function (data) {
         alert(data.message);
     });
 });
+*/
 
 // UPDATE planning
 $( "#planning_form" ).submit(function( event ) {
@@ -113,6 +115,12 @@ $('#genericModal').on('show.bs.modal', function (event) {
 
     switch ( button.data('action') ){
         //import data from csv files
+        case "parties":
+            modal.find('.modal-title').text('Parties');
+            modal.find('#modal_content').html("<strong>Parties</strong>");
+            //modal.find('#modal_content').load ('/uploadfile-fields', { localid : button.data('contractingprocess_id'), stage: button.data('stage') });
+            break;
+
         case "import_data":
             modal.find('.modal-title').text('Importar datos');
             modal.find('#modal_content').html("");
@@ -126,7 +134,7 @@ $('#genericModal').on('show.bs.modal', function (event) {
                 $('#newitem_form').submit(function (event) {
                     $.post('/new-item/', $(this).serialize()).done(function (data) {
                         alert(data.description);
-                        if (data.status == 'Ok'){modal.modal('hide');}
+                        if (data.status === 'Ok'){modal.modal('hide');}
                     });
                     event.preventDefault();
                 });
@@ -164,7 +172,7 @@ $('#genericModal').on('show.bs.modal', function (event) {
                 $('#newdoc_form').submit(function (event) {
                     $.post('/new-document/', $(this).serialize()).done(function (data) {
                         alert(data.description);
-                        if (data.status == 'Ok'){ modal.modal('hide');}
+                        if (data.status === 'Ok'){ modal.modal('hide');}
                     });
                     event.preventDefault();
                 });
@@ -178,7 +186,7 @@ $('#genericModal').on('show.bs.modal', function (event) {
                 $('#newamendmentchange_form').submit(function (event) {
                     $.post('/new-amendment-change',$(this).serialize()).done(function (data) {
                         alert(data.description);
-                        if ( data.status == 'Ok' ){modal.modal('hide');}
+                        if ( data.status === 'Ok' ){modal.modal('hide');}
                     });
                     event.preventDefault();
                 });
@@ -197,7 +205,7 @@ $('#genericModal').on('show.bs.modal', function (event) {
                 $('#newtransaction_form').submit(function (event) {
                     $.post('/new-transaction', $(this).serialize()).done(function(data){
                         alert(data.description);
-                        if (data.status == 'Ok'){ modal.modal('hide');}
+                        if (data.status === 'Ok'){ modal.modal('hide');}
                     });
                     event.preventDefault();
                 });
@@ -211,7 +219,7 @@ $('#genericModal').on('show.bs.modal', function (event) {
                 $('#neworg_form').submit(function (event) {
                     $.post('/new-organization/', $(this).serialize()).done(function (data) {
                         alert(data.description);
-                        if (data.status == 'Ok'){ modal.modal('hide');}
+                        if (data.status === 'Ok'){ modal.modal('hide');}
                     });
                     event.preventDefault();
                 });
@@ -228,7 +236,7 @@ $('#genericModal').on('show.bs.modal', function (event) {
                     var b = $(this);
                     $.post('/delete', { id : b.data('id'), table: b.data('table') }).done(function(data){
                         alert(data.msg);
-                        if ( data.status == 0 ){
+                        if ( data.status === 0 ){
                             b.parent().parent().remove();
                         }
                     });
@@ -245,7 +253,7 @@ $('#genericModal').on('show.bs.modal', function (event) {
                     var b = $(this);
                     $.post('/delete', { id : b.data('id'), table: b.data('table') }).done(function(data){
                         alert(data.msg);
-                        if ( data.status == 0 ){
+                        if ( data.status === 0 ){
                             b.parent().parent().remove();
                         }
                     });
@@ -262,7 +270,7 @@ $('#genericModal').on('show.bs.modal', function (event) {
                     var b = $(this);
                     $.post('/delete', { id : b.data('id'), table: b.data('table') }).done(function(data){
                         alert(data.msg);
-                        if ( data.status == 0 ){
+                        if ( data.status === 0 ){
                             b.parent().parent().remove();
                         }
                     });
@@ -279,7 +287,7 @@ $('#genericModal').on('show.bs.modal', function (event) {
                     var b = $(this);
                     $.post('/delete', { id : b.data('id'), table: b.data('table') }).done(function(data){
                         alert(data.msg);
-                        if ( data.status == 0 ){
+                        if ( data.status === 0 ){
                             b.parent().parent().remove();
                         }
                     });
@@ -296,7 +304,7 @@ $('#genericModal').on('show.bs.modal', function (event) {
                     var b = $(this);
                     $.post('/delete', { id : b.data('id'), table: b.data('table') }).done(function(data){
                         alert(data.msg);
-                        if ( data.status == 0 ){
+                        if ( data.status === 0 ){
                             b.parent().parent().remove();
                         }
                     });
@@ -311,7 +319,7 @@ $('#genericModal').on('show.bs.modal', function (event) {
                 $('#updatepub_form').submit(function (event) {
                     $.post('/update-publisher/', $(this).serialize()).done(function (data) {
                         alert( data.description );
-                        if ( data.status == 'Ok'){ modal.modal('hide');}
+                        if ( data.status === 'Ok'){ modal.modal('hide');}
                     });
                     event.preventDefault();
                 });
@@ -326,7 +334,7 @@ $('#genericModal').on('show.bs.modal', function (event) {
                     var b = $(this);
                     $.post('/delete', { id : b.data('id'), table: b.data('table') }).done(function(data){
                         alert(data.msg);
-                        if ( data.status == 0 ){
+                        if ( data.status === 0 ){
                             b.parent().parent().remove();
                         }
                     });
@@ -341,7 +349,7 @@ $('#genericModal').on('show.bs.modal', function (event) {
                 $( "#updatesingleorg_form" ).submit(function( event ) {
                     $.post('/update-organization/', $(this).serialize()).done(function (data) {
                         alert(data.description);
-                        if (data.status == 'Ok'){modal.modal('hide');}
+                        if (data.status === 'Ok'){modal.modal('hide');}
                     });
                     event.preventDefault();
                 });
@@ -355,7 +363,7 @@ $('#genericModal').on('show.bs.modal', function (event) {
                 $('#uri_form').submit(function (event) {
                     $.post('/update-uris/', $(this).serialize()).done(function (data) {
                         alert(data.description);
-                        if (data.status == 'Ok'){ modal.modal('hide');}
+                        if (data.status === 'Ok'){ modal.modal('hide');}
                     });
                     event.preventDefault();
                 });
@@ -368,7 +376,7 @@ $('#genericModal').on('show.bs.modal', function (event) {
                 $('#form_update_user_profile').submit(function (event) {
                     $.post('/update/user', $(this).serialize()).done(function (data) {
                         alert(data.description);
-                        if (data.status == 'Ok'){ modal.modal('hide');}
+                        if (data.status === 'Ok'){ modal.modal('hide');}
                     });
                     event.preventDefault();
                 });
@@ -383,7 +391,7 @@ $('#genericModal').on('show.bs.modal', function (event) {
                     if ( $('input[name = new_pass]').val().length >= 8 ) {
                         $.post('/update/password', $(this).serialize()).done(function (data) {
                             alert(data.description);
-                            if (data.status == 'Ok') {
+                            if (data.status === 'Ok') {
                                 modal.modal('hide');
                             }
                         });
