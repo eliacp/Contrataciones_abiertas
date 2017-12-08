@@ -11,7 +11,7 @@ var db_conf = require('../db_conf');
 var dbConfig = require('../db.js');
 var mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
-mongoose.connect(dbConfig.url);
+mongoose.connect(dbConfig.url, {useMongoClient: true});
 
 // Configuring Passport
 var passport = require('passport');
@@ -273,7 +273,7 @@ router.get('/main/:contractingprocess_id', isAuthenticated, function (req,res) {
     var query;
     if (req.user.isAdmin){
         query = db_conf.edca_db.one('select id as contractingprocess_id from contractingprocess where id = $1', [
-            req.params.contractingprocess_id 
+            req.params.contractingprocess_id
         ]);
     } else {
         query = db_conf.edca_db.one("select contractingprocess_id from user_contractingprocess where user_id = $1 and contractingprocess_id =$2", [
