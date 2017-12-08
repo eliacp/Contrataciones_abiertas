@@ -25,6 +25,7 @@
     "protobuf": "^5.0.1",
     "dgm-navbar": "mxabierto/dgm-navbar#latest",
     "dgm-footer": "mxabierto/dgm-footer#latest",
-    "axios": "^0.17.1"
+    "axios": "^0.17.1",
+    "handlebars": "^4.0.11"
   }
 }
