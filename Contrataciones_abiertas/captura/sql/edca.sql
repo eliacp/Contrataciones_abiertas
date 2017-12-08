@@ -24,6 +24,15 @@ create table ContractingProcess (
 	license text
 	);
 
+
+drop table if exists user_contractingprocess;
+create table user_contractingprocess(
+id serial primary key,
+user_id text,
+contractingprocess_id integer references contractingprocess(id)
+);
+
+
 /* Links de descarga para el tablero */
 drop table if exists links;
 create table links(

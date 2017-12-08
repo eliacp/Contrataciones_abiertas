@@ -183,7 +183,7 @@ router.get('/main', isAuthenticated, function(req, res, next) {
 
 /* admin page */
 router.get('/admin', isAuthenticated, function (req, res) {
-    res.render('admin', {title: "Panel de administración del sistema"});
+    res.render('admin', {title: "Panel de administración del sistema", user: req.user });
 });
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -240,7 +240,7 @@ router.post('/update/password',isAuthenticated,function (req, res ) {
                 status : "Error",
                 description: "Contraseña incorrecta"
             })
-        } else if ( isValidPassword(user, old_pass) && new_pass == confirm_pass ){
+        } else if ( isValidPassword(user, old_pass) && new_pass === confirm_pass ){
 
             user.password =  bCrypt.hashSync( new_pass, bCrypt.genSaltSync(10), null);
             user.save();
@@ -249,7 +249,7 @@ router.post('/update/password',isAuthenticated,function (req, res ) {
                 status: "Ok",
                 description: "Contraseña actualizada"
             });
-        } else if ( isValidPassword(user, old_pass) && new_pass != confirm_pass ){
+        } else if ( isValidPassword(user, old_pass) && new_pass !== confirm_pass ){
             res.json({
                 status : "Error",
                 description: "La nueva contraseña no coincide"
@@ -270,54 +270,69 @@ router.post('/update/password',isAuthenticated,function (req, res ) {
 /* GET main page with data */
 router.get('/main/:contractingprocess_id', isAuthenticated, function (req,res) {
 
-    db_conf.edca_db.task(function (t) {
-        // this = t = transaction protocol context;
-        // this.ctx = transaction config + state context;
-        return t.batch([
-            t.one("select * from ContractingProcess where id = $1",  [req.params.contractingprocess_id]),
-            t.one("select * from Planning where contractingprocess_id= $1", [req.params.contractingprocess_id]),
-            t.one("select * from budget where contractingprocess_id = $1", [req.params.contractingprocess_id]),
-            t.one("select * from Tender where contractingprocess_id = $1", [req.params.contractingprocess_id]),
-            t.one("select * from Award where contractingprocess_id = $1", [req.params.contractingprocess_id]),
-            t.one("select * from Contract where contractingprocess_id = $1", [req.params.contractingprocess_id]),
-            t.one("select * from Implementation where contractingprocess_id = $1", [req.params.contractingprocess_id]),
-            t.manyOrNone("select distinct currency, alphabetic_code from currency order by currency"),
-            t.manyOrNone("select * from implementationstatus")
-        ]);
-    })
-    // using .spread(function(user, event)) is best here, if supported;
-        .then(function (data) {
-            console.log("Contracting process -> ",data[0].id); //CP
-            console.log("Planning ->",data[1].id); //planning
-            console.log("Budget ->",data[2].id); //budget
-            console.log("Tender ->",data[3].id); //Tender
-            console.log("Award -> ",data[4].id); //Award
-            console.log("Contract -> ",data[5].id); //Contract
-            console.log("Implementation ->", data[6].id); //implementation
+    db_conf.edca_db.one("select contractingprocess_id from user_contractingprocess where (user_id = $1 or $2) and contractingprocess_id =$3", [
+        req.user.id,
+        req.user.isAdmin,
+        req.params.contractingprocess_id
+    ]).then(function (contratacion) {
 
-            res.render('main', {
-                user: req.user,
-                title: 'Sistema de captura de datos de contrataciones abiertas en México',
-                cp: data[0],
-                planning: data[1],
-                budget: data[2],
-                tender: data[3],
-                award: data[4],
-                contract: data[5],
-                implementation: data[6],
-                currencies : data[7],
-                implementation_status: data[8]
-            });
+        db_conf.edca_db.task(function (t) {
+            // this = t = transaction protocol context;
+            // this.ctx = transaction config + state context;
+            return t.batch([
+                t.one("select * from ContractingProcess where id = $1",  [contratacion.contractingprocess_id]),
+                t.one("select * from Planning where contractingprocess_id= $1", [contratacion.contractingprocess_id]),
+                t.one("select * from budget where contractingprocess_id = $1", [contratacion.contractingprocess_id]),
+                t.one("select * from Tender where contractingprocess_id = $1", [contratacion.contractingprocess_id]),
+                t.one("select * from Award where contractingprocess_id = $1", [contratacion.contractingprocess_id]),
+                t.one("select * from Contract where contractingprocess_id = $1", [contratacion.contractingprocess_id]),
+                t.one("select * from Implementation where contractingprocess_id = $1", [contratacion.contractingprocess_id]),
+                t.manyOrNone("select distinct currency, alphabetic_code from currency order by currency"),
+                t.manyOrNone("select * from implementationstatus")
+            ]);
         })
-        .catch(function (error) {
+        // using .spread(function(user, event)) is best here, if supported;
+            .then(function (data) {
+                console.log("Contracting process -> ",data[0].id); //CP
+                console.log("Planning ->",data[1].id); //planning
+                console.log("Budget ->",data[2].id); //budget
+                console.log("Tender ->",data[3].id); //Tender
+                console.log("Award -> ",data[4].id); //Award
+                console.log("Contract -> ",data[5].id); //Contract
+                console.log("Implementation ->", data[6].id); //implementation
+
+                res.render('main', {
+                    user: req.user,
+                    title: 'Sistema de captura de datos de contrataciones abiertas en México',
+                    cp: data[0],
+                    planning: data[1],
+                    budget: data[2],
+                    tender: data[3],
+                    award: data[4],
+                    contract: data[5],
+                    implementation: data[6],
+                    currencies : data[7],
+                    implementation_status: data[8]
+                });
+            }).catch(function (error) {
             console.log("Error", error);
 
             res.render('main', {
                 user: req.user,
                 title: 'Sistema de captura de datos de contrataciones abiertas en México',
-                error: 'Proceso de contratación no encontrado'
+                error: 'Ha ocurrido un error al cargar el proceso de contratación'
             });
         });
+    }).catch(function (error) {
+        console.log("Error", error);
+
+        res.render('main', {
+            user: req.user,
+            title: 'Sistema de captura de datos de contrataciones abiertas en México',
+            error: 'Proceso de contratación no encontrado'
+        });
+    });
+
 });
 
 // NUEVO PROCESO DE CONTRATACIÓN
@@ -333,7 +348,8 @@ router.post('/new-process', isAuthenticated, function (req, res) {
                     t.one("insert into Award (ContractingProcess_id) values ($1) returning id as award_id", [process.id]),
                     t.one("insert into Contract (ContractingProcess_id) values ($1) returning id as contract_id", [process.id]),
                     t.one("insert into Buyer (ContractingProcess_id) values ($1) returning id as buyer_id",[process.id]),
-                    t.one("insert into Publisher (ContractingProcess_id) values ($1) returning id as publisher_id", [process.id])
+                    t.one("insert into Publisher (ContractingProcess_id) values ($1) returning id as publisher_id", [process.id]),
+                    t.one("insert into user_contractingprocess(user_id, contractingprocess_id) values ($1,$2) returning id", [req.user.id, process.id])
                 ]);
 
             }).then(function (info) {

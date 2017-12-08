@@ -14,7 +14,8 @@ if ( typeof process.argv[2] != 'undefined'){
         username: String,
         password: String,
         email: String,
-        address: String
+        address: String,
+	    isAdmin: Boolean
     });
 
     db.on('error', console.error.bind(console, 'connection error:'));
@@ -51,6 +52,13 @@ if ( typeof process.argv[2] != 'undefined'){
                                     description: 'Ingrese una contraseña',
                                     replace: '*'
                                 },
+                                isAdmin: {
+                                    description: '¿El usuario es administrador? (t = Sí; f = No)',
+                                    format: "boolean",
+                                    required: true,
+                                    default: false,
+                                    message: 'Propocione una respuesta válida (t = Sí; f = No)'
+                                },
                                 email: {
                                     description: 'Ingrese su email',
                                     format: 'email',
@@ -71,6 +79,7 @@ if ( typeof process.argv[2] != 'undefined'){
                                 'fullname': result.fullname,
                                 'username': process.argv[3],
                                 'password': bcrypt.hashSync(result.password, bcrypt.genSaltSync(10), null),
+                                'isAdmin': result.isAdmin,
                                 'email': result.email,
                                 'address': result.address
                             });
