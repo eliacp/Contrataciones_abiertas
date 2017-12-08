@@ -270,11 +270,19 @@ router.post('/update/password',isAuthenticated,function (req, res ) {
 /* GET main page with data */
 router.get('/main/:contractingprocess_id', isAuthenticated, function (req,res) {
 
-    db_conf.edca_db.one("select contractingprocess_id from user_contractingprocess where (user_id = $1 or $2) and contractingprocess_id =$3", [
-        req.user.id,
-        req.user.isAdmin,
-        req.params.contractingprocess_id
-    ]).then(function (contratacion) {
+    var query;
+    if (req.user.isAdmin){
+        query = db_conf.edca_db.one('select id as contractingprocess_id from contractingprocess where id = $1', [
+            req.params.contractingprocess_id 
+        ]);
+    } else {
+        query = db_conf.edca_db.one("select contractingprocess_id from user_contractingprocess where user_id = $1 and contractingprocess_id =$2", [
+            req.user.id,
+            req.params.contractingprocess_id
+        ]);
+    }
+
+    query.then(function (contratacion) {
 
         db_conf.edca_db.task(function (t) {
             // this = t = transaction protocol context;
