@@ -379,7 +379,7 @@ router.post('/new-process', isAuthenticated, function (req, res) {
 
     }).then(function (data) {
         console.log(data);
-        res.json( { url: '/main/'+data[0].contractingprocess.id } );
+        res.json( { url: `/main/${data[0].contractingprocess.id}` } );
 
     }).catch(function (error) {
         console.log("ERROR: ", error);
@@ -878,7 +878,7 @@ router.post('/update-organization', isAuthenticated, function (req, res) {
             status: 'Ok',
             description: 'Los datos han sido actualizados'
         }); // envía la respuesta y presentala en un modal
-        console.log("Update "+req.body.table+": ", data);
+        console.log(`Update ${req.body.table}: ${data}`);
     }).catch(function (error) {
         res.json({
             status: "Error",
