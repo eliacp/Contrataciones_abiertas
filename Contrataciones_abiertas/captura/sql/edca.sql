@@ -24,6 +24,28 @@ create table ContractingProcess (
 	license text
 	);
 
+drop table if exists tags cascade;
+create table tags(
+id serial primary key,
+contractingprocess_id integer references ContractingProcess(id),
+planning boolean,
+planningUpdate boolean,
+tender boolean,
+tenderAmendment boolean,
+tenderUpdate boolean,
+tenderCancellation boolean,
+award boolean,
+awardUpdate boolean,
+awardCancellation boolean,
+contract boolean,
+contractUpdate boolean,
+contractAmendment boolean,
+implementation boolean,
+implementationUpdate boolean,
+contractTermination boolean,
+compiled boolean
+);
+
 
 drop table if exists user_contractingprocess;
 create table user_contractingprocess(

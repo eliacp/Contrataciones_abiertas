@@ -21,22 +21,22 @@
 
 <div class="well">
     <label> Release Tags </label><br>
-    <label class="checkbox-inline"><input type="checkbox"> planning </label><br>
-    <label class="checkbox-inline"><input type="checkbox">planningUpdate</label><br>
-    <label class="checkbox-inline"><input type="checkbox">tender</label><br>
-    <label class="checkbox-inline"><input type="checkbox">tenderAmendment</label><br>
-    <label class="checkbox-inline"><input type="checkbox">tenderUpdate</label><br>
-    <label class="checkbox-inline"><input type="checkbox">tenderCancellation</label><br>
-    <label class="checkbox-inline"><input type="checkbox">award</label><br>
-    <label class="checkbox-inline"><input type="checkbox">awardUpdate</label><br>
-    <label class="checkbox-inline"><input type="checkbox">awardCancellation</label><br>
-    <label class="checkbox-inline"><input type="checkbox">contract</label><br>
-    <label class="checkbox-inline"><input type="checkbox">contractUpdate</label><br>
-    <label class="checkbox-inline"><input type="checkbox">contractAmendment</label><br>
-    <label class="checkbox-inline"><input type="checkbox">implementation</label><br>
-    <label class="checkbox-inline"><input type="checkbox">implementationUpdate</label><br>
-    <label class="checkbox-inline"><input type="checkbox">contractTermination</label><br>
-    <label class="checkbox-inline"><input type="checkbox">compiled</label>
+    <label class="checkbox-inline"><input name="planning" type="checkbox" <%= tags.planning?'checked':'' %> > planning </label><br>
+    <label class="checkbox-inline"><input name="planningUpdate" type="checkbox" <%= tags.planningupdate?'checked':'' %> >planningUpdate</label><br>
+    <label class="checkbox-inline"><input name="tender" type="checkbox" <%= tags.tender?'checked':'' %> >tender</label><br>
+    <label class="checkbox-inline"><input name="tenderAmendment" type="checkbox" <%= tags.tenderamendment?'checked':'' %> >tenderAmendment</label><br>
+    <label class="checkbox-inline"><input name="tenderUpdate" type="checkbox" <%= tags.tenderupdate?'checked':'' %> >tenderUpdate</label><br>
+    <label class="checkbox-inline"><input name="tenderCancellation" type="checkbox" <%= tags.tendercancellation?'checked':'' %> >tenderCancellation</label><br>
+    <label class="checkbox-inline"><input name="award" type="checkbox" <%= tags.award?'checked':'' %> >award</label><br>
+    <label class="checkbox-inline"><input name="awardUpdate" type="checkbox" <%= tags.awardupdate?'checked':'' %> >awardUpdate</label><br>
+    <label class="checkbox-inline"><input name="awardCancellation" type="checkbox" <%= tags.awardcancellation?'checked':'' %> >awardCancellation</label><br>
+    <label class="checkbox-inline"><input name="contract" type="checkbox" <%= tags.contract?'checked':'' %> >contract</label><br>
+    <label class="checkbox-inline"><input name="contractUpdate" type="checkbox" <%= tags.contractupdate?'checked':'' %> >contractUpdate</label><br>
+    <label class="checkbox-inline"><input name="contractAmendment" type="checkbox" <%= tags.contractamendment?'checked':'' %> >contractAmendment</label><br>
+    <label class="checkbox-inline"><input name="implementation" type="checkbox" <%= tags.implementation?'checked':'' %> >implementation</label><br>
+    <label class="checkbox-inline"><input name="implementationUpdate" type="checkbox" <%= tags.implementationupdate?'checked':'' %> >implementationUpdate</label><br>
+    <label class="checkbox-inline"><input name="contractTermination" type="checkbox" <%= tags.contracttermination?'checked':'' %> >contractTermination</label><br>
+    <label class="checkbox-inline"><input name="compiled" type="checkbox" <%= tags.compiled?'checked':'' %> >compiled</label>
 </div>
     <p>
         <button type="submit" class="btn btn-default">Guardar</button>

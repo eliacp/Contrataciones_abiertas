@@ -357,7 +357,8 @@ router.post('/new-process', isAuthenticated, function (req, res) {
                     t.one("insert into Contract (ContractingProcess_id) values ($1) returning id as contract_id", [process.id]),
                     t.one("insert into Buyer (ContractingProcess_id) values ($1) returning id as buyer_id",[process.id]),
                     t.one("insert into Publisher (ContractingProcess_id) values ($1) returning id as publisher_id", [process.id]),
-                    t.one("insert into user_contractingprocess(user_id, contractingprocess_id) values ($1,$2) returning id", [req.user.id, process.id])
+                    t.one("insert into user_contractingprocess(user_id, contractingprocess_id) values ($1,$2) returning id", [req.user.id, process.id]),
+                    t.one("insert into tags values (default, $1, true, false, false, false, false, false, false, false, false, false,false, false, false, false, false, false) returning id", [ process.id ])
                 ]);
 
             }).then(function (info) {
@@ -434,8 +435,16 @@ router.post('/update-planning', isAuthenticated, function (req, res) {
 router.post('/uris',isAuthenticated, function(req, res){
     var id = Math.abs ( req.body.id );
 
-    db_conf.edca_db.one("select * from contractingprocess where id = $1",[ id ]).then(function (data) {
-        res.render('modals/uri', { contractingprocess : data });
+    db_conf.edca_db.task(function(t){
+        return this.batch([
+            this.one("select * from contractingprocess where id = $1",[ id ]),
+            this.one("select * from tags where contractingprocess_id =$1", [ id ])
+        ]);
+    }).then(function (data) {
+        res.render('modals/uri', {
+            contractingprocess : data[0],
+            tags: data[1]
+        });
     }).catch(function (error) {
         console.log(error);
         res.render("<p>Error</p>");
@@ -444,13 +453,47 @@ router.post('/uris',isAuthenticated, function(req, res){
 });
 
 router.post('/update-uris',isAuthenticated, function (req, res) {
-    db_conf.edca_db.one("update contractingprocess set uri =$1, publicationpolicy = $2, license = $3, destino=$4 where id = $5 returning id", [
-        req.body.uri,
-        req.body.publicationpolicy,
-        req.body.license,
-        req.body.destino,
-        req.body.id
-    ]).then(function (data) {
+    console.log(req.body);
+
+    var isChecked = (checkbox) => {
+        if (typeof checkbox !== "undefined"){
+            return checkbox === 'on'
+        }
+        return false;
+    };
+
+    db_conf.edca_db.tx(function (t) {
+        return this.batch([
+            this.one("update contractingprocess set uri =$1, publicationpolicy = $2, license = $3, destino=$4 where id = $5 returning id", [
+                req.body.uri,
+                req.body.publicationpolicy,
+                req.body.license,
+                req.body.destino,
+                req.body.id
+            ]),
+            this.one("update tags set planning=$2, planningUpdate=$3, tender=$4, tenderAmendment=$5, tenderUpdate=$6, tenderCancellation=$7, award=$8, " +
+                "awardUpdate=$9, awardCancellation=$10, contract=$11, contractUpdate=$12, contractAmendment=$13, implementation=$14, implementationUpdate=$15, " +
+                "contractTermination=$16, compiled=$17 where contractingprocess_id=$1 returning id",[
+                req.body.id,
+                isChecked(req.body.planning),
+                isChecked(req.body.planningUpdate),
+                isChecked(req.body.tender),
+                isChecked(req.body.tenderAmendment),
+                isChecked(req.body.tenderUpdate),
+                isChecked(req.body.tenderCancellation),
+                isChecked(req.body.award),
+                isChecked(req.body.awardUpdate),
+                isChecked(req.body.awardCancellation),
+                isChecked(req.body.contract),
+                isChecked(req.body.contractUpdate),
+                isChecked(req.body.contractAmendment),
+                isChecked(req.body.implementation),
+                isChecked(req.body.implementationUpdate),
+                isChecked(req.body.contractTermination),
+                isChecked(req.body.compiled)
+            ])
+        ]);
+    }).then(function (data) {
         console.log('Update URIs: ', data);
         res.json({
             status: "Ok",
