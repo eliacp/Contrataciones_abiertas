@@ -63,7 +63,7 @@ module.exports = {
             }).then(function (data) {
 
                 function checkValue( x ) {
-                    return ( x != null && x != '' && typeof x != "undefined");
+                    return ( x != null && x !== '' && typeof x !== "undefined");
                 }
 
                 function dateString( obj ) {

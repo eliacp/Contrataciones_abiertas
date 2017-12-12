@@ -453,7 +453,7 @@ router.post('/uris',isAuthenticated, function(req, res){
 });
 
 router.post('/update-uris',isAuthenticated, function (req, res) {
-    console.log(req.body);
+    //console.log(req.body);
 
     var isChecked = (checkbox) => {
         if (typeof checkbox !== "undefined"){
