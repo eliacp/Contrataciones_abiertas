@@ -54,7 +54,6 @@ user_id text,
 contractingprocess_id integer references contractingprocess(id)
 );
 
-
 /* Links de descarga para el tablero */
 drop table if exists links;
 create table links(
@@ -64,6 +63,164 @@ create table links(
     pdf text,
     contractingprocess_id integer references contractingprocess(id) on delete cascade
     );
+
+/**
+ * OCDS 1.1 Relations
+ */
+
+/* Parties */
+drop table if exists Parties cascade;
+create table Parties(
+contractingprocess_id integer references contractingprocess(id) on delete cascade,
+name text,
+id serial primary key,
+identifier_scheme text,
+identifier_id text,
+identifier_legalname text,
+identifier_uri text,
+/* additionalIdentifiers */
+address_streetaddress text,
+address_locality text,
+address_region text,
+address_postalcode text,
+address_countryname text,
+contactpoint_name text,
+contactpoint_email text,
+contactpoint_telephone text,
+contactpoint_faxnumber text,
+contactpoint_url text,
+/* roles */
+details text
+);
+
+/* Party Role Catalog */
+drop table if exists PartyRoles cascade;
+create table PartyRoles(
+    id serial primary key,
+    code text,
+    title text,
+    description text
+);
+
+insert into PartyRoles( code, title, description ) values
+('buyer', 'Buyer', 'The buyer is the entity whose budget will be used to purchase the goods.'),
+('procuringEntity', 'Procuring Entity', 'The entity managing the procurement, which may be different from the buyer who is paying / using the items being procured.'),
+('supplier', 'Supplier', 'The entity awarded or contracted to provide supplies, works or services.'),
+('tenderer', 'Tenderer', 'All entities who submit a tender'),
+('funder', 'Funder', 'The funder is an entity providing money or finance for this contracting process.'),
+('enquirer', 'Enquirer', 'A party who has made an enquiry during the enquiry phase of a contracting process.'),
+('payer', 'Payer', 'A party making a payment from a transaction'),
+('payee', 'Payee', 'A party in receipt of a payment from a transaction'),
+('reviewBody', 'Review Body','A party responsible for the review of this procurement process. This party often has a role in any challenges made to the contract award.');
+
+drop table if exists Suppliers cascade;
+create table Suppliers(
+id serial primary key,
+contractingprocess_id integer references ContractingProcess(id),
+parties_id integer references Parties(id)
+);
+
+drop table if exists Tenderers cascade;
+create table Tenderers (
+id serial primary key,
+contractingprocess_id integer references ContractingProcess(id),
+parties_id integer references Parties(id)
+);
+
+/* Buyers */
+drop table if exists Buyers cascade;
+create table Buyers(
+id serial primary key,
+contractingprocess_id integer references ContractingProcess(id),
+parties_id integer references Parties(id)
+);
+
+/* Procuring Entities */
+drop table if exists ProcuringEntities cascade;
+create table ProcuringEntities(
+id serial primary key,
+contractingprocess_id integer references ContractingProcess(id),
+parties_id integer references Parties(id)
+);
+
+/* Amendments */
+/* Tender Amendments */
+drop table if exists TenderAmendments cascade;
+create table TenderAmendments(
+id serial primary key,
+contractingprocess_id integer references ContractingProcess(id),
+tender_id integer references Tender(id),
+amendment_date date,
+rationale text,
+amendment_id text,
+description text,
+amendsReleaseID text,
+releaseID text
+);
+
+/* Tender amendments -> Changes */
+drop table if exists TenderAmendmentsChanges cascade;
+create table TenderAmendmentsChanges (
+id serial primary key,
+contractingprocess_id integer references ContractingProcess(id) on delete cascade,
+tender_id integer references Tender(id) on delete cascade,
+tenderamendments_id integer references TenderAmendments(id) on delete cascade,
+property text,
+former_value text
+);
+
+/* Awards Amendments */
+drop table if exists AwardsAmendments cascade;
+create table AwardsAmendments(
+id serial primary key,
+contractingprocess_id integer references ContractingProcess(id),
+award_id integer references Award(id),
+amendment_date date,
+rationale text,
+amendment_id text,
+description text,
+amendsReleaseID text,
+releaseID text
+);
+
+/* Award amendments -> Changes */
+drop table if exists AwardsAmendmentsChanges cascade;
+create table AwardsAmendmentsChanges (
+id serial primary key,
+contractingprocess_id integer references ContractingProcess(id) on delete cascade,
+award_id integer references Award(id) on delete cascade,
+awardsamendments_id integer references AwardsAmendments(id) on delete cascade,
+property text,
+former_value text
+);
+
+/* Contracts amendments */
+drop table if exists ContractsAmendments cascade;
+create table ContractsAmendments(
+id serial primary key,
+contractingprocess_id integer references ContractingProcess(id),
+contract_id integer references Contract(id),
+amendment_date date,
+rationale text,
+amendment_id text,
+description text,
+amendsReleaseID text,
+releaseID text
+);
+
+/* Contracts amendments -> Changes */
+drop table if exists ContractsAmendmentsChanges cascade;
+create table ContractsAmendmentsChanges (
+id serial primary key,
+contractingprocess_id integer references ContractingProcess(id) on delete cascade,
+contract_id integer references Contract(id),
+contractsamendments_id integer references ContractsAmendments(id) on delete cascade,
+property text,
+former_value text
+);
+
+/* * * * * * * * * * * * * * * * * * * * */
+
 
 drop table if exists Publisher cascade;
 create table Publisher (
