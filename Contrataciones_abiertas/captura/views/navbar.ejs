@@ -1,0 +1,57 @@
+<!-- Fixed navbar -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/main"> <img src="/images/inai.svg" style="width: 60px;"></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+
+                <% if ( typeof cp != 'undefined'){%>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Herramientas <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="<%= '/publish/release/'+ cp.id + '/release.json' %>"  download="<%= 'release_'+cp.id+'.json'%>"> <i class="fa fa-download"></i> Entrega (Release) </a></li>
+                        <li><a href="<%= '/publish/release-package/'+ cp.id + '/release-package.json' %>" download="<%= 'release-package_'+ cp.id+'.json'%>"> <i class="fa fa-download"></i> Paquete de Entregas (Release package) </a></li>
+                        <li class="disabled"><a href="#"><i class="fa fa-download"></i> Registro (Record)</a> </li>
+                        <li class="disabled"><a href="#"><i class="fa fa-download"></i> Paquete de Registros (Record Package)</a> </li>
+                        <!--<li role="separator" class="divider"></li>
+                        <li id="blockchain" data-id="<%= cp.id %>"> <a href="#"> <i class="fa fa-cubes"></i> Enviar a registro distribuido </a></li>-->
+                    </ul>
+                </li>
+
+                <%}%>
+                <% if (user.isAdmin === true){%>
+                <li><a href="/admin">Administrar</a></li>
+                <%}%>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Contrataciones <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" data-toggle="modal" data-target="#genericModal" data-action="search" data-user_id = "<%= user.id %>"> <i class="fa fa-search"></i> Buscar</a></li>
+                        <li id="create_process"><a href="#"><i class="fa fa-warning"></i> Nueva</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#" data-toggle="modal" data-target="#genericModal" data-action="manual"> <i class="fa fa-book"></i> Manual</a></li>
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><%= user.fullname %> <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" data-action="edit_user" data-user_id="<%= user.id %>" data-toggle="modal" data-target="#genericModal"><i class="fa fa-user"></i> Actualizar información </a></li>
+                        <li><a href="#" data-action="update_password" data-user_id="<%= user.id %>" data-toggle="modal" data-target="#genericModal"><i class="fa fa-key"></i> Cambiar contraseña</a></li>
+                        <li role="separator" class="divider"></li>
+                        <!--<li class="dropdown-header">Nav header</li>-->
+                        <li><a href="/signout"><i class="fa fa-sign-out"></i> Salir </a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
