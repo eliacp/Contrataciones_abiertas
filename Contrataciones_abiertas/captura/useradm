@@ -6,17 +6,8 @@ if ( typeof process.argv[2] !== 'undefined'){
     var mongoose = require('mongoose');
     mongoose.Promise = require('bluebird');
     mongoose.connect(dbConfig.url,{useMongoClient: true});
-//var User = require('../models/user');
-
+    var User = require('./models/user');
     var db = mongoose.connection;
-    var User = mongoose.model('User',{
-        fullname: String,
-        username: String,
-        password: String,
-        email: String,
-        address: String,
-	    isAdmin: Boolean
-    });
 
     db.on('error', console.error.bind(console, 'connection error:'));
 
