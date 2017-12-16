@@ -28,30 +28,30 @@
 
 <div class="container">
     <div class="panel panel-default">
-        <div class="panel-heading">Panel de administración</div>
+        <div class="panel-heading">
+            <div class="panel-title">Panel de administración</div>
+        </div>
         <div class="panel-body">
 
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="well">
-                        <p><strong>Usuarios</strong></p>
-                        <p>
-                            <button class="btn btn-primary"> Nuevo </button>
-                        </p>
-                        <p>
-                            <button class="btn btn-primary"> Editar </button>
-                        </p>
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="well">
-                        <p><strong>Contrataciones</strong></p>
-                        <p><button class="btn btn-primary">Administrar</button> </p>
-                        <p>
-                            <button class="btn btn-primary"> Asignar usuarios </button>
-                        </p>
-                    </div>
-                </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Usuarios <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#"><i class="fa fa-user-plus"></i> Nuevo</a></li>
+                    <li><a href="#"><i class="fa fa-users"></i> Editar</a></li>
+                </ul>
+            </div>
+
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Contrataciones <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#"><i class="fa fa-cubes"></i> Administar</a></li>
+                    <li><a href="#"><i class="fa fa-vcard"></i> Gestionar usuarios</a></li>
+                </ul>
             </div>
 
         </div>
