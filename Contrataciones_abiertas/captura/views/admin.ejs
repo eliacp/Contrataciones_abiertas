@@ -34,23 +34,23 @@
         <div class="panel-body">
 
             <div class="btn-group">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Usuarios <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a href="#"><i class="fa fa-user-plus"></i> Nuevo</a></li>
-                    <li><a href="#"><i class="fa fa-users"></i> Editar</a></li>
+                    <li data-toggle="modal" data-target="#adminModal"><a href="#"><i class="fa fa-user-plus"></i> Nuevo</a></li>
+                    <li data-toggle="modal" data-target="#adminModal"><a href="#"><i class="fa fa-users"></i> Editar</a></li>
                 </ul>
             </div>
 
 
             <div class="btn-group">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Contrataciones <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a href="#"><i class="fa fa-cubes"></i> Administar</a></li>
-                    <li><a href="#"><i class="fa fa-vcard"></i> Gestionar usuarios</a></li>
+                    <li data-toggle="modal" data-target="#adminModal"><a href="#"><i class="fa fa-cubes"></i> Administar</a></li>
+                    <li data-toggle="modal" data-target="#adminModal"><a href="#"><i class="fa fa-vcard"></i> Gestionar usuarios</a></li>
                 </ul>
             </div>
 
@@ -58,7 +58,7 @@
     </div>
 </div>
 
-<% include modals/generic_modal.ejs %>
+<% include modals/admin_modal.ejs %>
 
 
 <script src="/bower_components/axios/dist/axios.min.js"></script>
@@ -69,4 +69,5 @@
 <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
 <script src="/javascript/main.js"></script>
+<script src="/javascript/admin.js"></script>
 </body>
