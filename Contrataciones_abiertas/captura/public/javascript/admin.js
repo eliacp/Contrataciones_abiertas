@@ -12,6 +12,9 @@ $("#adminModal").on('show.bs.modal', function (event) {
                     $(this).find('form').submit(function (e) {
                         $.post('/user', $(this).serialize()).done(function (data) {
                             alert(data.message);
+                            if (data.status === 'Ok'){
+                                modal.modal('hide');
+                            }
                         });
                         e.preventDefault();
                     })
