@@ -89,9 +89,12 @@
             <a href="http://standard.open-contracting.org/latest/es/schema/release/#id1">aquí</a>
             para obtener más información sobre el Estándar de Datos de Contrataciones Abiertas.</p>
         <p>
-            <button id = "nuevo_jumbo" class="btn btn-primary">Nueva contratación <i class="fa fa-pencil"></i></button>
-            <button class="btn btn-primary" data-toggle="modal" data-target="#genericModal" data-action="search" data-user_id="<%= user.id %>">Buscar contratación <i class="fa fa-search"></i></button>
-            <button class="btn btn-primary" data-toggle="modal" data-target="#genericModal" data-action="manual">Manual <i class="fa fa-book"></i></button>
+            <% if (user.isAdmin === true){%>
+            <a href="/admin" class="btn btn-primary"><i class="fa fa-tasks"></i> Administrar</a>
+            <%}%>
+            <button id = "nuevo_jumbo" class="btn btn-primary"><i class="fa fa-plus"></i> Nueva contratación </button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#genericModal" data-action="search" data-user_id="<%= user.id %>"> <i class="fa fa-search"></i> Buscar contratación </button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#genericModal" data-action="manual"> <i class="fa fa-book"></i> Manual</button>
         </p>
     </div>
     <%}%>
