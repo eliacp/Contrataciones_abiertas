@@ -70,7 +70,8 @@ var isValidPassword = function(user, password){
 };
 
 // No usamos este código
-/* passport.use('signup', new LocalStrategy({
+/*
+passport.use('signup', new LocalStrategy({
         passReqToCallback : true // allows us to pass back the entire request to the callback
       },
       function(req, username, password, done) {
@@ -116,12 +117,9 @@ var isValidPassword = function(user, password){
         process.nextTick(findOrCreateUser);
       })
   );
-
-// Generates hash using bCrypt
-var createHash = function(password){
-    return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
-};
 */
+// Generates hash using bCrypt
+const createHash = (password) => bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
 
 // Passport needs to be able to serialize and deserialize users to support persistent login sessions
 passport.serializeUser(function(user, done) {
@@ -161,6 +159,65 @@ router.get('/', isNotAuthenticated, function (req, res, next) {
     res.render('index', {title: 'Sistema de captura de datos de contrataciones abiertas en México', message: req.flash('message')});
 });
 
+router.get('/new-user', isAuthenticated, (req, res) => {
+    res.render('modals/new_user');
+});
+
+/* Handle sign up */
+router.post('/user', isAuthenticated, (req, res)=> {
+
+    if ( req.user.isAdmin === true ) {
+        const username = req.body.username.trim();
+
+        User.findOne({'username': username}, function (err, user) {
+            // In case of any error, return using the done method
+            if (err) {
+                console.log('Error in SignUp: ' + err);
+                return done(err);
+            }
+            // already exists
+            if (user) {
+                console.log(`User already exists with username: ${username}`);
+                res.jsonp({
+                    status: 'Error',
+                    message: `El usuario ${username} ya existe en la base de datos`
+                });
+                //return done(null, false, req.flash('message','User Already Exists'));
+            } else {
+                // if there is no user with that email
+                // create the user
+                let newUser = new User();
+
+                // set the user's local credentials
+                newUser.username = username;
+                newUser.password = createHash(req.body.password);
+                newUser.email = req.body.email;
+                newUser.address = req.body.address;
+                newUser.fullname = req.body.fullname;
+                newUser.isAdmin = req.body.isAdmin === "true" ;
+
+                // save the user
+                newUser.save(function (err) {
+                    if (err) {
+                        console.log('Error in Saving user: ' + err);
+                        res.jsonp({
+                            status: "Error",
+                            message: `Error al guardar el usuario ${usuario}`
+                        });
+                    }
+
+                    res.jsonp({
+                        status: "Ok",
+                        message: `Se ha creado el usuario ${username}`
+                    });
+                });
+            }
+        });
+    }else {
+        res.send("<p><b>No estás autorizado para crear usuarios</b></p>");
+    }
+
+});
 
 /* Handle Login POST */
 router.post('/login', passport.authenticate('login', {

@@ -38,7 +38,7 @@
                     Usuarios <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-                    <li data-toggle="modal" data-target="#adminModal"><a href="#"><i class="fa fa-user-plus"></i> Nuevo</a></li>
+                    <li data-toggle="modal" data-action="new_user" data-target="#adminModal"><a href="#"><i class="fa fa-user-plus"></i> Nuevo</a></li>
                     <li data-toggle="modal" data-target="#adminModal"><a href="#"><i class="fa fa-users"></i> Editar</a></li>
                 </ul>
             </div>
@@ -57,7 +57,7 @@
         </div>
     </div>
 </div>
-
+<% include modals/generic_modal.ejs%>
 <% include modals/admin_modal.ejs %>
 
 
