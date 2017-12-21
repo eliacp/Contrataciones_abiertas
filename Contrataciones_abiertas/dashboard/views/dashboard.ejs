@@ -1,5 +1,5 @@
 <% function formatAmount( amount ) {
-   return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+   return (amount !== null)?amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","):''
 }%>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" lang="es-MX" xml:lang="es-MX">

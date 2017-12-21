@@ -1,8 +1,0 @@
-<% for ( var i = 0; i < suppliers.length; i++){ %>
-<div class="well">
-    <p>Nombre o razón social: <b><%= suppliers[i].identifier_legalname %></b></p>
-    <p>Identificador: <b><%= suppliers[i].identifier_id %></b></p>
-    <p>Sitio web: <b><a href="<%= suppliers[i].identifier_uri %>"><%= suppliers[i].identifier_uri %></a></b></p>
-    <a href="<%= "/contratacionesabiertas/proveedor/"+ suppliers[i].id %>" class="btn btn-default">Ver más</a>
-</div>
-<%}%>
