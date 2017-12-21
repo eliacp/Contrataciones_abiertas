@@ -27,7 +27,7 @@ create table ContractingProcess (
 drop table if exists tags cascade;
 create table tags(
 id serial primary key,
-contractingprocess_id integer references ContractingProcess(id),
+contractingprocess_id integer references ContractingProcess(id) on delete cascade,
 planning boolean,
 planningUpdate boolean,
 tender boolean,
@@ -47,11 +47,11 @@ compiled boolean
 );
 
 
-drop table if exists user_contractingprocess;
+drop table if exists user_contractingprocess cascade;
 create table user_contractingprocess(
 id serial primary key,
 user_id text,
-contractingprocess_id integer references contractingprocess(id)
+contractingprocess_id integer references contractingprocess(id) on delete cascade
 );
 
 /* Links de descarga para el tablero */

@@ -415,7 +415,8 @@ router.post('/new-process', isAuthenticated, function (req, res) {
                     t.one("insert into Buyer (ContractingProcess_id) values ($1) returning id as buyer_id",[process.id]),
                     t.one("insert into Publisher (ContractingProcess_id) values ($1) returning id as publisher_id", [process.id]),
                     t.one("insert into user_contractingprocess(user_id, contractingprocess_id) values ($1,$2) returning id", [req.user.id, process.id]),
-                    t.one("insert into tags values (default, $1, true, false, false, false, false, false, false, false, false, false,false, false, false, false, false, false) returning id", [ process.id ])
+                    t.one("insert into tags values (default, $1, true, false, false, false, false, false, false, false, false, false,false, false, false, false, false, false) returning id", [ process.id ]),
+                    t.one("insert into links(contractingprocess_id) values ($1) returning id", [process.id])
                 ]);
 
             }).then(function (info) {
