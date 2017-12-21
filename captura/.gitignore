@@ -8,3 +8,4 @@ uploads/*
 #*#
 output/
 .env
+.DS_Store
