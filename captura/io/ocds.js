@@ -7,16 +7,19 @@ module.exports = {
 
             return t.one("Select * from contractingprocess where id = $1", [localid]).then(function (cp) { //0
 
-                var planning = t.one("select * from planning where contractingprocess_id = $1", [localid]);     //1
-                var budget = t.one("select * from budget where contractingprocess_id = $1", [localid]);         //2
-                var tender = t.one("select * from tender where contractingprocess_id = $1", [localid]);        //3
-                var buyer = t.one("select * from buyer where contractingprocess_id = $1", [localid]);    //4
-                var award = t.one("select * from award where contractingprocess_id = $1", [localid]);           //5
-                var contract = t.one("select * from contract where contractingprocess_id = $1", [localid]);     //6
-                var implementation = t.oneOrNone('select * from implementation where contractingprocess_id = $1', [localid]); //7
-                var procuringentity = t.one('select * from ProcuringEntity where contractingprocess_id=$1', [localid]); //8
-
-                return t.batch([cp, planning, budget, tender, buyer, award, contract, implementation, procuringentity]);
+                return t.batch([
+                    cp,
+                    t.one("select * from planning where contractingprocess_id = $1", [localid]),    //1
+                    t.one("select * from budget where contractingprocess_id = $1", [localid]),         //2
+                    t.one("select * from tender where contractingprocess_id = $1", [localid]),        //3
+                    t.one("select * from buyer where contractingprocess_id = $1", [localid]),    //4
+                    t.one("select * from award where contractingprocess_id = $1", [localid]),           //5
+                    t.one("select * from contract where contractingprocess_id = $1", [localid]),     //6
+                    t.oneOrNone('select * from implementation where contractingprocess_id = $1', [localid]), //7
+                    t.one('select * from ProcuringEntity where contractingprocess_id=$1', [localid]), //8
+                    t.manyOrNone('select * from parties where contractingprocess_id=$1', [localid]),
+                    t.oneOrNone('select * from tags where contractingprocess_id =$1', [localid])
+                ]);
 
             }).then(function (data) {
 
@@ -29,7 +32,9 @@ module.exports = {
                     award: data[5],
                     contract: data[6],
                     implementation: data[7],
-                    procuringentity: data[8]
+                    procuringentity: data[8],
+                    parties: data[9],
+                    tags: data[10]
                 };
 
                 //queries secundarias
@@ -72,7 +77,7 @@ module.exports = {
 
                 function deleteNullProperties(test, recursive) {
                     for (var i in test) {
-                        if (test[i] === null || JSON.stringify(test[i]) === JSON.stringify({}) || test[i]=='' ) {
+                        if (test[i] === null || JSON.stringify(test[i]) === JSON.stringify({}) || test[i]=== '' ) {
                             delete test[i];
                         } else if (recursive && typeof test[i] === 'object') {
                             deleteNullProperties(test[i], recursive);
@@ -239,12 +244,19 @@ module.exports = {
                 }
 
 
+                let tags = [];
+                for (var t in data[0].tags){
+                    if (data[0].tags[t] === true){
+                        tags.push(t)
+                    }
+                }
+
                 //RELEASE METADATA
                 var release = {
                     ocid: String(data[0].cp.ocid),
                     id: "RELEASE_" + data[0].cp.ocid + "_" + (new Date()).toISOString(),
                     date: dateString( data[0].cp.fecha_creacion ),
-                    tag: ["contract"],
+                    tag: tags,
                     initiationType: "tender"
                 };
 
@@ -498,7 +510,7 @@ module.exports = {
 
                 release.language = 'es';
 
-                if (type =="release-package"){
+                if (type === "release-package"){
 
                     var publisher = {
                         name: data[3].name,

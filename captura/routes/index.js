@@ -1169,7 +1169,7 @@ router.get('/publish/:type/:localid/:outputname', function (req,res) {
     var type = req.params.type;
 
 
-    ocds.getOCDSJSON( Number(req.params.localid) , req.params.type, edca_db ).then(function (data) {
+    ocds.getOCDSJSON( Number(req.params.localid) , req.params.type, db_conf.edca_db ).then(function (data) {
 
         delete data.localid;
 
