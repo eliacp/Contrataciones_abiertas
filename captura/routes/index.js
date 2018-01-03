@@ -1196,7 +1196,7 @@ router.get('/publish/:type/:localid/:outputname', function (req,res) {
     }).catch(function (error) {
         console.log(error);
         res.json ({
-            message: "El proceso "+localid+" no existe"
+            message: `El proceso ${localid} no existe`
         });
     });
 

@@ -68,7 +68,7 @@ module.exports = {
             }).then(function (data) {
 
                 function checkValue( x ) {
-                    return ( x != null && x !== '' && typeof x !== "undefined");
+                    return ( x !== null && x !== '' && typeof x !== "undefined");
                 }
 
                 function dateString( obj ) {
@@ -247,7 +247,56 @@ module.exports = {
                 let tags = [];
                 for (var t in data[0].tags){
                     if (data[0].tags[t] === true){
-                        tags.push(t)
+                        switch (t){
+                            case "planning":
+                                tags.push("planning");
+                                break;
+                            case "planningupdate":
+                                tags.push("planningUpdate");
+                                break;
+                            case "tender":
+                                tags.push("tender");
+                                break;
+                            case "tenderamendment":
+                                tags.push("tenderAmendment");
+                                break;
+                            case "tenderupdate":
+                                tags.push("tenderUpdate");
+                                break;
+                            case "tendercancellation":
+                                tags.push("tenderCancellation");
+                                break;
+                            case "award":
+                                tags.push("award");
+                                break;
+                            case "awardupdate":
+                                tags.push("awardUpdate");
+                                break;
+                            case "awardcancellation":
+                                tags.push("awardCancellation");
+                                break;
+                            case "contract":
+                                tags.push("contract");
+                                break;
+                            case "contractupdate":
+                                tags.push("contractUpdate");
+                                break;
+                            case "contractamendment":
+                                tags.push("contractAmendment");
+                                break;
+                            case "implementation":
+                                tags.push("implementation");
+                                break;
+                            case "implementationupdate":
+                                tags.push("implementationUpdate");
+                                break;
+                            case "contracttermination":
+                                tags.push("contractTermination");
+                                break;
+                            case "compiled":
+                                tags.push("compiled");
+                                break;
+                        }
                     }
                 }
 
