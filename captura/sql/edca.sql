@@ -95,6 +95,8 @@ details text
 
 drop table if exists roles cascade;
 create table roles(
+parties_id integer references parties on delete cascade,
+id serial primary key,
 buyer boolean,
 procuringentity boolean,
 supplier boolean,

@@ -510,15 +510,16 @@ router.post('/uris',isAuthenticated, function(req, res){
 
 });
 
+let isChecked = (checkbox) => {
+    if (typeof checkbox !== "undefined"){
+        return checkbox === 'on'
+    }
+    return false;
+};
+
 router.post('/update-uris',isAuthenticated, function (req, res) {
     //console.log(req.body);
 
-    var isChecked = (checkbox) => {
-        if (typeof checkbox !== "undefined"){
-            return checkbox === 'on'
-        }
-        return false;
-    };
 
     db_conf.edca_db.tx(function (t) {
         return this.batch([
@@ -1562,6 +1563,22 @@ router.put('/1.1/party/', function (req,res) {
         req.body.contactpoint_faxnumber,
         req.body.contactpoint_url
     ]).then(function (data) {
+
+        return db_conf.edca_db.one('insert into roles values (default, $1,$2,$3,$4,$5,$6,$7,$8,$9,$10) returning id, parties_id',[
+            data.id,
+            isChecked(req.body.buyer),
+            isChecked(req.body.procuringEntity),
+            isChecked(req.body.supplier),
+            isChecked(req.body.tenderer),
+            isChecked(req.body.funder),
+            isChecked(req.body.enquirer),
+            isChecked(req.body.payer),
+            isChecked(req.body.payee),
+            isChecked(req.body.reviewBody)
+        ]);
+
+    }).then(function(data) {
+
         res.jsonp({
             status: 'Ok',
             data : data
