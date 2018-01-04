@@ -93,8 +93,21 @@ contactpoint_url text,
 details text
 );
 
+drop table if exists roles cascade;
+create table roles(
+buyer boolean,
+procuringentity boolean,
+supplier boolean,
+tenderer boolean,
+funder boolean,
+enquirer boolean,
+payer boolean,
+payee boolean,
+reviewnody boolean
+);
+
 /* Party Role Catalog */
-drop table if exists PartyRoles cascade;
+drop table if exists RoleCatalog cascade;
 create table PartyRoles(
     id serial primary key,
     code text,
@@ -102,7 +115,7 @@ create table PartyRoles(
     description text
 );
 
-insert into PartyRoles( code, title, description ) values
+insert into RoleCatalog( code, title, description ) values
 ('buyer', 'Buyer', 'The buyer is the entity whose budget will be used to purchase the goods.'),
 ('procuringEntity', 'Procuring Entity', 'The entity managing the procurement, which may be different from the buyer who is paying / using the items being procured.'),
 ('supplier', 'Supplier', 'The entity awarded or contracted to provide supplies, works or services.'),

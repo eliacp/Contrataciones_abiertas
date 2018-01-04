@@ -2212,4 +2212,9 @@ router.delete('/1.1/:path/changes', function (req, res) {
 
 });
 
+router.post('/1.1/add_party.html', (req, res) => {
+    res.render('modals/add_party.ejs', { contractingprocess_id : req.body.contractingprocess_id });
+});
+
+
 module.exports = router;

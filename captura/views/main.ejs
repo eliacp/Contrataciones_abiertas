@@ -50,15 +50,24 @@
             <div class="well">
                 <p><strong>Contratación</strong></p>
 
-                    <button class="btn btn-primary" data-action="parties" data-contractingprocess_id="<%= cp.id %>" data-toggle="modal"
-                    data-target="#genericModal"> <i class="fa fa-users"></i> Parties</button>
-                    <button class="btn btn-primary" data-action="edit_organization" data-contractingprocess_id="<%= cp.id %>" data-table="buyer" data-toggle="modal"
-                            data-target="#genericModal">
-                        Comprador <!--Buyer--> <i class="fa fa-user"></i></button>
-                    <button class="btn btn-primary" data-action="edit_publisher" data-contractingprocess_id="<%= cp.id %>" data-toggle="modal" data-target="#genericModal">
-                        Editor <i class="fa fa-user"></i> </button>
-                    <button class="btn btn-primary" data-action="edit_uris" data-contractingprocess_id="<%= cp.id %>" data-toggle="modal" data-target="#genericModal">
-                        Metadatos <i class="fa fa-link"></i> </button>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-users"></i> Partes <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li data-action="add_party" data-toggle="modal" data-contractingprocess_id="<%= cp.id%>" data-target="#genericModal"> <a href="#"><i class="fa fa-user-plus"></i> Registrar</a></li>
+                        <li data-action="edit_parties" data-toggle="modal" data-contractingprocess_id="<%= cp.id%>" data-target="#genericModal"> <a href="#"><i class="fa fa-edit"></i> Editar</a></li>
+                    </ul>
+                </div>
+
+
+                <button class="btn btn-primary" data-action="edit_organization" data-contractingprocess_id="<%= cp.id %>" data-table="buyer" data-toggle="modal"
+                        data-target="#genericModal">
+                    Comprador <!--Buyer--> <i class="fa fa-user"></i></button>
+                <button class="btn btn-primary" data-action="edit_publisher" data-contractingprocess_id="<%= cp.id %>" data-toggle="modal" data-target="#genericModal">
+                    Editor <i class="fa fa-user"></i> </button>
+                <button class="btn btn-primary" data-action="edit_uris" data-contractingprocess_id="<%= cp.id %>" data-toggle="modal" data-target="#genericModal">
+                    Metadatos <i class="fa fa-link"></i> </button>
 
             </div>
         </div>
