@@ -128,36 +128,6 @@ insert into RoleCatalog( code, title, description ) values
 ('payee', 'Payee', 'A party in receipt of a payment from a transaction'),
 ('reviewBody', 'Review Body','A party responsible for the review of this procurement process. This party often has a role in any challenges made to the contract award.');
 
-drop table if exists Suppliers cascade;
-create table Suppliers(
-id serial primary key,
-contractingprocess_id integer references ContractingProcess(id),
-parties_id integer references Parties(id)
-);
-
-drop table if exists Tenderers cascade;
-create table Tenderers (
-id serial primary key,
-contractingprocess_id integer references ContractingProcess(id),
-parties_id integer references Parties(id)
-);
-
-/* Buyers */
-drop table if exists Buyers cascade;
-create table Buyers(
-id serial primary key,
-contractingprocess_id integer references ContractingProcess(id),
-parties_id integer references Parties(id)
-);
-
-/* Procuring Entities */
-drop table if exists ProcuringEntities cascade;
-create table ProcuringEntities(
-id serial primary key,
-contractingprocess_id integer references ContractingProcess(id),
-parties_id integer references Parties(id)
-);
-
 /* Amendments */
 /* Tender Amendments */
 drop table if exists TenderAmendments cascade;

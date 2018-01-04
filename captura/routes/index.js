@@ -1491,6 +1491,10 @@ router.post('/update-implementation', function (req,res) {
  *  OCDS 1.1
  *  */
 
+router.post('/1.1/add_party.html', (req, res) => {
+    res.render('modals/add_party.ejs', { contractingprocess_id : req.body.contractingprocess_id });
+});
+
 //get parties
 router.get('/1.1/parties', function (req, res) {
 
@@ -1667,204 +1671,7 @@ router.delete('/1.1/parties', function (req, res) {
 
 });
 
-//add party roles
-router.put('/1.1/role/', function (req, res) {
-
-    var role = req.body.role;
-
-    switch (role){
-        case 'buyer':
-            db_conf.edca_db.oneOrNone('select * from buyers where contractingprocess_id = $1',[
-                req.body.contractingprocess_id
-            ]).then(function (buyer) {
-                if (buyer === null){
-                    return db_conf.edca_db.one('insert into buyers(parties_id, contractingprocess_id) values ($1,$2) returning id', [
-                        req.body.parties_id,
-                        req.body.contractingprocess_id
-                    ]);
-                }
-
-                return db_conf.edca_db.one('update buyers set parties_id=$1 where contractingprocess_id=$2 returning id', [
-                    req.body.parties_id,
-                    req.body.contractingprocess_id
-                ]);
-            }).then(function (buyer) {
-                res.jsonp({
-                    status: 'Ok',
-                    data: buyer
-                })
-            }).catch(function (error) {
-                res.status(400).jsonp({
-                    status: 'Error',
-                    error: error
-                });
-            });
-            break;
-        case 'procuringEntity':
-            db_conf.edca_db.oneOrNone('select * from procuringentities where contractingprocess_id = $1',[
-                req.body.contractingprocess_id
-            ]).then(function (pe) {
-                if (pe === null){
-                    return db_conf.edca_db.one('insert into procuringentities(parties_id, contractingprocess_id) values ($1,$2) returning id', [
-                        req.body.parties_id,
-                        req.body.contractingprocess_id
-                    ]);
-                }
-
-                return db_conf.edca_db.one('update procuringentities set parties_id=$1 where contractingprocess_id=$2 returning id', [
-                    req.body.parties_id,
-                    req.body.contractingprocess_id
-                ]);
-            }).then(function (pe) {
-                res.jsonp({
-                    status: 'Ok',
-                    data: pe
-                })
-            }).catch(function (error) {
-                res.status(400).jsonp({
-                    status: 'Error',
-                    error: error
-                });
-            });
-            break;
-        case 'supplier':
-            db_conf.edca_db.oneOrNone('select * from suppliers where contractingprocess_id = $1 and parties_id = $2',[
-                req.body.contractingprocess_id,
-                req.body.parties_id
-            ]).then(function (supplier) {
-                if (supplier === null){
-                    return db_conf.edca_db.one('insert into suppliers (parties_id, contractingprocess_id) values ($1,$2) returning id', [
-                        req.body.parties_id,
-                        req.body.contractingprocess_id
-                    ]);
-                }
-
-                return supplier;
-            }).then(function (supplier) {
-                res.jsonp({
-                    status: 'Ok',
-                    data: supplier
-                });
-            }).catch(function (error) {
-                res.status(400).jsonp({
-                    status: 'Error',
-                    error: error
-                });
-            });
-            break;
-        case 'tenderer':
-            db_conf.edca_db.oneOrNone('select * from tenderers where contractingprocess_id = $1 and parties_id = $2',[
-                req.body.contractingprocess_id,
-                req.body.parties_id
-            ]).then(function (tenderer) {
-                if (supplier === null){
-                    return db_conf.edca_db.one('insert into tenderers(parties_id, contractingprocess_id) values ($1,$2) returning id', [
-                        req.body.parties_id,
-                        req.body.contractingprocess_id
-                    ]);
-                }
-
-                return tenderer;
-            }).then(function (tenderer) {
-                res.jsonp({
-                    status: 'Ok',
-                    data: tenderer
-                });
-            }).catch(function (error) {
-                res.status(400).jsonp({
-                    status: 'Error',
-                    error: error
-                });
-            });
-            break;
-        case 'funder':
-            res.jsonp({
-                status: 'Ok',
-                message: 'Not implemented yet'
-            });
-            break;
-        case 'enquirer':
-            res.jsonp({
-                status: 'Ok',
-                message: 'Not implemented yet'
-            });
-            break;
-        case 'payer':
-            res.jsonp({
-                status: 'Ok',
-                message: 'Not implemented yet'
-            });
-            break;
-        case 'payee':
-            res.jsonp({
-                status: 'Ok',
-                message: 'Not implemented'
-            });
-            break;
-        case 'reviewBody':
-            res.jsonp({
-                status: 'Ok',
-                message: 'Not implemented'
-            });
-            break;
-        default:
-            res.status(400).jsonp({
-                status: 'Error',
-                message: 'Opción desconocida'
-            });
-    }
-
-});
-
-//remove party role
-router.delete('/1.1/role', function (req, res) {
-
-    var rel = '';
-    switch (req.body.role){
-        case 'buyer':
-            rel = 'buyers';
-            break;
-        case 'procuringEntity':
-            rel = 'procuringentities';
-            break;
-        case 'supplier':
-            rel = 'suppliers';
-            break;
-        case 'tenderer':
-            rel = 'tenderers';
-            break;
-        /*case 'funder':
-            break;
-        case 'enquirer':
-            break;
-        case 'payer':
-            break;
-        case 'payee':
-            break;
-        case 'reviewBody':
-            break;*/
-        default:
-            res.jsonp({
-                status: 'Error',
-                message: 'Opción desconocida'
-            });
-    }
-
-    db_conf.edca_db.one('delete from ~$1 where parties_id=$2', [
-        rel,
-        req.body.parties_id
-    ]).then(function (deleted) {
-        res.jsonp({
-            status: 'Ok',
-            data: deleted
-        });
-    }).catch(function (error) {
-        res.status(400).jsonp({
-            status: 'Error',
-            error: error
-        });
-    })
-});
+//debe existir una restricción para que asignar no más de un party como buyer o procuringEntity
 
 //get amenments
 router.get('/1.1/:path/amendments', function (req, res) {
@@ -2228,10 +2035,5 @@ router.delete('/1.1/:path/changes', function (req, res) {
     });
 
 });
-
-router.post('/1.1/add_party.html', (req, res) => {
-    res.render('modals/add_party.ejs', { contractingprocess_id : req.body.contractingprocess_id });
-});
-
 
 module.exports = router;
