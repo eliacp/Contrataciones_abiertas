@@ -1631,7 +1631,7 @@ router.post('/1.1/party', function(req,res){
     });
 });
 
-router.delete('/1.1/party', function (req, res) {
+router.delete('/1.1/party', isAuthenticated, (req, res) => {
     db_conf.edca_db.one('delete from parties where id = $1 returning id', req.body.id).then(function (party) {
         res.jsonp({
             status : 'Ok',
@@ -2109,7 +2109,7 @@ router.put('/1.1/:path/change', function (req, res) {
 });
 
 //edit change
-router.post('/1.1/:path/change', function(){
+router.post('/1.1/:path/change', (req, res) => {
 
     var rel = '';
     switch ( req.params.path ){
