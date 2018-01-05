@@ -93,6 +93,16 @@ contactpoint_url text,
 details text
 );
 
+drop table if exists PartiesAdditionalIdentifiers cascade;
+create table PartiesAdditionalIdentifiers(
+	id serial primary key,
+	contractingprocess_id int references ContractingProcess(id) on delete cascade,
+	parties_id int references parties(id) on delete cascade,
+	scheme text,
+	legalname text,
+	uri text
+);
+
 drop table if exists roles cascade;
 create table roles(
 contractingprocess_id integer references contractingprocess(id) on delete cascade,
@@ -276,37 +286,7 @@ create table Budget (
 	budget_uri text
 	);
 
-/* BUYER (organization) */
-drop table if exists Buyer cascade;
-create table Buyer (
-	id serial primary key, 
-	contractingprocess_id int references ContractingProcess(id) on delete cascade,
-	name text,
-	identifier_scheme text,
-	identifier_id text,
-	identifier_legalname text,
-	identifier_uri text,
-	address_streetaddress text,
-	address_locality text, 
-	address_region text, 
-	address_postalcode text, 
-	address_countryname text,
-	contactpoint_name text, 
-	contactpoint_email text, 
-	contactpoint_telephone text, 
-	contactpoint_faxnumber text, 
-	contactpoint_url text
-	);
 
-drop table if exists BuyerAdditionalIdentifiers cascade;
-create table BuyerAdditionalIdentifiers(
-	id serial primary key,
-	contractingprocess_id int references ContractingProcess(id) on delete cascade,
-	buyer_id int references buyer(id) on delete cascade,
-	scheme text, 
-	legalname text, 
-	uri text
-);
 
 /* TENDER (licitación) */
 drop table if exists Tender cascade;
@@ -356,73 +336,6 @@ create table TenderDocuments (
 	language text 
 	);
 
-/* Tenderer (Organization) */
-drop table if exists Tenderer cascade;
-create table Tenderer(
-	id serial primary key,
-	ContractingProcess_id int references ContractingProcess(id) on delete cascade,
-	Tender_id int references Tender(id) on delete cascade,
-	name text,
-	identifier_scheme text,
-	identifier_id text,
-	identifier_legalname text, 
-	identifier_uri text,
-	address_streetaddress text,
-	address_locality text, 
-	address_region text, 
-	address_postalcode text, 
-	address_countryname text,
-	contactpoint_name text, 
-	contactpoint_email text, 
-	contactpoint_telephone text, 
-	contactpoint_faxnumber text, 
-	contactpoint_url text
-	);
-
-drop table if exists TendererAdditionalIdentifiers cascade;
-create table TendererAdditionalIdentifiers(
-	id serial primary key,
-	contractingprocess_id int references ContractingProcess(id) on delete cascade,
-	tenderer_id int references Tenderer(id) on delete cascade,
-	scheme text, 
-	legalname text, 
-	uri text
-);
-
-/* ProcuringEntity (organization) */
-
-drop table if exists ProcuringEntity cascade;
-create table ProcuringEntity(
-	id serial primary key,
-	ContractingProcess_id int references ContractingProcess(id) on delete cascade,
-	Tender_id int references Tender(id) on delete cascade,
-	identifier_scheme text,
-	identifier_id text,
-	identifier_legalname text,
-	identifier_uri text,
-    name text,
-	address_streetaddress text,
-	address_locality text,
-	address_region text,
-	address_postalcode text,
-	address_countryname text,
-	contactpoint_name text,
-	contactpoint_email text,
-	contactpoint_telephone text,
-	contactpoint_faxnumber text,
-	contactpoint_url text
-	);
-
-drop table if exists ProcuringEntityAdditionalIdentifiers cascade;
-create table ProcuringEntityAdditionalIdentifiers(
-	id serial primary key,
-	contractingprocess_id int references ContractingProcess(id) on delete cascade,
-	tender_id int references Tender(id) on delete cascade,
-	procuringentity_id int references ProcuringEntity(id) on delete cascade,
-	scheme text, 
-	legalname text, 
-	uri text
-);
 
 drop table if exists TenderMilestone cascade;
 create table TenderMilestone(
@@ -523,8 +436,6 @@ create table AwardAmendmentChanges(
 );
 
 
-
-
 drop table if exists AwardDocuments cascade;
 create table AwardDocuments(
 	id serial primary key,
@@ -539,42 +450,6 @@ create table AwardDocuments(
 	date_modified timestamp, 
 	format text, 
 	language text 
-);
-
-
-/* Supplier (Organization) */
-drop table if exists Supplier cascade;
-create table Supplier(
-	id serial primary key,
-	contractingprocess_id int references ContractingProcess(id) on delete cascade, 
-	award_id int references Award(id) on delete cascade,
-	name text,
-	identifier_scheme text,
-	identifier_id text,
-	identifier_legalname text, 
-	identifier_uri text,
-	address_streetaddress text,
-	address_locality text, 
-	address_region text, 
-	address_postalcode text, 
-	address_countryname text,
-	contactpoint_name text, 
-	contactpoint_email text, 
-	contactpoint_telephone text, 
-	contactpoint_faxnumber text, 
-	contactpoint_url text
-);
-
-
-drop table if exists SupplierAdditionalIdentifiers cascade;
-create table SupplierAdditionalIdentifiers(
-	id serial primary key, 
-	contractingprocess int references ContractingProcess(id) on delete cascade,
-	award_id int references Award(id) on delete cascade, 
-	supplier_id int references Supplier(id) on delete cascade,
-	scheme text, 
-	legalname text, 
-	uri text
 );
 
 drop table if exists AwardItem cascade;

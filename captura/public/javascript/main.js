@@ -115,6 +115,20 @@ $('#genericModal').on('show.bs.modal', function (event) {
 
     switch ( button.data('action') ){
         //import data from csv files
+        case "edit_publisher":
+            modal.find('.modal-title').text('Editar');
+            modal.find('#modal_content').html("");
+            modal.find('#modal_content').load('/publisher/',{ localid: button.data('contractingprocess_id') }, function () {
+                // Edit publisher submit event
+                $('#updatepub_form').submit(function (event) {
+                    $.post('/update-publisher/', $(this).serialize()).done(function (data) {
+                        alert( data.description );
+                        if ( data.status === 'Ok'){ modal.modal('hide');}
+                    });
+                    event.preventDefault();
+                });
+            });
+            break;
         case "edit_parties":
             modal.find('.modal-title').text('Parties');
             modal.find('#modal_content').load('/1.1/parties.html', { contractingprocess_id : button.data("contractingprocess_id")});
@@ -125,6 +139,36 @@ $('#genericModal').on('show.bs.modal', function (event) {
             $('#add_party_form').submit(function (e) {
                 //
                 e.preventDefault();
+            });
+            break;
+        case "edit_organizations":
+            modal.find('.modal-title').text('Editar organizaciones');
+            modal.find('#modal_content').html("");
+            modal.find('#modal_content').load( '/organization-list/' ,{ ocid: button.data('contractingprocess_id'), table : button.data('table') }, function () {
+                var div = modal.find('#modal_content');
+                div.find('.btn').click(function () {
+                    var b = $(this);
+                    $.post('/delete', { id : b.data('id'), table: b.data('table') }).done(function(data){
+                        alert(data.msg);
+                        if ( data.status === 0 ){
+                            b.parent().parent().remove();
+                        }
+                    });
+                });
+            });
+            break;
+        case "edit_organization":
+            modal.find('.modal-title').text('Editar organización');
+            modal.find('#modal_content').html("");
+            modal.find('#modal_content').load('/org-fields/',{ localid: button.data('contractingprocess_id') ,table : button.data('table') }, function () {
+                //Update buyer - procuring entity event
+                $( "#updatesingleorg_form" ).submit(function( event ) {
+                    $.post('/update-organization/', $(this).serialize()).done(function (data) {
+                        alert(data.description);
+                        if (data.status === 'Ok'){modal.modal('hide');}
+                    });
+                    event.preventDefault();
+                });
             });
             break;
         case "import_data":
@@ -314,50 +358,6 @@ $('#genericModal').on('show.bs.modal', function (event) {
                             b.parent().parent().remove();
                         }
                     });
-                });
-            });
-            break;
-        case "edit_publisher":
-            modal.find('.modal-title').text('Editar');
-            modal.find('#modal_content').html("");
-            modal.find('#modal_content').load('/publisher/',{ localid: button.data('contractingprocess_id') }, function () {
-                // Edit publisher submit event
-                $('#updatepub_form').submit(function (event) {
-                    $.post('/update-publisher/', $(this).serialize()).done(function (data) {
-                        alert( data.description );
-                        if ( data.status === 'Ok'){ modal.modal('hide');}
-                    });
-                    event.preventDefault();
-                });
-            });
-            break;
-        case "edit_organizations":
-            modal.find('.modal-title').text('Editar organizaciones');
-            modal.find('#modal_content').html("");
-            modal.find('#modal_content').load( '/organization-list/' ,{ ocid: button.data('contractingprocess_id'), table : button.data('table') }, function () {
-                var div = modal.find('#modal_content');
-                div.find('.btn').click(function () {
-                    var b = $(this);
-                    $.post('/delete', { id : b.data('id'), table: b.data('table') }).done(function(data){
-                        alert(data.msg);
-                        if ( data.status === 0 ){
-                            b.parent().parent().remove();
-                        }
-                    });
-                });
-            });
-            break;
-        case "edit_organization":
-            modal.find('.modal-title').text('Editar organización');
-            modal.find('#modal_content').html("");
-            modal.find('#modal_content').load('/org-fields/',{ localid: button.data('contractingprocess_id') ,table : button.data('table') }, function () {
-                //Update buyer - procuring entity event
-                $( "#updatesingleorg_form" ).submit(function( event ) {
-                    $.post('/update-organization/', $(this).serialize()).done(function (data) {
-                        alert(data.description);
-                        if (data.status === 'Ok'){modal.modal('hide');}
-                    });
-                    event.preventDefault();
                 });
             });
             break;
