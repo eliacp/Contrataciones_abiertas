@@ -1,0 +1,17 @@
+<%for (var i=0; i< parties.length; i++){%>
+<div class="well">
+    <p>
+        Nombre: <b> <%= parties[i].name%> </b>
+    </p>
+    <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Opciones <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a href="#">Editar</a></li>
+            <li><a href="#">Eliminar</a></li>
+        </ul>
+    </div>
+
+</div>
+<%}%>

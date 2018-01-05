@@ -1495,6 +1495,13 @@ router.post('/1.1/add_party.html', (req, res) => {
     res.render('modals/add_party.ejs', { contractingprocess_id : req.body.contractingprocess_id });
 });
 
+router.post('/1.1/parties.html', function (req, res) {
+   let contractingprocess_id = req.body.contractingprocess_id;
+   db_conf.edca_db.manyOrNone("select * from parties where contractingprocess_id = $1", [contractingprocess_id]).then(function (parties) {
+       res.render('modals/parties.ejs', { parties: parties });
+   });
+});
+
 //get parties
 router.get('/1.1/parties', function (req, res) {
 

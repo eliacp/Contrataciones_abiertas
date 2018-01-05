@@ -117,12 +117,15 @@ $('#genericModal').on('show.bs.modal', function (event) {
         //import data from csv files
         case "edit_parties":
             modal.find('.modal-title').text('Parties');
-            modal.find('#modal_content').html("<strong>Parties</strong>");
-            //modal.find('#modal_content').load ('/uploadfile-fields', { localid : button.data('contractingprocess_id'), stage: button.data('stage') });
+            modal.find('#modal_content').load('/1.1/parties.html', { contractingprocess_id : button.data("contractingprocess_id")});
             break;
         case "add_party":
             modal.find('.modal-title').text("Registrar parte");
             modal.find('#modal_content').load('/1.1/add_party.html', { contractingprocess_id : button.data("contractingprocess_id")});
+            $('#add_party_form').submit(function (e) {
+                //
+                e.preventDefault();
+            });
             break;
         case "import_data":
             modal.find('.modal-title').text('Importar datos');
