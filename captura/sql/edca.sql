@@ -95,7 +95,8 @@ details text
 
 drop table if exists roles cascade;
 create table roles(
-parties_id integer references parties on delete cascade,
+contractingprocess_id integer references contractingprocess(id) on delete cascade,
+parties_id integer references parties(id) on delete cascade,
 id serial primary key,
 buyer boolean,
 procuringentity boolean,
@@ -105,7 +106,7 @@ funder boolean,
 enquirer boolean,
 payer boolean,
 payee boolean,
-reviewnody boolean
+reviewbody boolean
 );
 
 /* Party Role Catalog */
