@@ -412,7 +412,7 @@ router.post('/new-process', isAuthenticated, function (req, res) {
                     t.one("insert into Tender (ContractingProcess_id) values ($1) returning id as tender_id", [process.id]),
                     t.one("insert into Award (ContractingProcess_id) values ($1) returning id as award_id", [process.id]),
                     t.one("insert into Contract (ContractingProcess_id) values ($1) returning id as contract_id", [process.id]),
-                    t.one("insert into Buyer (ContractingProcess_id) values ($1) returning id as buyer_id",[process.id]),
+                    //t.one("insert into Buyer (ContractingProcess_id) values ($1) returning id as buyer_id",[process.id]),
                     t.one("insert into Publisher (ContractingProcess_id) values ($1) returning id as publisher_id", [process.id]),
                     t.one("insert into user_contractingprocess(user_id, contractingprocess_id) values ($1,$2) returning id", [req.user.id, process.id]),
                     t.one("insert into tags values (default, $1, true, false, false, false, false, false, false, false, false, false,false, false, false, false, false, false) returning id", [ process.id ]),
@@ -427,10 +427,10 @@ router.post('/new-process', isAuthenticated, function (req, res) {
                     { tender : { id: info[2].tender_id } },
                     { award: { id:info[3].award_id } },
                     { contract: { id:info[4].contract_id } },
-                    { buyer : { id: info[5].buyer_id } },
+                    //{ buyer : { id: info[5].buyer_id } },
                     { publisher: { id: info[6].publisher_id } },
                     t.one("insert into Budget (ContractingProcess_id, Planning_id) values ($1, $2 ) returning id as budget_id", [info[0].id, info[1].planning_id]),
-                    t.one("insert into ProcuringEntity (contractingprocess_id, tender_id) values ($1, $2) returning id as procuringentity_id",[info[0].id, info[2].tender_id]),
+                    //t.one("insert into ProcuringEntity (contractingprocess_id, tender_id) values ($1, $2) returning id as procuringentity_id",[info[0].id, info[2].tender_id]),
                     t.one("insert into Implementation (ContractingProcess_id, Contract_id ) values ($1, $2) returning id as implementation_id", [info[0].id, info[4].contract_id])
                 ]);
             });
