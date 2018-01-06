@@ -72,8 +72,9 @@ create table links(
 drop table if exists Parties cascade;
 create table Parties(
 contractingprocess_id integer references contractingprocess(id) on delete cascade,
-name text,
 id serial primary key,
+partyid text,
+name text,
 identifier_scheme text,
 identifier_id text,
 identifier_legalname text,

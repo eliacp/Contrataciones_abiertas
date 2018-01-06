@@ -1453,13 +1453,14 @@ router.get('/1.1/parties', function (req, res) {
 router.put('/1.1/party/', function (req,res) {
     //falta verificar que la organización no exista
 
-    db_conf.edca_db.one('insert into parties (contractingprocess_id, name, identifier_scheme, ' +
+    db_conf.edca_db.one('insert into parties (contractingprocess_id, name, partyid, identifier_scheme, ' +
         ' identifier_id, identifier_legalname, identifier_uri, address_streetaddress, address_locality, ' +
         ' address_region, address_postalcode, address_countryname, contactpoint_name, contactpoint_email, ' +
         ' contactpoint_telephone, contactpoint_faxnumber, contactpoint_url) values' +
-        ' ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16) returning id', [
+        ' ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17) returning id', [
         req.body.contractingprocess_id,
         req.body.name,
+        req.body.partyid,
         req.body.identifier_scheme,
         req.body.identifier_id,
         req.body.identifier_legalname,
@@ -1529,11 +1530,12 @@ router.post('/1.1/party', function(req,res){
 
     db_conf.edca_db.tx(function (t) {
         return t.batch([
-            this.one('update parties set name=$1, identifier_scheme=$2,' +
-                ' identifier_id=$3, identifier_legalname=$4, identifier_uri=$5, address_streetaddress=$6, address_locality=$7,' +
-                ' address_region=$8, address_postalcode=$9, address_countryname=$10, contactpoint_name=$11, contactpoint_email=$12,' +
-                ' contactpoint_telephone=$13, contactpoint_faxnumber=$14, contactpoint_url=$15 where id = $16 returning id',[
+            this.one('update parties set name=$1, partyid=$2, identifier_scheme=$3,' +
+                ' identifier_id=$4, identifier_legalname=$5, identifier_uri=$6, address_streetaddress=$7, address_locality=$8,' +
+                ' address_region=$9, address_postalcode=$10, address_countryname=$11, contactpoint_name=$12, contactpoint_email=$13,' +
+                ' contactpoint_telephone=$14, contactpoint_faxnumber=$15, contactpoint_url=$16 where id = $17 returning id',[
                 req.body.name,
+                req.body.partyid,
                 req.body.identifier_scheme,
                 req.body.identifier_id,
                 req.body.identifier_legalname,

@@ -88,52 +88,64 @@ module.exports = {
                     }
                 }
 
-                function getOrganizations(array){
-                    var organizations = [];
-                    for ( var i=0; i < array.length; i++){
-                        var organization={};
+                function getParties(array) {
+                    var parties = [];
+                    for(let p of array) {
+                        parties.push({
+                            name: p.name,
+                            id: p.id
+                        })
+                    }
+                    return parties;
+                }
 
-                        organization.identifier = {};
-                        if( checkValue(array[i].identifier_scheme)  ){organization.identifier.scheme = array[i].identifier_scheme;}
-                        if( checkValue(array[i].identifier_id) ){organization.identifier.id = array[i].identifier_id;}
-                        if( checkValue(array[i].identifier_legalname) ){organization.identifier.legalName = array[i].identifier_legalname;}
-                        if( checkValue(array[i].identifier_uri) ){organization.identifier.uri = array[i].identifier_uri;}
+                function getFullParties(array){
+                    //console.log(array);
+                    var parties = [];
+                    for ( var i=0; i < array.length; i++){
+                        var party={};
+
+                        if( checkValue(array[i].name) ){party.name = array[i].name;}
+                        if( checkValue(array[i].partyid) ){party.id = array[i].partyid;}
+                        party.identifier = {};
+                        if( checkValue(array[i].identifier_scheme)  ){party.identifier.scheme = array[i].identifier_scheme;}
+                        if( checkValue(array[i].identifier_id) ){party.identifier.id = array[i].identifier_id;}
+                        if( checkValue(array[i].identifier_legalname) ){party.identifier.legalName = array[i].identifier_legalname;}
+                        if( checkValue(array[i].identifier_uri) ){party.identifier.uri = array[i].identifier_uri;}
 
                         //additionalIdentifiers:[ ],
 
-                        if( checkValue(array[i].name) ){organization.name = array[i].name;}
+                        party.address = {};
+                        if( checkValue(array[i].address_streetaddress) ){party.address.streetAddress = array[i].address_streetaddress;}
+                        if( checkValue(array[i].address_locality) ){party.address.locality = array[i].address_locality;}
+                        if( checkValue(array[i].address_region) ){party.address.region = array[i].address_region;}
+                        if( checkValue(array[i].address_postalcode) ){party.address.postalCode = array[i].address_postalcode;}
+                        if( checkValue(array[i].address_countryname) ){party.address.countryName = array[i].address_countryname;}
 
-                        organization.address = {};
-                        if( checkValue(array[i].address_streetaddress) ){organization.address.streetAddress = array[i].address_streetaddress;}
-                        if( checkValue(array[i].address_locality) ){organization.address.locality = array[i].address_locality;}
-                        if( checkValue(array[i].address_region) ){organization.address.region = array[i].address_region;}
-                        if( checkValue(array[i].address_postalcode) ){organization.address.postalCode = array[i].address_postalcode;}
-                        if( checkValue(array[i].address_countryname) ){organization.address.countryName = array[i].address_countryname;}
+                        party.contactPoint = {};
+                        if( checkValue(array[i].contactpoint_name) ){party.contactPoint.name = array[i].contactpoint_name;}
+                        if( checkValue(array[i].contactpoint_email) ){party.contactPoint.email = array[i].contactpoint_email;}
+                        if( checkValue(array[i].contactpoint_telephone) ){party.contactPoint.telephone = array[i].contactpoint_telephone;}
+                        if( checkValue(array[i].contactpoint_faxnumber) ){party.contactPoint.faxNumber = array[i].contactpoint_faxnumber;}
+                        if( checkValue(array[i].contactpoint_url) ){party.contactPoint.url = array[i].contactpoint_url;}
 
-                        organization.contactPoint = {};
-                        if( checkValue(array[i].contactpoint_name) ){organization.contactPoint.name = array[i].contactpoint_name;}
-                        if( checkValue(array[i].contactpoint_email) ){organization.contactPoint.email = array[i].contactpoint_email;}
-                        if( checkValue(array[i].contactpoint_telephone) ){organization.contactPoint.telephone = array[i].contactpoint_telephone;}
-                        if( checkValue(array[i].contactpoint_faxnumber) ){organization.contactPoint.faxNumber = array[i].contactpoint_faxnumber;}
-                        if( checkValue(array[i].contactpoint_url) ){organization.contactPoint.url = array[i].contactpoint_url;}
-
-                        organization.roles = [];
+                        party.roles = [];
 
                         var roles = ["buyer","procuringEntity","supplier","tenderer","funder", "enquirer","payer","payee","reviewbody"];
 
                         for (var x of roles){
                            if (array[i][x.toLocaleLowerCase()] === true){
-                               organization.roles.push(x);
+                               party.roles.push(x);
                            }
                         }
 
-                        deleteNullProperties(organization, true);
-                        if ( organization !== null ) {
-                            organizations.push(organization);
+                        deleteNullProperties(party, true);
+                        if ( party !== null ) {
+                            parties.push(party);
                         }
 
                     }
-                    return organizations;
+                    return parties;
                 }
 
 
@@ -319,7 +331,7 @@ module.exports = {
                     initiationType: "tender"
                 };
 
-                release.parties = getOrganizations(data[0].parties);
+                release.parties = getFullParties(data[0].parties);
 
                 //PLANNING
                 release.planning = { };
@@ -432,11 +444,17 @@ module.exports = {
                 if(checkValue(data[0].tender.numberoftenderers)){release.tender.numberOfTenderers = data[0].tender.numberoftenderers;}
 
                 if (data[1].length > 0) {
-                    release.tender.tenderers = getOrganizations(data[1]);
+                    release.tender.tenderers = getParties(data[1]);
                 }
 
                 // Tender -> procuring entity
-                release.tender.procuringEntity = (getOrganizations( [ data[0].procuringentity ]))[0];
+             if (data[0].procuringentity !== null) {
+                 release.tender.procuringEntity = {
+                     name: data[0].procuringentity.name,
+                     id: data[0].procuringentity.partyid
+                 };
+             }
+
 
                 if( data[5].length > 0) {
                     release.tender.documents = getDocuments(data[5]);
@@ -463,7 +481,12 @@ module.exports = {
                 }
 
                 //BUYER
-                release.buyer = (getOrganizations( [ data[0].buyer ]) )[0];
+                if (data[0].buyer !== null){
+                    release.buyer = {
+                        name: data[0].buyer.name,
+                        id: data[0].buyer.partyid
+                    }
+                }
 
                 //AWARDS
                 var award =  { };
@@ -479,7 +502,7 @@ module.exports = {
 
 
                 if (data[2].length > 0) {
-                    award.suppliers = getOrganizations(data[2]); //pueden pertenecer a diferentes awards
+                    award.suppliers = getParties(data[2]); //pueden pertenecer a diferentes awards
                 }
 
                 if (data[10].length > 0) {

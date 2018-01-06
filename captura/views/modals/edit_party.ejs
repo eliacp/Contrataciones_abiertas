@@ -4,12 +4,15 @@
 
     <p><label>Nombre<!--Name--></label>
         <input name="name" type="text" class="form-control" value="<%= data.name %>"></p>
+    <p><label>ID</label>
+        <input name="partyid" type="text" class="form-control" value="<%= data.partyid%>" required>
+    </p>
     <hr>
     <h4>Identificador</h4>
     <p><label>Esquema <!--Identifier scheme--></label>
         <input name = "identifier_scheme" class="form-control" type="text" value="<%= data.identifier_scheme %>" ></p>
     <p><label>ID<!--Identifier ID--></label>
-        <input name = "identifier_id" class="form-control" type="text" value="<%= data.identifier_id %>" required></p>
+        <input name = "identifier_id" class="form-control" type="text" value="<%= data.identifier_id %>"></p>
     <p><label>Nombre legal<!--Identifier legal name--></label>
         <input name = "identifier_legalname" class="form-control" type="text" value="<%= data.identifier_legalname %>" ></p>
     <p><label>URI<!--Identifier URI--></label>
