@@ -1,19 +1,6 @@
 <form id="add_party_form">
 
-    <label>Roles </label>
-    <div class="well">
-        <label class="checkbox-inline"><input name="buyer" type="checkbox"> Buyer </label><br>
-        <label class="checkbox-inline"><input name="procuringEntity" type="checkbox"> Procuring Entity </label><br>
-        <label class="checkbox-inline"><input name="supplier" type="checkbox"> Supplier </label><br>
-        <label class="checkbox-inline"><input name="tenderer" type="checkbox"> Tenderer </label><br>
-        <label class="checkbox-inline"><input name="funder" type="checkbox"> Funder </label><br>
-        <label class="checkbox-inline"><input name="enquirer" type="checkbox"> Enquirer </label><br>
-        <label class="checkbox-inline"><input name="payer" type="checkbox"> Payer </label><br>
-        <label class="checkbox-inline"><input name="payee" type="checkbox"> Payee </label><br>
-        <label class="checkbox-inline"><input name="reviewBody" type="checkbox"> Review Body </label><br>
-    </div>
-
-    <input type="text" name="localid" value = "<%= contractingprocess_id %>" hidden>
+    <input type="text" name="contractingprocess_id" value = "<%= contractingprocess_id %>" hidden>
 
     <p><label>Nombre<!--Name--></label>
         <input name="name" type="text" class="form-control" required></p>
@@ -51,6 +38,20 @@
         <input name="contactpoint_faxnumber"    type="text" class="form-control"></p>
     <p><label>URL <!--Contact point URL--></label>
         <input name="contactpoint_url" type="url" class="form-control"></p>
+
+    <label>Roles </label>
+    <div class="well">
+        <label class="checkbox-inline"><input name="buyer" type="checkbox"> Buyer </label><br>
+        <label class="checkbox-inline"><input name="procuringEntity" type="checkbox"> Procuring Entity </label><br>
+        <label class="checkbox-inline"><input name="supplier" type="checkbox"> Supplier </label><br>
+        <label class="checkbox-inline"><input name="tenderer" type="checkbox"> Tenderer </label><br>
+        <label class="checkbox-inline"><input name="funder" type="checkbox"> Funder </label><br>
+        <label class="checkbox-inline"><input name="enquirer" type="checkbox"> Enquirer </label><br>
+        <label class="checkbox-inline"><input name="payer" type="checkbox"> Payer </label><br>
+        <label class="checkbox-inline"><input name="payee" type="checkbox"> Payee </label><br>
+        <label class="checkbox-inline"><input name="reviewBody" type="checkbox"> Review Body </label><br>
+    </div>
+    
     <button type="submit" class="btn btn-default">Crear</button>
 </form>
 

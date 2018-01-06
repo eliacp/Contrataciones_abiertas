@@ -1,3 +1,9 @@
+<%if (parties.length === 0){ %>
+<div class="alert alert-warning" role="alert">
+<p>No se han registrado partes</p>
+</div>
+<%}%>
+
 <%for (var i=0; i< parties.length; i++){%>
 <div class="well">
     <p>
@@ -15,3 +21,4 @@
 
 </div>
 <%}%>
+

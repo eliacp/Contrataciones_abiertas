@@ -716,50 +716,6 @@ router.post('/newdoc-fields', function (req,res) {
     });
 });
 
-/* New organization */
-router.post('/new-organization', isAuthenticated, function (req, res) {
-    //falta pasar id de award y tender segun sea el caso
-    db_conf.edca_db.one("insert into $17~" +
-        " (contractingprocess_id, identifier_scheme, identifier_id, identifier_legalname, identifier_uri, name, address_streetaddress," +
-        " address_locality, address_region, address_postalcode, address_countryname, contactpoint_name, contactpoint_email, contactpoint_telephone," +
-        " contactpoint_faxnumber, contactpoint_url) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16) returning id",
-        [
-            req.body.localid,
-            req.body.identifier_scheme,
-            req.body.identifier_id,
-            req.body.identifier_legalname,
-            req.body.identifier_uri,
-            req.body.name,
-            req.body.address_streetaddress,
-            req.body.address_locality,
-            req.body.address_region,
-            req.body.address_postalcode,
-            req.body.address_countryname,
-            req.body.contactpoint_name,
-            req.body.contactpoint_email,
-            req.body.contactpoint_telephone,
-            req.body.contactpoint_faxnumber,
-            req.body.contactpoint_url,
-            req.body.table
-        ]).then(function (data) {
-        res.json({
-            status: 'Ok',
-            description: 'La organización ha sido registrada'
-        }); // envía la respuesta y presentala en un modal
-        console.log("Create organization: ", data);
-    }).catch(function (error) {
-        res.json({
-            status: "Error",
-            description : "Ha ocurrido un error al registrar la organización"
-        });
-        console.log("ERROR: ",error);
-    });
-});
-
-router.post('/neworg-fields', function (req,res) {
-    res.render('modals/neworg-fields', { localid: req.body.localid , table : req.body.table });
-});
-
 router.post('/new-item',isAuthenticated,function (req,res) {
     db_conf.edca_db.one('insert into $1~ (contractingprocess_id, itemid, description, classification_scheme, classification_id, classification_description, classification_uri,' +
         ' quantity, unit_name, unit_value_amount, unit_value_currency) values ($2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) returning id',
@@ -908,6 +864,7 @@ router.post('/newamendmentchange-fields', function (req,res) {
 });
 
 // Update buyer, procuring entity
+/*
 router.post('/update-organization', isAuthenticated, function (req, res) {
 
     db_conf.edca_db.one("update $1~ set identifier_scheme= $3, identifier_id =$4, identifier_legalname=$5, identifier_uri=$6, name = $7, address_streetaddress=$8," +
@@ -962,6 +919,7 @@ router.post('/org-fields',function(req,res){
     });
 
 });
+*/
 
 // Update publisher
 router.post('/update-publisher',isAuthenticated, function (req, res) {
@@ -1515,7 +1473,7 @@ router.get('/1.1/parties', function (req, res) {
                 status :'Ok',
                 data: parties
             });
-        }).catch(function (erro) {
+        }).catch(function (error) {
             console.log(error);
             res.status(400).jsonp({
                 status: 'Error',
@@ -1575,7 +1533,10 @@ router.put('/1.1/party/', function (req,res) {
         req.body.contactpoint_url
     ]).then(function (data) {
 
-        return db_conf.edca_db.one('insert into roles values (default, $1,$2,$3,$4,$5,$6,$7,$8,$9,$10) returning id, parties_id',[
+        return db_conf.edca_db.one('insert into roles(id, contractingprocess_id, parties_id, ' +
+            'buyer, procuringentity, supplier, tenderer, funder, enquirer,' +
+            'payer, payee, reviewbody) values (default,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) returning id, parties_id',[
+            req.body.contractingprocess_id,
             data.id,
             isChecked(req.body.buyer),
             isChecked(req.body.procuringEntity),
@@ -1592,6 +1553,7 @@ router.put('/1.1/party/', function (req,res) {
 
         res.jsonp({
             status: 'Ok',
+            description: "Parte registrada",
             data : data
         });
     }).catch(function (error) {

@@ -135,12 +135,37 @@ $('#genericModal').on('show.bs.modal', function (event) {
             break;
         case "add_party":
             modal.find('.modal-title').text("Registrar parte");
-            modal.find('#modal_content').load('/1.1/add_party.html', { contractingprocess_id : button.data("contractingprocess_id")});
-            $('#add_party_form').submit(function (e) {
-                //
-                e.preventDefault();
+            modal.find('#modal_content').load('/1.1/add_party.html', { contractingprocess_id : button.data("contractingprocess_id")}, function(){
+                $('#add_party_form').submit(function (e) {
+                   $.ajax({
+                       url: "/1.1/party/",
+                       method: "PUT",
+                       data: $(this).serialize(),
+                       success: function (data) {
+                           alert(data.description);
+                           if (data.status === 'Ok'){ modal.modal('hide');}
+                       }
+                   });
+                    e.preventDefault();
+                });
             });
+
             break;
+
+        /*case "new_organization":
+            modal.find('.modal-title').text('Nueva organización');
+            modal.find('#modal_content').html("");
+            $('#modal_content').load('/neworg-fields/',{ localid: button.data('contractingprocess_id') ,table : button.data('table') }, function () {
+                //submit new organization event (tenderers, suppliers)
+                $('#neworg_form').submit(function (event) {
+                    $.post('/new-organization/', $(this).serialize()).done(function (data) {
+                        alert(data.description);
+                        if (data.status === 'Ok'){ modal.modal('hide');}
+                    });
+                    event.preventDefault();
+                });
+            });
+            break;*/
         case "edit_organizations":
             modal.find('.modal-title').text('Editar organizaciones');
             modal.find('#modal_content').html("");
@@ -254,20 +279,6 @@ $('#genericModal').on('show.bs.modal', function (event) {
                 //submit new transaction event
                 $('#newtransaction_form').submit(function (event) {
                     $.post('/new-transaction', $(this).serialize()).done(function(data){
-                        alert(data.description);
-                        if (data.status === 'Ok'){ modal.modal('hide');}
-                    });
-                    event.preventDefault();
-                });
-            });
-            break;
-        case "new_organization":
-            modal.find('.modal-title').text('Nueva organización');
-            modal.find('#modal_content').html("");
-            $('#modal_content').load('/neworg-fields/',{ localid: button.data('contractingprocess_id') ,table : button.data('table') }, function () {
-                //submit new organization event (tenderers, suppliers)
-                $('#neworg_form').submit(function (event) {
-                    $.post('/new-organization/', $(this).serialize()).done(function (data) {
                         alert(data.description);
                         if (data.status === 'Ok'){ modal.modal('hide');}
                     });
