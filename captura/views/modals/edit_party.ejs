@@ -52,5 +52,13 @@
         <label class="checkbox-inline"><input name="reviewBody" type="checkbox" <%= roles.reviewbody?'checked':'' %>> Review Body </label><br>
     </div>
 
-        <button type="submit" class="btn btn-default">Guardar</button>
+    <div class="row">
+        <div class="col-sm-6">
+            <button type="submit" class="btn btn-default">Guardar</button>
+        </div>
+        <div class="col-sm-6" style="text-align: right">
+            <button name="delete_party" data-parties_id="<%= data.id %>" type="button" class="btn btn-danger">Eliminar</button>
+        </div>
+    </div>
+
 </form>

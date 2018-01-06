@@ -135,6 +135,19 @@ $('#genericModal').on('show.bs.modal', function (event) {
                 $('button[name="edit_party"]').click(function () {
                     modal.find('.modal-title').text("Editar");
                     modal.find("#modal_content").load('/1.1/edit_party.html', { parties_id: $(this).data('parties_id')},function(){
+                        $('button[name="delete_party"]').click(function () {
+                            if (confirm("¿Está seguro de eliminar el registro?")){
+                                $.ajax({
+                                    url: "/1.1/party",
+                                    method: "DELETE",
+                                    data: {parties_id : $(this).data("parties_id")},
+                                    success:  function (data) {
+                                        alert(data.description);
+                                        if (data.status === 'Ok'){ modal.modal('hide');}
+                                    }
+                                })
+                            }
+                        });
                         $('#update_party_form').submit(function (e) {
                             $.post('/1.1/party', $(this).serialize()).done(function (data) {
                                 alert( data.description );

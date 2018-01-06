@@ -1579,17 +1579,17 @@ router.post('/1.1/party', function(req,res){
     });
 });
 
-router.delete('/1.1/party', isAuthenticated, (req, res) => {
-    db_conf.edca_db.one('delete from parties where id = $1 returning id', req.body.id).then(function (party) {
+router.delete('/1.1/party', isAuthenticated, function(req, res) {
+    db_conf.edca_db.one('delete from parties where id = $1 returning id', [req.body.parties_id]).then(function (party) {
         res.jsonp({
             status : 'Ok',
-            data : party
+            description: "El registro ha sido eliminado"
         });
     }).catch(function (error) {
         console.log(error);
         res.status(400).jsonp({
             status: 'Error',
-            error : error
+            description: "Ocurrió un error al borrar el registro"
         });
     })
 });
