@@ -12,12 +12,12 @@ module.exports = {
                     t.one("select * from planning where contractingprocess_id = $1", [localid]),    //1
                     t.one("select * from budget where contractingprocess_id = $1", [localid]),         //2
                     t.one("select * from tender where contractingprocess_id = $1", [localid]),        //3
-                    t.one("select * from buyer where contractingprocess_id = $1", [localid]),    //4
+                    t.oneOrNone("select * from parties, roles where roles.parties_id = parties.id and roles.buyer = true and parties.contractingprocess_id = $1 limit 1", [localid]),    //4
                     t.one("select * from award where contractingprocess_id = $1", [localid]),           //5
                     t.one("select * from contract where contractingprocess_id = $1", [localid]),     //6
                     t.oneOrNone('select * from implementation where contractingprocess_id = $1', [localid]), //7
-                    t.one('select * from ProcuringEntity where contractingprocess_id=$1', [localid]), //8
-                    t.manyOrNone('select * from parties where contractingprocess_id=$1', [localid]),
+                    t.oneOrNone('select * from parties, roles where roles.parties_id = parties.id and roles.procuringentity = true and parties.contractingprocess_id = $1 limit 1', [localid]), //8
+                    t.manyOrNone('select * from parties, roles where parties.id = roles.parties_id and parties.contractingprocess_id=$1', [localid]),
                     t.oneOrNone('select * from tags where contractingprocess_id =$1', [localid])
                 ]);
 
@@ -41,8 +41,8 @@ module.exports = {
                 return t.batch(
                     [
                         qp, //0
-                        t.manyOrNone("select * from tenderer where contractingprocess_id=$1", [data[0].id]), //1
-                        t.manyOrNone("select * from supplier where contractingprocess_id=$1", [data[0].id]), //2: dependen de awards
+                        t.manyOrNone("select * from parties, roles where roles.parties_id = parties.id and roles.tenderer = true and parties.contractingprocess_id=$1", [data[0].id]), //1
+                        t.manyOrNone("select * from parties, roles where roles.parties_id = parties.id and roles.supplier = true and parties.contractingprocess_id=$1", [data[0].id]), //2: dependen de awards
                         t.one("select * from publisher where contractingprocess_id=$1",[data[0].id]), //3
                         /* Documents */
                         t.manyOrNone('select * from planningdocuments where contractingprocess_id=$1',[data[0].id]),//4
@@ -116,6 +116,16 @@ module.exports = {
                         if( checkValue(array[i].contactpoint_telephone) ){organization.contactPoint.telephone = array[i].contactpoint_telephone;}
                         if( checkValue(array[i].contactpoint_faxnumber) ){organization.contactPoint.faxNumber = array[i].contactpoint_faxnumber;}
                         if( checkValue(array[i].contactpoint_url) ){organization.contactPoint.url = array[i].contactpoint_url;}
+
+                        organization.roles = [];
+
+                        var roles = ["buyer","procuringEntity","supplier","tenderer","funder", "enquirer","payer","payee","reviewbody"];
+
+                        for (var x of roles){
+                           if (array[i][x.toLocaleLowerCase()] === true){
+                               organization.roles.push(x);
+                           }
+                        }
 
                         deleteNullProperties(organization, true);
                         if ( organization !== null ) {
@@ -308,6 +318,8 @@ module.exports = {
                     tag: tags,
                     initiationType: "tender"
                 };
+
+                release.parties = getOrganizations(data[0].parties);
 
                 //PLANNING
                 release.planning = { };
@@ -571,19 +583,20 @@ module.exports = {
                     deleteNullProperties(publisher, true);
 
 
-                    var record = {};
+                    var release_package = {};
 
-                    record.uri = data[0].cp.uri;//"http://datos.gob.mx/busca/organization/gacm",
-                    record.publishedDate = (new Date).toISOString();//getMString(new Date()),
-                    record.releases = [ release ];
-                    record.publisher = publisher;
-                    record.license = data[0].cp.license;//"http://datos.gob.mx/libreusomx",
-                    record.publicationPolicy = data[0].cp.publicationpolicy;//"http://dof.gob.mx/nota_detalle.php?codigo=5391143&fecha=04/05/2015",
-                    record.localid  = localid;
+                    release_package.uri = data[0].cp.uri;
+                    release_package.version = "1.1";
+                    release_package.publishedDate = (new Date()).toISOString();//getMString(new Date()),
+                    release_package.releases = [ release ];
+                    release_package.publisher = publisher;
+                    release_package.license = data[0].cp.license;
+                    release_package.publicationPolicy = data[0].cp.publicationpolicy;
+                    release_package.localid  = localid;
 
-                    deleteNullProperties(record, false);
+                    deleteNullProperties(release_package, false);
 
-                    return record;
+                    return release_package;
                 }
 
                 release.localid = localid;
