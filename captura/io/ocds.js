@@ -93,7 +93,7 @@ module.exports = {
                     for(let p of array) {
                         parties.push({
                             name: p.name,
-                            id: p.id
+                            id: p.partyid
                         })
                     }
                     return parties;
