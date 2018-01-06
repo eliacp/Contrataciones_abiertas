@@ -38,5 +38,19 @@
         <input name="contactpoint_faxnumber" type="text" class="form-control" value="<%= data.contactpoint_faxnumber %>"></p>
     <p><label>URL<!--Contact point url--></label>
         <input name="contactpoint_url"    type="url" class="form-control" value="<%= data.contactpoint_url %>"></p>
-    <p><button type="submit" class="btn btn-default">Guardar</button></p>
+
+        <label>Roles </label>
+    <div class="well">
+        <label class="checkbox-inline"><input name="buyer" type="checkbox" <%= roles.buyer?'checked':'' %>> Buyer </label><br>
+        <label class="checkbox-inline"><input name="procuringEntity" type="checkbox" <%= roles.procuringentity?'checked':'' %>> Procuring Entity </label><br>
+        <label class="checkbox-inline"><input name="supplier" type="checkbox" <%= roles.supplier?'checked':'' %>> Supplier </label><br>
+        <label class="checkbox-inline"><input name="tenderer" type="checkbox" <%= roles.tenderer?'checked':'' %>> Tenderer </label><br>
+        <label class="checkbox-inline"><input name="funder" type="checkbox" <%= roles.funder?'checked':'' %>> Funder </label><br>
+        <label class="checkbox-inline"><input name="enquirer" type="checkbox" <%= roles.enquirer?'checked':'' %>> Enquirer </label><br>
+        <label class="checkbox-inline"><input name="payer" type="checkbox" <%= roles.payer?'checked':'' %>> Payer </label><br>
+        <label class="checkbox-inline"><input name="payee" type="checkbox" <%= roles.payee?'checked':'' %>> Payee </label><br>
+        <label class="checkbox-inline"><input name="reviewBody" type="checkbox" <%= roles.reviewbody?'checked':'' %>> Review Body </label><br>
+    </div>
+
+        <button type="submit" class="btn btn-default">Guardar</button>
 </form>

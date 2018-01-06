@@ -863,63 +863,6 @@ router.post('/newamendmentchange-fields', function (req,res) {
     res.render('modals/newamendmentchange-fields', { localid: req.body.localid, table : req.body.table });
 });
 
-// Update buyer, procuring entity
-/*
-router.post('/update-organization', isAuthenticated, function (req, res) {
-
-    db_conf.edca_db.one("update $1~ set identifier_scheme= $3, identifier_id =$4, identifier_legalname=$5, identifier_uri=$6, name = $7, address_streetaddress=$8," +
-        " address_locality=$9, address_region =$10, address_postalcode=$11, address_countryname=$12, contactpoint_name=$13, contactpoint_email=$14, contactpoint_telephone=$15," +
-        " contactpoint_faxnumber=$16, contactpoint_url=$17 where ContractingProcess_id = $2 returning id",
-        [
-            req.body.table,
-            req.body.localid,
-            req.body.identifier_scheme,
-            req.body.identifier_id,
-            req.body.identifier_legalname,
-            req.body.identifier_uri,
-            req.body.name,
-            req.body.address_streetaddress,
-            req.body.address_locality,
-            req.body.address_region,
-            req.body.address_postalcode,
-            req.body.address_countryname,
-            req.body.contactpoint_name,
-            req.body.contactpoint_email,
-            req.body.contactpoint_telephone,
-            req.body.contactpoint_faxnumber,
-            req.body.contactpoint_url
-        ]
-    ).then(function (data) {
-        res.json({
-            status: 'Ok',
-            description: 'Los datos han sido actualizados'
-        }); // envía la respuesta y presentala en un modal
-        console.log(`Update ${req.body.table}: ${data}`);
-    }).catch(function (error) {
-        res.json({
-            status: "Error",
-            description: "Ha ocurrido un error al actualizar los datos de la organización"
-        });
-        console.log("ERROR: ",error);
-    });
-});
-
-router.post('/org-fields',function(req,res){
-    console.log("localid ->",req.body.localid);
-    console.log("table ->",req.body.table);
-
-    db_conf.edca_db.one('select * from $1~ where contractingprocess_id = $2', [
-        req.body.table,
-        req.body.localid
-    ]).then(function (data) {
-        res.render('modals/org-fields',{ data : data, table: req.body.table });
-    }).catch(function (error) {
-        console.log('ERROR: ', error);
-        res.send('ERROR');
-    });
-
-});
-*/
 
 // Update publisher
 router.post('/update-publisher',isAuthenticated, function (req, res) {
@@ -1563,6 +1506,21 @@ router.put('/1.1/party/', function (req,res) {
             error: error
         });
     });
+
+});
+
+router.post('/1.1/edit_party.html', function (req, res){
+    db_conf.edca_db.task(function (t) {
+        return this.batch([
+            this.one('select * from parties where id = $1',[req.body.parties_id ]),
+            this.one('select * from roles where id = $1', [req.body.parties_id ])
+        ])
+    }).then(function (data) {
+        res.render('modals/edit_party',{data: data[0], roles: data[1]});
+    }).catch(function (error) {
+        console.log(error);
+        res.send("<b>Error</b>");
+    })
 
 });
 
