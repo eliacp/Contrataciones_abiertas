@@ -130,8 +130,21 @@ $('#genericModal').on('show.bs.modal', function (event) {
             });
             break;
         case "edit_parties":
-            modal.find('.modal-title').text('Parties');
-            modal.find('#modal_content').load('/1.1/parties.html', { contractingprocess_id : button.data("contractingprocess_id")});
+            modal.find('.modal-title').text('Partes');
+            modal.find('#modal_content').load('/1.1/parties.html', { contractingprocess_id : button.data("contractingprocess_id")}, function () {
+                $('button[name="edit_party"]').click(function () {
+                    modal.find('.modal-title').text("Editar");
+                    modal.find("#modal_content").load('/1.1/edit_party.html', { parties_id: $(this).data('parties_id')},function(){
+                        $('#update_party_form').submit(function (e) {
+                            $.post('/1.1/party', $(this).serialize()).done(function (data) {
+                                alert( data.description );
+                                if ( data.status === 'Ok'){ modal.modal('hide');}
+                            });
+                            e.preventDefault();
+                        });
+                    });
+                })
+            });
             break;
         case "add_party":
             modal.find('.modal-title').text("Registrar parte");
@@ -166,6 +179,7 @@ $('#genericModal').on('show.bs.modal', function (event) {
                 });
             });
             break;*/
+        /*
         case "edit_organizations":
             modal.find('.modal-title').text('Editar organizaciones');
             modal.find('#modal_content').html("");
@@ -196,6 +210,7 @@ $('#genericModal').on('show.bs.modal', function (event) {
                 });
             });
             break;
+            */
         case "import_data":
             modal.find('.modal-title').text('Importar datos');
             modal.find('#modal_content').html("");

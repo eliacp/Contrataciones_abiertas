@@ -1474,13 +1474,13 @@ router.put('/1.1/party/', function (req,res) {
         req.body.contactpoint_telephone,
         req.body.contactpoint_faxnumber,
         req.body.contactpoint_url
-    ]).then(function (data) {
+    ]).then(function (party) {
 
         return db_conf.edca_db.one('insert into roles(id, contractingprocess_id, parties_id, ' +
             'buyer, procuringentity, supplier, tenderer, funder, enquirer,' +
             'payer, payee, reviewbody) values (default,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) returning id, parties_id',[
             req.body.contractingprocess_id,
-            data.id,
+            party.id,
             isChecked(req.body.buyer),
             isChecked(req.body.procuringEntity),
             isChecked(req.body.supplier),
@@ -1513,7 +1513,7 @@ router.post('/1.1/edit_party.html', function (req, res){
     db_conf.edca_db.task(function (t) {
         return this.batch([
             this.one('select * from parties where id = $1',[req.body.parties_id ]),
-            this.one('select * from roles where id = $1', [req.body.parties_id ])
+            this.one('select * from roles where parties_id = $1', [req.body.parties_id ])
         ])
     }).then(function (data) {
         res.render('modals/edit_party',{data: data[0], roles: data[1]});
@@ -1527,36 +1527,53 @@ router.post('/1.1/edit_party.html', function (req, res){
 //update party
 router.post('/1.1/party', function(req,res){
 
-    db_conf.edca_db.one('update parties set contractingprocess_id=$1, name=$2, identifier_scheme=$3,' +
-        ' identifier_id=$4, identifier_legalname=$5, identifier_uri=$6, address_streetaddress=$7, address_locality=$8,' +
-        ' address_region=$9, address_postalcode=$10, address_countryname=$11, contactpoint_name=$12, contactpoint_email=$13,' +
-        ' contactpoint_telephone=$14, contactpoint_faxnumber=$15, contactpoint_url=$16 where id = $17',[
-        req.body.contractingprocess_id,
-        req.body.name,
-        req.body.identifier_scheme,
-        req.body.identifier_id,
-        req.body.identifier_legalname,
-        req.body.identifier_uri,
-        req.body.address_streetaddress,
-        req.body.address_locality,
-        req.body.address_region,
-        req.body.address_postalcode,
-        req.body.address_countryname,
-        req.body.contactpoint_name,
-        req.body.contactpoint_email,
-        req.body.contactpoint_telephone,
-        req.body.contactpoint_faxnumber,
-        req.body.contactpoint_url,
-        req.body.id
-    ]).then(function(data){
+    db_conf.edca_db.tx(function (t) {
+        return t.batch([
+            this.one('update parties set name=$1, identifier_scheme=$2,' +
+                ' identifier_id=$3, identifier_legalname=$4, identifier_uri=$5, address_streetaddress=$6, address_locality=$7,' +
+                ' address_region=$8, address_postalcode=$9, address_countryname=$10, contactpoint_name=$11, contactpoint_email=$12,' +
+                ' contactpoint_telephone=$13, contactpoint_faxnumber=$14, contactpoint_url=$15 where id = $16 returning id',[
+                req.body.name,
+                req.body.identifier_scheme,
+                req.body.identifier_id,
+                req.body.identifier_legalname,
+                req.body.identifier_uri,
+                req.body.address_streetaddress,
+                req.body.address_locality,
+                req.body.address_region,
+                req.body.address_postalcode,
+                req.body.address_countryname,
+                req.body.contactpoint_name,
+                req.body.contactpoint_email,
+                req.body.contactpoint_telephone,
+                req.body.contactpoint_faxnumber,
+                req.body.contactpoint_url,
+                req.body.parties_id
+            ]),
+            this.one('update roles set buyer=$2, procuringentity=$3, supplier=$4, tenderer=$5, funder=$6,' +
+                'enquirer=$7, payer=$8, payee=$9, reviewbody=$10 where parties_id = $1 returning id', [
+                req.body.parties_id,
+                isChecked(req.body.buyer),
+                isChecked(req.body.procuringEntity),
+                isChecked(req.body.supplier),
+                isChecked(req.body.tenderer),
+                isChecked(req.body.funder),
+                isChecked(req.body.enquirer),
+                isChecked(req.body.payer),
+                isChecked(req.body.payee),
+                isChecked(req.body.reviewBody)
+            ])
+        ]);
+    }).then(function(data){
         res.jsonp({
             status: 'Ok',
-            data : data
+            description: "Los datos han sido actualizados"
         });
     }).catch(function (error) {
         console.log(error);
         res.status(400).jsonp({
             status : 'Error',
+            description: "Ocurrió un error al actualizar los datos",
             error: error
         });
     });

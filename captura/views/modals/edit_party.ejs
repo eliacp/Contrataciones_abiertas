@@ -1,6 +1,6 @@
-<form id="updatesingleorg_form">
-    <input type="text" name="table" value="<%= table %>" hidden>
-    <input type="text" name="localid" value = "<%= data.contractingprocess_id %>" hidden>
+<form id="update_party_form">
+    <input type="text" name="contractingprocess_id" value = "<%= data.contractingprocess_id %>" hidden>
+    <input type="text" name="parties_id" value = "<%= data.id %>" hidden>
 
     <p><label>Nombre<!--Name--></label>
         <input name="name" type="text" class="form-control" value="<%= data.name %>"></p>
@@ -9,7 +9,7 @@
     <p><label>Esquema <!--Identifier scheme--></label>
         <input name = "identifier_scheme" class="form-control" type="text" value="<%= data.identifier_scheme %>" ></p>
     <p><label>ID<!--Identifier ID--></label>
-        <input name = "identifier_id" class="form-control" type="text" value="<%= data.identifier_id %>" ></p>
+        <input name = "identifier_id" class="form-control" type="text" value="<%= data.identifier_id %>" required></p>
     <p><label>Nombre legal<!--Identifier legal name--></label>
         <input name = "identifier_legalname" class="form-control" type="text" value="<%= data.identifier_legalname %>" ></p>
     <p><label>URI<!--Identifier URI--></label>
