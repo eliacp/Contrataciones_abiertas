@@ -51,7 +51,7 @@
 <div class="row contract-stats">
     <div class="col-md-12">
         <p class="small">Comprador</p>
-        <p class="semi-bold"><%= buyer.identifier_legalname %></p>
+        <p class="semi-bold"><%= buyer!== null?buyer.identifier_legalname:"En proceso..." %></p>
     </div>
 </div>
 

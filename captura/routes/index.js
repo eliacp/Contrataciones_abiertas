@@ -403,7 +403,7 @@ router.get('/main/:contractingprocess_id', isAuthenticated, function (req,res) {
 // NUEVO PROCESO DE CONTRATACIÓN
 router.post('/new-process', isAuthenticated, function (req, res) {
     db_conf.edca_db.tx(function (t) {
-        return t.one("insert into ContractingProcess (fecha_creacion, hora_creacion, ocid, stage ) values (current_date, current_time, concat('CONTRATACION_', current_date,'_', current_time), 0) returning id")
+        return t.one("insert into ContractingProcess (fecha_creacion, hora_creacion, ocid, stage ) values (current_date, current_time, concat('CONTRATACION_', current_date,'_', current_time), 4) returning id")
             .then(function (process) {
 
                 return t.batch([

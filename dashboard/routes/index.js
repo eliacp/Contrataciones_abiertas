@@ -22,7 +22,7 @@ router.get('/', function(req, res, next) {
 
     edca_db.task(function (t) {
         return this.batch([
-        this.one('select count (*)  as total from (select distinct identifier_id  from supplier) as t ;'),
+        this.one('select count (*) as total from (select distinct partyid  from parties, roles where roles.supplier=true and parties.id = roles.parties_id) as t ;'),
         this.one('select count (*) as total from contractingprocess'),
         this.one('select count (*) as total from contract where value_amount > 0 '),
         this.one('select sum(value_amount) as total from contract')
@@ -46,7 +46,7 @@ router.get('/', function(req, res, next) {
 router.get('/contratos/',function (req, res) {
     edca_db.task(function (t) {
         return this.batch([
-            this.one('select count (*)  as total from (select distinct identifier_id  from supplier) as t ;'),
+            this.one('select count (*)  as total from (select distinct partyid from parties, roles where parties.id = roles.parties_id and roles.supplier=true) as t;'),
             this.one('select count (*) as total from contractingprocess'),
             this.one('select count (*) as total from contract where value_amount > 0'),
             this.one('select sum(value_amount) as total from contract'),
@@ -87,16 +87,16 @@ router.post('/pagination', function (req, res) {
 
         var q1, q2 ;
 
-        if ( typeof req.body.keyword != 'undefined' && typeof req.body.orderby != 'undefined' && typeof req.body.orderby != 'undefined') {
+        if ( typeof req.body.keyword !== 'undefined' && typeof req.body.orderby !== 'undefined' && typeof req.body.orderby !== 'undefined') {
             q1 = this.manyOrNone("select json, contractingprocess.id as localid, contractingprocess.ocid, contractingprocess.stage, contract.title," +
                 "contract.datesigned, contract.value_amount, tender.procurementmethod, " +
-                "(select count(*) as nsuppliers from supplier where supplier.contractingprocess_id = tender.contractingprocess_id )" +
+                "(select count(*) as nsuppliers from parties,roles where parties.id= roles.parties_id and roles.supplier = true and parties.contractingprocess_id = tender.contractingprocess_id )" +
                 " from contract, tender, contractingprocess, links " +
                 "where contract.contractingprocess_id = tender.contractingprocess_id and tender.contractingprocess_id= links.contractingprocess_id" +
                 " and contract.contractingprocess_id = contractingprocess.id " +
                 "and (contract.title ilike '%$1#%' or contract.contractid ilike '%$1#%') " +
-                ( req.body.filter != 'Todo' ? " and tender.procurementmethod ilike '$2#%' " : "") +
-                "order by $3~ "+(req.body.orderby == 'value_amount' || req.body.orderby == 'datesigned'?" desc ":"")+" limit $4 offset $5",
+                ( req.body.filter !== 'Todo' ? " and tender.procurementmethod ilike '$2#%' " : "") +
+                "order by $3~ "+(req.body.orderby === 'value_amount' || req.body.orderby === 'datesigned'?" desc ":"")+" limit $4 offset $5",
                 [
                     req.body.keyword,
                     req.body.filter,
@@ -106,14 +106,14 @@ router.post('/pagination', function (req, res) {
                 ]);
             q2 = this.one("select count(*) as total from contract, tender where contract.contractingprocess_id = tender.contractingprocess_id " +
             "and (contract.title ilike '%$1#%' or contract.contractid ilike '%$1#%') " +
-            ( req.body.filter != 'Todo' ? " and tender.procurementmethod ilike '$2#%' " : ""),[
+            ( req.body.filter !== 'Todo' ? " and tender.procurementmethod ilike '$2#%' " : ""),[
                 req.body.keyword,
                 req.body.filter
             ]);
         } else {
             q1 = this.manyOrNone('select json, contractingprocess.id as localid, contractingprocess.ocid, contractingprocess.stage, contract.title,' +
                 'contract.datesigned, contract.value_amount, tender.procurementmethod,' +
-                '(select count(*) as nsuppliers from supplier where supplier.contractingprocess_id = tender.contractingprocess_id )' +
+                '(select count(*) as nsuppliers from parties, roles where parties.id= roles.parties_id and roles.supplier = true and parties.contractingprocess_id = tender.contractingprocess_id )' +
                 ' from tender, contract, contractingprocess, links ' +
                 ' where tender.contractingprocess_id= links.contractingprocess_id and tender.contractingprocess_id = contractingprocess.id and tender.contractingprocess_id = contract.contractingprocess_id order by contract.value_amount desc limit $1 offset $2',
                 [
@@ -169,7 +169,7 @@ router.get('/contrato/:cpid/:stage',function (req, res) {
                     return this.batch([
                         //información general
                         this.one(qinfo, [ cpid ]),
-                        this.one( q1,[ 'buyer', cpid ]),
+                        this.oneOrNone( "select * from parties, roles where parties.id = roles.parties_id and roles.buyer=true and parties.contractingprocess_id=$1 limit 1",[ cpid ]), //cambia
                         this.one(q1,[ 'tender', cpid ]),
                         this.manyOrNone(q1,[ 'tenderitem', cpid ]),
                         this.manyOrNone(q1,[ 'tendermilestone', cpid ]),
@@ -201,9 +201,9 @@ router.get('/contrato/:cpid/:stage',function (req, res) {
                     return this.batch([
                         //información general
                         this.one(qinfo, [ cpid ]),
-                        this.one(q1,[ 'buyer',cpid ]),
+                        this.oneOrNone("select * from parties, roles where parties.id = roles.parties_id and roles.buyer=true and parties.contractingprocess_id=$1 limit 1",[cpid ]),
                         this.one(q1 ,[ 'award', cpid ]),
-                        this.manyOrNone(q1 ,[ 'supplier', cpid ]),
+                        this.manyOrNone("select * from parties, roles where parties.id = roles.parties_id and roles.supplier=true and parties.contractingprocess_id=$1" ,[ cpid ]),
                         this.manyOrNone(q1 ,[ 'awarditem', cpid ]),
                         this.manyOrNone(q1 ,[ 'awarddocuments', cpid ]),
                         this.manyOrNone(q1 ,[ 'awardamendmentchanges', cpid ]),
@@ -233,7 +233,7 @@ router.get('/contrato/:cpid/:stage',function (req, res) {
                     return this.batch([
                         //información general
                         this.one(qinfo, [ cpid ]),
-                        this.one(q1,[ 'buyer', cpid ]),
+                        this.oneOrNone("select * from parties, roles where parties.id = roles.parties_id and roles.buyer=true and parties.contractingprocess_id=$1 limit 1",[ cpid ]), //cambia
                         this.one(q1 ,[ 'contract', cpid ]),
                         this.manyOrNone(q1 ,[ 'contractitem', cpid ]),
                         this.manyOrNone(q1 ,[ 'contractdocuments', cpid ]),
@@ -263,7 +263,7 @@ router.get('/contrato/:cpid/:stage',function (req, res) {
                     return this.batch([
                         //información general
                         this.one(qinfo, [ cpid ]),
-                        this.one(q1,['buyer', cpid ]),
+                        this.oneOrNone("select * from parties, roles where parties.id = roles.parties_id and roles.buyer=true and parties.contractingprocess_id=$1 limit 1",[cpid ]),
                         this.manyOrNone(q1, ['implementationtransactions', cpid ]),
                         this.manyOrNone(q1, ['implementationmilestone', cpid ]),
                         this.manyOrNone(q1, ['implementationdocuments', cpid ]),
@@ -291,7 +291,7 @@ router.get('/contrato/:cpid/:stage',function (req, res) {
                     return this.batch([
                         //información general
                         this.one(qinfo, [cpid]),
-                        this.one(q1, ['buyer', cpid]),
+                        this.oneOrNone("select * from parties, roles where parties.id = roles.parties_id and roles.buyer=true and parties.contractingprocess_id=$1 limit 1", [cpid]),
                         this.one(q1 ,['budget', cpid]),
                         this.manyOrNone(q1,['planningdocuments', cpid]),
                         this.oneOrNone("select * from contractingprocess where id = $1",[ cpid ]),
@@ -316,7 +316,7 @@ router.get('/contrato/:cpid/:stage',function (req, res) {
 
 
     }).catch(function (error) {
-        res.send("Atención: <b>Proceso no registrado</b>")
+        res.send("Atención: <b>Proceso no registrado</b>");
         console.log(error);
     });
 
@@ -324,14 +324,6 @@ router.get('/contrato/:cpid/:stage',function (req, res) {
 
 
 /* supplier details & statistics */
-router.get('/proveedor/:supplierid', function (req, res ) {
-    edca_db.one(' select * from supplier where id = $1 ', [ req.params.supplierid] ).then(function (data) {
-        res.render('supplier', { supplier : data});
-    }).catch(function (error) {
-        res.render ('supplier');
-        console.log("ERROR: ",error)
-    });
-});
 
 /* DATA */
 router.post('/bubble-chart-data', function (req, res) {
