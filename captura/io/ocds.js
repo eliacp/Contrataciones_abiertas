@@ -333,6 +333,14 @@ module.exports = {
 
                 release.parties = getFullParties(data[0].parties);
 
+                //BUYER
+                if (data[0].buyer !== null){
+                    release.buyer = {
+                        name: data[0].buyer.name,
+                        id: data[0].buyer.partyid
+                    }
+                }
+
                 //PLANNING
                 release.planning = { };
 
@@ -463,29 +471,28 @@ module.exports = {
                     release.tender.milestones = getMilestones(data[12]);
                 }
 
-                release.tender.amendment = { };
-                if(checkValue(data[0].tender.amendment_date)){release.tender.amendment.date = dateString(data[0].tender.amendment_date);}
+                release.tender.amendments=[];
+                let tender_amendment = { };
+                if(checkValue(data[0].tender.amendment_date)){tender_amendment.date = dateString(data[0].tender.amendment_date);}
 
 
                 if( data[15].length > 0 ) {
-                    release.tender.amendment.changes = getAmendmentChanges(data[15]);
+                    tender_amendment.changes = getAmendmentChanges(data[15]);
                 }
 
-                if (checkValue(data[0].tender.amendment_rationale)){release.tender.amendment.rationale = data[0].tender.amendment_rationale;}
+                if (checkValue(data[0].tender.amendment_rationale)){tender_amendment.rationale = data[0].tender.amendment_rationale;}
+
+                if (JSON.stringify(tender_amendment)!==JSON.stringify({})){
+                    release.tender.amendments.push(tender_amendment);
+                }else{
+                    delete release.tender.amendments;
+                }
 
                 //limpia la etapa de licitación
                 deleteNullProperties( release.tender, true );
 
                 if (JSON.stringify(release.tender) === JSON.stringify({})){
-                    delete release['tender'];
-                }
-
-                //BUYER
-                if (data[0].buyer !== null){
-                    release.buyer = {
-                        name: data[0].buyer.name,
-                        id: data[0].buyer.partyid
-                    }
+                    delete release.tender;
                 }
 
                 //AWARDS
@@ -517,15 +524,22 @@ module.exports = {
                     award.documents = getDocuments(data[6]);
                 }
 
-                award.amendment = { };
-                if(checkValue(data[0].award.amendment_date)){award.amendment.date = dateString(data[0].award.amendment_date);}
+                award.amendments = [];
+                    let award_amendment = { };
+                if(checkValue(data[0].award.amendment_date)){award_amendment.date = dateString(data[0].award.amendment_date);}
 
 
                 if (data[16].length > 0) {
-                    award.amendment.changes = getAmendmentChanges(data[16]);
+                    award_amendment.changes = getAmendmentChanges(data[16]);
                 }
 
-                if(checkValue(data[0].award.amendment_rationale)){award.amendment.rationale = data[0].award.amendment_rationale;}
+                if(checkValue(data[0].award.amendment_rationale)){award_amendment.rationale = data[0].award.amendment_rationale;}
+
+                if (JSON.stringify(award_amendment) !== JSON.stringify({})){
+                    award.amendments.push(award_amendment);
+                }else{
+                    delete award.amendments;
+                }
 
                 //limpia la adjudicación
                 deleteNullProperties( award, true );
@@ -561,15 +575,23 @@ module.exports = {
                     contract.documents = getDocuments(data[7]);
                 }
 
-                contract.amendment = { };
+                contract.amendments=[];
+                let contract_amendment = { };
 
-                if(checkValue(data[0].contract.amendment_date)){contract.amendment.date = dateString(data[0].contract.amendment_date);}
+                if(checkValue(data[0].contract.amendment_date)){contract_amendment.date = dateString(data[0].contract.amendment_date);}
 
                 if (data[17].length > 0) {
-                    contract.amendment.changes = getAmendmentChanges(data[17]);
+                    contract_amendment.changes = getAmendmentChanges(data[17]);
                 }
 
-                if(checkValue(data[0].contract.amendment_rationale)){contract.amendment.rationale = data[0].contract.amendment_rationale;}
+                if(checkValue(data[0].contract.amendment_rationale)){contract_amendment.rationale = data[0].contract.amendment_rationale;}
+
+                if (JSON.stringify(contract_amendment) !== JSON.stringify({})){
+                    contract.amendments.push(contract_amendment);
+                }else {
+                    delete contract.amendments;
+                }
+
 
                 //IMPLEMENTATION
                 contract.implementation = { };
