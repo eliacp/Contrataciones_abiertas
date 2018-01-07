@@ -314,14 +314,14 @@ function getMString ( fecha ){
                 <p>
                     <label data-tooltip="crear_proceso" title='Campo binario para indicar si hubo o no aclaraciones en el proceso de licitación'>Se realizaron aclaraciones <!--Has enquiries--></label>
                     <select class="form-control" name="hasenquiries">
-                        <option value="1"
-                                <% if (typeof tender != "undefined") {%>
-                                <%=(tender.hasenquiries > 0) ?'selected':''%>
+                        <option value="true"
+                                <% if (typeof tender !== "undefined") {%>
+                                <%=(tender.hasenquiries) ?'selected':''%>
                                 <%}%>
                         >Si</option>
-                        <option value="0"
-                                <% if (typeof tender != "undefined"){%>
-                                <%=(tender.hasenquiries <= 0) ?'selected':''%>
+                        <option value="false"
+                                <% if (typeof tender !== "undefined"){%>
+                                <%=(tender.hasenquiries === false) ?'selected':''%>
                                 <%}%>
                         >No</option>
                     </select>

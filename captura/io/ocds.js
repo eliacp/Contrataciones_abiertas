@@ -442,7 +442,7 @@ module.exports = {
                 if(checkValue(data[0].tender.enquiryperiod_startdate)){release.tender.enquiryPeriod.startDate = dateString(data[0].tender.enquiryperiod_startdate);}
                 if(checkValue(data[0].tender.enquiryperiod_enddate)){release.tender.enquiryPeriod.endDate = dateString(data[0].tender.enquiryperiod_enddate);}
 
-                if(checkValue(data[0].tender.hasenquiries)){release.tender.hasEnquiries = (data[0].tender.hasenquiries > 0);}
+                if(checkValue(data[0].tender.hasenquiries)){release.tender.hasEnquiries = data[0].tender.hasenquiries;}
                 if(checkValue(data[0].tender.eligibilitycriteria)){release.tender.eligibilityCriteria = data[0].tender.eligibilitycriteria;}
 
                 release.tender.awardPeriod = { };

@@ -594,7 +594,7 @@ router.post('/update-tender',isAuthenticated, function (req, res) {
         dateCol(req.body.tenderperiod_enddate),
         dateCol(req.body.enquiryperiod_startdate),
         dateCol(req.body.enquiryperiod_enddate),
-        req.body.hasenquiries,
+        (req.body.hasenquiries==="true")?true:false,
         req.body.eligibilitycriteria,
         dateCol(req.body.awardperiod_startdate),
         dateCol(req.body.awardperiod_enddate),
@@ -1270,7 +1270,7 @@ router.post('/upload-stage', isAuthenticated, upload.single('datafile'), functio
                     jsonArray[0].PERIODO_RECEPCION_PROPUESTAS,
                     jsonArray[0].FECHA_INICIO_ACLARACIONES,
                     jsonArray[0].FECHA_CIERRE_ACLARACIONES,
-                    Number(jsonArray[0].TUVO_ACLARACIONES),
+                    (jsonArray[0].TUVO_ACLARACIONES==="true")?true:false,
 
                     jsonArray[0].CRITERIOS_ELEGIBILIDAD,
                     jsonArray[0].PERIODO_ADJUDICACION,

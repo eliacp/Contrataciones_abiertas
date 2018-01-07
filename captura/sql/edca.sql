@@ -312,7 +312,7 @@ create table Tender(
 	tenderperiod_enddate timestamp,
 	enquiryperiod_startdate timestamp, 
 	enquiryperiod_enddate timestamp,
-	hasenquiries int, 
+	hasenquiries boolean,
 	eligibilitycriteria text, 
 	awardperiod_startdate timestamp,
 	awardperiod_enddate timestamp,
