@@ -224,6 +224,7 @@ module.exports = {
 
                     for (var i =0; i< arr.length;i++){
                         var transaction = { };
+                        transaction.id = arr[i].transactionid;
 
                         if(checkValue(arr[i].source)){transaction.source = arr[i].source;}
                         if(checkValue(arr[i].date)){transaction.date = dateString(arr[i].date);}
