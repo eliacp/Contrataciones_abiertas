@@ -602,7 +602,7 @@ router.post('/update-tender',isAuthenticated, function (req, res) {
         dateCol(req.body.tenderperiod_enddate),
         dateCol(req.body.enquiryperiod_startdate),
         dateCol(req.body.enquiryperiod_enddate),
-        (req.body.hasenquiries==="true")?true:false,
+        (req.body.hasenquiries==="true"),
         req.body.eligibilitycriteria,
         dateCol(req.body.awardperiod_startdate),
         dateCol(req.body.awardperiod_enddate),
@@ -1400,7 +1400,7 @@ router.post('/update-implementation', function (req,res) {
  *  OCDS 1.1
  *  */
 
-router.post('/1.1/add_party.html', (req, res) => {
+router.post('/1.1/add_party.html', function (req, res)  {
     res.render('modals/add_party.ejs', { contractingprocess_id : req.body.contractingprocess_id });
 });
 
@@ -1870,7 +1870,7 @@ router.put('/1.1/:path/change', function (req, res) {
 });
 
 //edit change
-router.post('/1.1/:path/change', (req, res) => {
+router.post('/1.1/:path/change', function (req, res) {
 
     var rel = '';
     switch ( req.params.path ){
