@@ -1,0 +1,14 @@
+<%if (users.length === 0){%>
+<div class="alert alert-warning">
+    <p>No se han registrado usuarios además del administrador.</p>
+</div>
+<%} else {%>
+    <div class="list-group">
+        <%for (var i=0; i< users.length;i++){%>
+        <a href="#" class="list-group-item" data-user_id="<%= users[i]._id%>">
+            <h4 class="list-group-item-heading"><%=users[i].fullname%></h4>
+            <p class="list-group-item-text"><%=users[i].email%></p>
+        </a>
+        <%}%>
+    </div>
+<%}%>

@@ -159,12 +159,20 @@ router.get('/', isNotAuthenticated, function (req, res, next) {
     res.render('index', {title: 'Sistema de captura de datos de contrataciones abiertas en México', message: req.flash('message')});
 });
 
-router.get('/new-user', isAuthenticated, (req, res) => {
+router.get('/admin/new-user.html', isAuthenticated, function(req, res){
     res.render('modals/new_user');
 });
 
+router.get('/admin/users.html', isAuthenticated,  function (req, res) {
+    //console.log(req.user);
+    User.find({ _id :{ $ne: req.user._id }}).then(function (users) {
+        res.render('modals/users', {users: users});
+    });
+
+});
+
 /* Handle sign up */
-router.post('/user', isAuthenticated, (req, res)=> {
+router.post('/user', isAuthenticated, function (req, res) {
 
     if ( req.user.isAdmin === true ) {
         const username = req.body.username.trim();
@@ -1178,10 +1186,10 @@ router.post('/upload-stage', isAuthenticated, upload.single('datafile'), functio
 
             }).then(function (data) {
                 console.log('PLanning stage loaded: ', data);
-                res.redirect('/main/'+ req.body.localid);
+                res.redirect(`/main/${req.body.localid}`);
             }).catch(function (error) {
                 console.log('ERROR: ',error);
-                res.redirect('/main/'+ req.body.localid);
+                res.redirect(`/main/${req.body.localid}`);
             });
 
         } else if (req.body.stage === 'tender'){
@@ -1902,8 +1910,6 @@ router.post('/1.1/:path/change', (req, res) => {
             error: error
         });
     });
-
-
 });
 
 //delete change

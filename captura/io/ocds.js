@@ -74,7 +74,7 @@ module.exports = {
                 function dateString( obj ) {
                     return obj instanceof Date ? obj.toISOString() : obj
                 }
-                
+
                 function deleteNullProperties(obj, recursive) {
 
                     if (Array.isArray(obj) ) {
