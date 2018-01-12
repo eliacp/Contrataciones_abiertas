@@ -171,6 +171,12 @@ router.get('/admin/users.html', isAuthenticated,  function (req, res) {
 
 });
 
+router.get('/admin/contrataciones.html', isAuthenticated, function (req, res) {
+    db_conf.edca_db.manyOrNone('select * from contractingprocess').then(function (cp) {
+        res.render('modals/contractingprocess_list',{ cp: cp});
+    });
+});
+
 /* Handle sign up */
 router.post('/user', isAuthenticated, function (req, res) {
 

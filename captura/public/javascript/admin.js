@@ -27,5 +27,13 @@ $("#adminModal").on('show.bs.modal', function (event) {
             modal.find('#modal_content').load('/admin/users.html',function () {
 
             });
+            break;
+        case 'manage_process':
+            modal.find('.modal-title').text('Contrataciones');
+            modal.find('#modal_content').html("");
+            modal.find('#modal_content').load('/admin/contrataciones.html',function () {
+
+            });
+            break;
     }
 });

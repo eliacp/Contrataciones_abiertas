@@ -1,0 +1,14 @@
+<%if (cp.length === 0){%>
+<div class="alert alert-warning">
+    <p>No se han registrado contrataciones.</p>
+</div>
+<%} else {%>
+<div class="list-group">
+    <%for (var i=0; i< cp.length;i++){%>
+    <a href="#" class="list-group-item" data-contractingprocess_id="<%= cp[i].id%>">
+        <h4 class="list-group-item-heading"><%=cp[i].ocid%></h4>
+        <p class="list-group-item-text"><%=cp[i].ocid%></p>
+    </a>
+    <%}%>
+</div>
+<%}%>
