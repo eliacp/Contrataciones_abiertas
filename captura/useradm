@@ -31,10 +31,16 @@ if ( typeof process.argv[2] !== 'undefined'){
 
                         var schema = {
                             properties: {
-                                fullname: {
-                                    description: 'Nombre completo',
+                                name: {
+                                    description: 'Nombre',
                                     pattern: /^[a-zA-Z\s\-]+$/,
-                                    message: 'Nombre completo',
+                                    message: 'Nombre',
+                                    required: true
+                                },
+                                lastname: {
+                                    description: "Apellidos",
+                                    pattern: /^[a-zA-Z\s\-]+$/,
+                                    message: 'Apellidos',
                                     required: true
                                 },
                                 password: {
@@ -67,7 +73,8 @@ if ( typeof process.argv[2] !== 'undefined'){
                         prompt.get(schema, function (error, result) {
 
                             var u = new User({
-                                'fullname': result.fullname,
+                                'name': result.name,
+                                'lastname': result.lastname,
                                 'username': process.argv[3],
                                 'password': bcrypt.hashSync(result.password, bcrypt.genSaltSync(10), null),
                                 'isAdmin': result.isAdmin,

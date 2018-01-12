@@ -207,7 +207,8 @@ router.post('/user', isAuthenticated, function (req, res) {
                 newUser.password = createHash(req.body.password);
                 newUser.email = req.body.email;
                 newUser.address = req.body.address;
-                newUser.fullname = req.body.fullname;
+                newUser.name = req.body.name;
+                newUser.lastname = req.body.lastname;
                 newUser.isAdmin = req.body.isAdmin === "true" ;
 
                 // save the user
@@ -275,11 +276,13 @@ router.post("/change-password/", isAuthenticated, function (req, res) {
 router.post('/update/user/',isAuthenticated, function (req, res) {
     var id = req.body.id;
     var email = req.body.email;
-    var fullname = req.body.fullname;
+    var name = req.body.name;
+    var lastname = req.body.lastname;
     var address= req.body.address;
 
     User.findOne({ '_id' : id }).then(function (data) {
-        data.fullname = fullname;
+        data.name = name;
+        data.lastname = lastname;
         data.email = email;
         data.address = address;
         data.save();

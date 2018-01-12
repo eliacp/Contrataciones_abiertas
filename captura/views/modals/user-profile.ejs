@@ -1,12 +1,16 @@
 <form id="form_update_user_profile">
     <input name="id" type="text" value="<%= user._id %>" hidden>
     <p>
-        <label>Nombre de usuario</label>
+        <label>Usuario del sistema</label>
         <input name = "username" type="text" class="form-control" value="<%= user.username %>" disabled>
     </p>
     <p>
         <label>Nombre(s)</label>
-        <input name="fullname" type="text" class="form-control" value="<%= user.fullname %>" required>
+        <input name="name" type="text" class="form-control" value="<%= user.name %>" required>
+    </p>
+
+    <p><label>Apellido(s)</label>
+        <input name="lastname" type="text" class="form-control" value="<%= user.lastname%>" required>
     </p>
 
     <p><label>E-mail</label>
