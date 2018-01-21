@@ -52,7 +52,7 @@ BubbleChart = (function() {
         });
         //console.log(num_max_indicadores);
         // TAMAÑO DE LOS NODOS
-        this.radius_scale = d3.scale.pow().exponent(0.3).domain([1, num_max_indicadores]).range([1, 80]); //.domain([1, 4.5]).range([10, 30]);
+        this.radius_scale = d3.scale.pow().exponent(0.3).domain([1, num_max_indicadores]).range([1, 120]); //.domain([1, 4.5]).range([10, 30]);
         this.create_nodes();
         this.create_vis();
         this.circles.style("fill", '#00cc99');
@@ -67,18 +67,18 @@ BubbleChart = (function() {
         filterText = filterText.toLowerCase();
         if (filterText !== "") {
             var filtrados = this.data.filter(function(d) {
-                return d['Nombre o razón social'].toLowerCase().indexOf(filterText) != -1
-                //return d.identifier_legalname.toLowerCase().indexOf(filterText) != -1
-            }); //=== 0 });  //!!!
+              if(d["Razón social"] !== null){
+                return d["Razón social"].toLowerCase().indexOf(filterText) != -1;
+              }
+            });
             if (Object.keys(filtrados).length !== 0) {
                 var names = {};
                 filtrados.forEach(function(x) {
-                    names[x["Nombre o razón social"]] = "#00cc99";
+                    names[x["Razón social"]] = "#00cc99";
                     //names[x.identifier_legalname] = "#00cc99";
                 }); //!!!
-                //console.log(names);
                 this.circles.transition().duration(600).style("fill", function(d) {
-                    return names[d.original['Nombre o razón social']]; //!!!
+                    return names[d.original['Razón social']]; //!!!
                     //return names[d.original.idenfier_legalname];
                 });
                 hide_color_chart();
@@ -113,7 +113,7 @@ BubbleChart = (function() {
         var that,
             _this = this;
         /*this.vis = d3.select("#vis").append("svg").attr("width", this.width).attr("height", this.height).attr("id", "svg_vis");*/
-        this.vis = d3.select("#vis").append("svg").attr("id", "svg_vis").attr("preserveAspectRatio", "xMinYMin meet").attr("viewBox", "-20 -50 1250 810");  //Tamaño del área del gráfico Información general de contratos y proveedores
+        this.vis = d3.select("#vis").append("svg").attr("id", "svg_vis").attr("preserveAspectRatio", "xMinYMin meet").attr("viewBox", "0 0 1140 600");
         this.circles = this.vis.selectAll("circle").data(this.nodes, function(d) {
             return d.id;
         });
@@ -167,15 +167,15 @@ BubbleChart = (function() {
             return d.y = d.y + (_this.center.y - d.y) * (_this.damper + 0.02) * alpha;
         };
     };
-    // FUNCIÓN PARA MAPAEAR LOS COLORES, SE PUEDEN CAMBIAR... (En la gráfica "Información general de contratos y proveedores")
+    // FUNCIÓN PARA MAPAEAR LOS COLORES, SE PUEDEN CAMBIAR...
     BubbleChart.prototype.get_color_map_lookup_set = function(allValuesArray) {
         var baseArray, color_map, index, value, _i, _len;
         baseArray = [
-        	'#00cc99', // Adjudicación directa Art 41        	      (verde)              
-            'gray',    // Adjudicación directa Art 42                 (gris)
-            '#ff6600', // Invitación a cuando menos 3 personas     	  (morado)
-            '#663399', // Licitacion pública   			              (amarillo)
-            '#ffcc00', // Excepción al reglamento                     (naranja)
+            '#00cc99', //adjudicación directa
+            'gray', // asa
+            '#ffcc00', //convenio de colaboración
+            '#663399', // Invitación a 3
+            '#ff6600', //licitación
             '#ff6666',
             "#0000D9",
             "#FF00FF",
@@ -257,17 +257,17 @@ BubbleChart = (function() {
         numCenters = allValuesArray.length;
         this.group_centers = {};
         this.group_labels = {};
-        position = .86; // Posicion dentro del DIV de las burbujas y los títulos
-        total_slots = allValuesArray.length + 1;
+        position = 1.8; // Posicion dentro del DIV
+        total_slots = allValuesArray.length + 2;
         allValuesArray.forEach(function(i) {
             var x_position;
             x_position = _this.width * position / total_slots;
             _this.group_centers[i] = {
                 x: x_position,
-                y: _this.height / 1.6 // Separación entre las etiquetas y los nodos
+                y: _this.height / 1.9 // Separación entre las etiquetas y los nodos
             };
             _this.group_labels[i] = x_position;
-            position = position + 1.1;  //Separación entre burbujas y títulos
+            position = position + 1;
         });
         //console.log(this.group_labels);
         this.hide_labels();
@@ -317,7 +317,7 @@ BubbleChart = (function() {
         labels = this.vis.selectAll(".top_labels").data(label_data);
         labels.enter().append("text").attr("class", "top_labels").attr("width", 80).attr("x", function(d) {
             return group_labels[d];
-        }).attr("y", -15).text(function(d) {
+        }).attr("y", 10).text(function(d) {
             return d;
         });
     };
@@ -330,7 +330,7 @@ BubbleChart = (function() {
     BubbleChart.prototype.show_details = function(data, i, element) {
         var content, key, title, value, _ref;
         d3.select(element)./*attr("stroke", "black").*/style("fill-opacity", 0.85).style("cursor", "pointer");
-        content = "Nombre o razón social:<br><b>"+data.original['Nombre o razón social']+"</b>"; //.Elemento;
+        content = "Razón social:<br><b>"+data.original['Razón social']+"</b>"; //.Elemento;
         //content = data.original.identifier_legalname; //.Elemento;
         this.tooltip.showTooltip(content, d3.event);
     };
@@ -420,9 +420,23 @@ $(function() {
         chart.display_labels();
     };
 
-    // Funcion que carga el CSV
-    d3.csv("/contratacionesabiertas/static/supplier_data.csv", render_vis);
-    //d3.json("/contratacionesabiertas/static/supplier_data.csv", render_vis);
+    //d3.csv("/contratacionesabiertas/static/supplier_data.csv", render_vis);
+    d3.json("/contratacionesabiertas/d3-bubble-chart-data", function(error, result) {
+      var data2 = [];
+      for (i = 0; i < result.length; i += 1) {
+        data2.push({
+          "Proveedor": result[i].partyid,
+          "Razón social": result[i].name,
+          "ID de contrato": result[i].contractid,
+          "Producto o servicio": result[i].title,
+          "Procedimiento de contratación": result[i].procurementmethod,
+          "Vigencia del contrato": result[i].vigencia,
+          "Monto": result[i].value_amount,
+          "cpid": result[i].cpid
+        });
+      }
+      render_vis(data2);
+    });
     // Evento KEYUP para buscar, ACTIVA LA FUNCIÓN BUSCAR AL ESCRIBIR ALGO EN EL INPUT DE BUSCAR
     $("#buscar_bubble").keyup(function() {
         var searchTerm;

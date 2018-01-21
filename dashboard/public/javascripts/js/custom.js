@@ -42,7 +42,7 @@ var initialise_form = function(selectionOptions) {
     var groupSelect = $('#group-everything-by');
     for (var opt in selectionOptions) {
         var lookup = selectionOptions[opt];
-        if (lookup.title != 'Proveedor' && lookup.title != 'ID de contrato' && lookup.title != 'Nombre o razón social' ) {
+        if (lookup.title != 'Proveedor' && lookup.title != 'ID de contrato' && lookup.title != 'Razón social' ) {
             groupSelect.append('<option value="' + lookup.key + '">' + lookup.title + '</option>');
         }
     }
@@ -118,13 +118,13 @@ function render_filters_colors_and_groups(data) {
         // SELECCIONA LOS CAMPOS A FILTRAR
 
 
-        if (lookup.type == "Nombre o razón social" ||lookup.type =="Vigencia del contrato" || lookup.type == "Procedimiento de contratación"){
+        if (lookup.type == "Razón social" ||lookup.type =="Vigencia del contrato" || lookup.type == "Procedimiento de contratación"){
             lookups.push(lookup);
         }
 /*
         switch (lookup.type) {
             //case "Proveedor":
-            case "Nombre o razón social":
+            case "Razón social":
             //case "ID de contrato":
             case "Tipo de contratación":
             case "Vigencia":
@@ -135,11 +135,11 @@ function render_filters_colors_and_groups(data) {
         }*/
     }
 
-    var filterList = $('#filter-list');     /* Gráfica "información general de contratos y proveedores" columnas */
+    var filterList = $('#filter-list');
     for (var i in lookups) {
         var lookup = lookups[i];
         var values = get_distinct_values(data, lookup.type, lookup.key);
-        var item = $('<div class="filter_block col-md-4"><li class="filter_title"><p style="color:#00cc99;"><strong>' + lookup.title + '</strong></p></li></div>');
+        var item = $('<div class="filter_block dropdown-header"><li class="filter_title"><p style="color:#00cc99;"><strong>' + lookup.title + '</strong></p></li></div>');
         for (var j in values) {
             var checkbox = $('<li class="sub-filter-block"><label style="cursor:pointer"><input style="cursor:pointer" data-target="' + lookup.key + '" type="checkbox" checked="checked" value="' + values[j] + '"/> ' + values[j] + '</label></li>');
             checkbox.appendTo(item);
