@@ -20,8 +20,6 @@
     "d3": "^3.5.17",
     "font-awesome": "fontawesome#^4.6.3",
     "jqplot": "*",
-    "dgm-navbar": "mxabierto/dgm-navbar#latest",
-    "dgm-footer": "mxabierto/dgm-footer#latest",
     "tooltipster": "^4.1.6",
     "tooltipster-follower": "^0.1.5"
   }
