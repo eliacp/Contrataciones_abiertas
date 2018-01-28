@@ -28,15 +28,39 @@ function getMString ( fecha ){
                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-tooltip="crear_proceso" title="Aquí se pueden agregar los diversos documentos que pertenecen a la fase de planeación.">
                     <!-- Documents-->Documentos <span class="caret"></span>
                 </button>
+
                 <ul class="dropdown-menu">
                     <li><a href="#" data-toggle="modal" data-action="new_document" data-table="planningdocuments" data-contractingprocess_id="<%= cp.id %>" data-target="#genericModal">Nuevo</a></li>
                     <li><a href="#" data-toggle="modal" data-action="edit_documents" data-table="planningdocuments" data-contractingprocess_id="<%=cp.id%>" data-target="#genericModal">Editar</a></li>
                 </ul>
             </div>
+
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-tooltip="crear_proceso" title="Aquí se pueden agregar los diversos documentos que pertenecen a la fase de planeación.">
+                    <!-- Documents-->Cotizaciones <span class="caret"></span>
+                </button>
+
+                <ul class="dropdown-menu">
+                    <li><a href="#" data-toggle="modal" data-action="new_" data-contractingprocess_id="<%= cp.id %>" data-target="#genericModal">Nuevo</a></li>
+                    <li><a href="#" data-toggle="modal" data-action="edit_" data-contractingprocess_id="<%=cp.id%>" data-target="#genericModal">Editar</a></li>
+                </ul>
+            </div>
+
             <hr>
 
             <form id="planning_form" >
-                <p> <label data-tooltip="crear_proceso" title='Texto que describe los motivos de la contratación. No se limita al "fundamento legal", es decir, a aquella normatividad que permite realizar la contratación, sino que además debe señalarse la necesidad a la que responde el proceso de contratación. Se puede fundamentar en la planeación estratégica y sectorial de la institución que ejecuta el proyecto.'>Justificación<!--Rationale--></label>
+
+                <p>
+                    <label>¿Se realizaron cotizaciones?</label>
+                    <select name="hasquotes" class="form-control">
+                        <option value="false" <%= planning.hasquotes?'':'selected'%>>No</option>
+                        <option value="true" <%= planning.hasquotes?'selected':''%>>Sí</option>
+                    </select>
+                </p>
+
+                <p>
+                    <label data-tooltip="crear_proceso" title='Texto que describe los motivos de la contratación. No se limita al "fundamento legal", es decir, a aquella normatividad que permite realizar la contratación, sino que además debe señalarse la necesidad a la que responde el proceso de contratación. Se puede fundamentar en la planeación estratégica y sectorial de la institución que ejecuta el proyecto.'>Justificación<!--Rationale--></label>
                     <input type="text" class="form-control" name="rationale" value = "<%=(typeof planning!= "undefined")? planning.rationale : ''%>" >
                 </p>
 

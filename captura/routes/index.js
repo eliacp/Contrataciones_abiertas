@@ -479,7 +479,11 @@ function stringCol( str ){
 router.post('/update-planning', isAuthenticated, function (req, res) {
 
     db_conf.edca_db.tx(function (t) {
-        var planning = this.one("update planning set rationale = $1 where ContractingProcess_id = $2 returning id", [req.body.rationale, req.body.contractingprocess_id]);
+        var planning = this.one("update planning set rationale = $1, hasquotes = $2 where ContractingProcess_id = $3 returning id", [
+            req.body.rationale,
+            req.body.hasquotes === 'true',
+            req.body.contractingprocess_id
+        ]);
         var budget = this.one("update budget set budget_source = $2, budget_budgetid =$3, budget_description= $4, budget_amount=$5, budget_currency=$6, budget_project=$7, budget_projectid=$8, budget_uri=$9" +
             " where ContractingProcess_id=$1 returning id",
             [

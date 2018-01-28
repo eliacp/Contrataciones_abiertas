@@ -234,6 +234,7 @@ drop table if exists Planning cascade;
 create table Planning (
 	id serial primary key, 
 	ContractingProcess_id int references ContractingProcess(id) on delete cascade,
+	hasquotes boolean,
 	rationale text
 	);
 
