@@ -2,11 +2,17 @@
 
     <input type="text" name="contractingprocess_id" value = "<%= contractingprocess_id %>" hidden>
 
-    <p><label>Nombre<!--Name--></label>
+    <p>
+        <label>Nombre<!--Name--></label>
         <input name="name" type="text" class="form-control" required>
     </p>
-    <p><label>ID</label>
+    <p>
+        <label>ID</label>
         <input name="partyid" type="text" class="form-control" required>
+    </p>
+    <p>
+        <label>Cargo</label>
+        <input name="position" type="text" class="form-control">
     </p>
     <hr>
     <h4>Identificador</h4>
@@ -54,6 +60,8 @@
         <label class="checkbox-inline"><input name="payer" type="checkbox"> Payer </label><br>
         <label class="checkbox-inline"><input name="payee" type="checkbox"> Payee </label><br>
         <label class="checkbox-inline"><input name="reviewBody" type="checkbox"> Review Body </label><br>
+        <label class="checkbox-inline"><input name="clarificationMeetingAttendee" type="checkbox"> Clarification Meeting Attendee</label><br>
+        <label class="checkbox-inline"><input name="clarificationMeetingOfficial" type="checkbox"> Clarification Meeting Official</label><br>
     </div>
 
     <button type="submit" class="btn btn-default">Crear</button>

@@ -183,6 +183,17 @@ function getMString ( fecha ){
                 </ul>
             </div>
 
+            <!-- juntas de aclaración -->
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-tooltip="crear_proceso" title="Aquí se pueden registrar los diversos hitos de la fase de licitación">
+                    Juntas de aclaración <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#" data-toggle="modal" data-action="new_"  data-contractingprocess_id="<%= cp.id %>" data-target="#genericModal">Nuevo</a></li>
+                    <li><a href="#" data-toggle="modal" data-action="edit_" data-contractingprocess_id="<%=cp.id%>" data-target="#genericModal">Editar</a></li>
+                </ul>
+            </div>
+
             <hr>
 
             <form id="tender_form" role="form" >

@@ -149,7 +149,8 @@ module.exports = {
 
                         party.roles = [];
 
-                        var roles = ["buyer","procuringEntity","supplier","tenderer","funder", "enquirer","payer","payee","reviewbody"];
+                        var roles = ["buyer","procuringEntity","supplier","tenderer","funder", "enquirer",
+                            "payer","payee","reviewbody", "clarificationMeetingAttendee", "clarificationMeetingOfficial"];
 
                         for (var x of roles){
                            if (array[i][x.toLocaleLowerCase()] === true){

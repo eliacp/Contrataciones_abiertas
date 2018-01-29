@@ -75,6 +75,7 @@ contractingprocess_id integer references contractingprocess(id) on delete cascad
 id serial primary key,
 partyid text,
 name text,
+position text,
 identifier_scheme text,
 identifier_id text,
 identifier_legalname text,
@@ -117,7 +118,9 @@ funder boolean,
 enquirer boolean,
 payer boolean,
 payee boolean,
-reviewbody boolean
+reviewbody boolean,
+clarificationMeetingAttendee boolean,
+clarificationMeetingOfficial boolean
 );
 
 /* Party Role Catalog */

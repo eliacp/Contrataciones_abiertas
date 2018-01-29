@@ -2,10 +2,16 @@
     <input type="text" name="contractingprocess_id" value = "<%= data.contractingprocess_id %>" hidden>
     <input type="text" name="parties_id" value = "<%= data.id %>" hidden>
 
-    <p><label>Nombre<!--Name--></label>
+    <p>
+        <label>Nombre<!--Name--></label>
         <input name="name" type="text" class="form-control" value="<%= data.name %>"></p>
-    <p><label>ID</label>
+    <p>
+        <label>ID</label>
         <input name="partyid" type="text" class="form-control" value="<%= data.partyid%>" required>
+    </p>
+    <p>
+        <label>Cargo</label>
+        <input name="position" type="text" class="form-control" value="<%= data.position %>">
     </p>
     <hr>
     <h4>Identificador</h4>
@@ -53,6 +59,8 @@
         <label class="checkbox-inline"><input name="payer" type="checkbox" <%= roles.payer?'checked':'' %>> Payer </label><br>
         <label class="checkbox-inline"><input name="payee" type="checkbox" <%= roles.payee?'checked':'' %>> Payee </label><br>
         <label class="checkbox-inline"><input name="reviewBody" type="checkbox" <%= roles.reviewbody?'checked':'' %>> Review Body </label><br>
+        <label class="checkbox-inline"><input name="clarificationMeetingAttendee" type="checkbox" <%= roles.clarificationmeetingattendee?'checked':'' %>> Clarification Meeting Attendee</label><br>
+        <label class="checkbox-inline"><input name="clarificationMeetingOfficial" type="checkbox" <%= roles.clarificationmeetingofficial?'checked':'' %>> Clarification Meeting Official</label><br>
     </div>
 
     <div class="row">

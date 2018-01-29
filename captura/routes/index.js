@@ -1474,14 +1474,15 @@ router.get('/1.1/parties', function (req, res) {
 router.put('/1.1/party/', function (req,res) {
     //falta verificar que la organización no exista
 
-    db_conf.edca_db.one('insert into parties (contractingprocess_id, name, partyid, identifier_scheme, ' +
+    db_conf.edca_db.one('insert into parties (contractingprocess_id, name, partyid, position, identifier_scheme, ' +
         ' identifier_id, identifier_legalname, identifier_uri, address_streetaddress, address_locality, ' +
         ' address_region, address_postalcode, address_countryname, contactpoint_name, contactpoint_email, ' +
         ' contactpoint_telephone, contactpoint_faxnumber, contactpoint_url) values' +
-        ' ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17) returning id', [
+        ' ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18) returning id', [
         req.body.contractingprocess_id,
         req.body.name,
         req.body.partyid,
+        req.body.position,
         req.body.identifier_scheme,
         req.body.identifier_id,
         req.body.identifier_legalname,
@@ -1500,7 +1501,8 @@ router.put('/1.1/party/', function (req,res) {
 
         return db_conf.edca_db.one('insert into roles(id, contractingprocess_id, parties_id, ' +
             'buyer, procuringentity, supplier, tenderer, funder, enquirer,' +
-            'payer, payee, reviewbody) values (default,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) returning id, parties_id',[
+            'payer, payee, reviewbody, clarificationMeetingAttendee, ' +
+            'clarificationMeetingOfficial) values (default,$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13) returning id, parties_id',[
             req.body.contractingprocess_id,
             party.id,
             isChecked(req.body.buyer),
@@ -1511,7 +1513,9 @@ router.put('/1.1/party/', function (req,res) {
             isChecked(req.body.enquirer),
             isChecked(req.body.payer),
             isChecked(req.body.payee),
-            isChecked(req.body.reviewBody)
+            isChecked(req.body.reviewBody),
+            isChecked(req.body.clarificationMeetingAttendee),
+            isChecked(req.body.clarificationMeetingOfficial)
         ]);
 
     }).then(function(data) {
@@ -1551,12 +1555,13 @@ router.post('/1.1/party', function(req,res){
 
     db_conf.edca_db.tx(function (t) {
         return t.batch([
-            this.one('update parties set name=$1, partyid=$2, identifier_scheme=$3,' +
-                ' identifier_id=$4, identifier_legalname=$5, identifier_uri=$6, address_streetaddress=$7, address_locality=$8,' +
-                ' address_region=$9, address_postalcode=$10, address_countryname=$11, contactpoint_name=$12, contactpoint_email=$13,' +
-                ' contactpoint_telephone=$14, contactpoint_faxnumber=$15, contactpoint_url=$16 where id = $17 returning id',[
+            this.one('update parties set name=$1, partyid=$2, position=$3, identifier_scheme=$4,' +
+                ' identifier_id=$5, identifier_legalname=$6, identifier_uri=$7, address_streetaddress=$8, address_locality=$9,' +
+                ' address_region=$10, address_postalcode=$11, address_countryname=$12, contactpoint_name=$13, contactpoint_email=$14,' +
+                ' contactpoint_telephone=$15, contactpoint_faxnumber=$16, contactpoint_url=$17 where id = $18 returning id',[
                 req.body.name,
                 req.body.partyid,
+                req.body.position,
                 req.body.identifier_scheme,
                 req.body.identifier_id,
                 req.body.identifier_legalname,
@@ -1574,7 +1579,8 @@ router.post('/1.1/party', function(req,res){
                 req.body.parties_id
             ]),
             this.one('update roles set buyer=$2, procuringentity=$3, supplier=$4, tenderer=$5, funder=$6,' +
-                'enquirer=$7, payer=$8, payee=$9, reviewbody=$10 where parties_id = $1 returning id', [
+                'enquirer=$7, payer=$8, payee=$9, reviewbody=$10, clarificationMeetingAttendee=$11, ' +
+                'clarificationMeetingOfficial=$12 where parties_id = $1 returning id', [
                 req.body.parties_id,
                 isChecked(req.body.buyer),
                 isChecked(req.body.procuringEntity),
@@ -1584,7 +1590,9 @@ router.post('/1.1/party', function(req,res){
                 isChecked(req.body.enquirer),
                 isChecked(req.body.payer),
                 isChecked(req.body.payee),
-                isChecked(req.body.reviewBody)
+                isChecked(req.body.reviewBody),
+                isChecked(req.body.clarificationMeetingAttendee),
+                isChecked(req.body.clarificationMeetingOfficial)
             ])
         ]);
     }).then(function(data){
